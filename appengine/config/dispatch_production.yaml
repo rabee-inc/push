@@ -1,0 +1,3 @@
+dispatch:
+- url: "*push.salontia.rabee.jp/*"
+  service: push
