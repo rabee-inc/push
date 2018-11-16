@@ -2,7 +2,7 @@
 
 
 [[projects]]
-  digest = "1:e9ee7b2717763800729f4bea0a92adc6418705b04806a4a50bd4a924f3834d52"
+  digest = "1:c77c6bc1fa2448fb086d79aff98286a9d54a501617ab2850d2174817b1fc6ad8"
   name = "cloud.google.com/go"
   packages = [
     "compute/metadata",
@@ -10,7 +10,6 @@
     "firestore/apiv1beta1",
     "iam",
     "internal",
-    "internal/atomiccache",
     "internal/btree",
     "internal/fields",
     "internal/optional",
@@ -19,8 +18,8 @@
     "storage",
   ]
   pruneopts = "UT"
-  revision = "1fd54cf41e6e0e178ffe3c52b0e2260281f603e3"
-  version = "v0.32.0"
+  revision = "74b12019e2aa53ec27882158f59192d7cd6d1998"
+  version = "v0.33.1"
 
 [[projects]]
   digest = "1:883f94ba0f0ab4ebf643a538842b9d444d5c6a52adabaceec9ed5828682eb377"
@@ -92,12 +91,12 @@
   version = "v1.2.0"
 
 [[projects]]
-  digest = "1:e145e9710a10bc114a6d3e2738aadf8de146adaa031854ffdf7bbfe15da85e63"
+  digest = "1:e04cc716992a302cacf6d726409a05aa9546241998b24356d6dd0f01bc5a374e"
   name = "github.com/googleapis/gax-go"
   packages = ["."]
   pruneopts = "UT"
-  revision = "317e0006254c44a0ac427cc52a0e083ff0b9622f"
-  version = "v2.0.0"
+  revision = "b001040cd31805261cbd978842099e326dfa857b"
+  version = "v2.0.2"
 
 [[projects]]
   branch = "master"
@@ -106,6 +105,22 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "b9786414de4d903830df7ac38eea68a0e3267a35"
+
+[[projects]]
+  digest = "1:e583fc00497ee3eaf30bde9edf05601f60d5a8668f7fe4c657b3f935ddca03f7"
+  name = "go.mercari.io/datastore"
+  packages = [
+    ".",
+    "aedatastore",
+    "boom",
+    "internal",
+    "internal/c/atomiccache",
+    "internal/c/fields",
+    "internal/shared",
+  ]
+  pruneopts = "UT"
+  revision = "7a323a3747d39b6c9cdf825697d09cb36907d4cb"
+  version = "v1.3.0"
 
 [[projects]]
   digest = "1:381ccafa5e013a0e3f9b54604ae522a73b9533a375a6a714b483c634d5e927ab"
@@ -133,7 +148,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:65c765afa6bd03160739504fefac7774864cf47356f9cd008e251b17854f43dd"
+  digest = "1:5ad570851feb57bcc5c147ee81a54cdd023a8c66a5c716d57faed25a7b6c1dff"
   name = "golang.org/x/net"
   packages = [
     "context",
@@ -146,7 +161,7 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "03003ca0c849e57b6ea29a4bab8d3cb6e4d568fe"
+  revision = "adae6a3d119ae4890b46832a2e88a95adc62b8e7"
 
 [[projects]]
   branch = "master"
@@ -199,7 +214,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:76a997024d89bce060d8d185f44300e5920e72ff1b616dc5c8f120fb999d6029"
+  digest = "1:9c5f840f7ea1d0ee0103251cb29116c7d9c9c6baf9671b6fef3b94854d1e0a79"
   name = "google.golang.org/api"
   packages = [
     "gensupport",
@@ -217,13 +232,14 @@
     "transport/http/internal/propagation",
   ]
   pruneopts = "UT"
-  revision = "cfbc873f6b93790282bed8e31e7f7df417caee1b"
+  revision = "83a9d304b1e613fc253e1e2710778642fe81af53"
 
 [[projects]]
-  digest = "1:a711e2439e32d71e9cf4464d008e3aadc2ec9f311c04d89f4ba3fe2e7a4d4e5d"
+  digest = "1:70e16296f95fe7f60e51bf9b95d68dcbf2674cb437600f49811b32ce90d0ecca"
   name = "google.golang.org/appengine"
   packages = [
     ".",
+    "datastore",
     "internal",
     "internal/app_identity",
     "internal/base",
@@ -232,9 +248,11 @@
     "internal/modules",
     "internal/remote_api",
     "internal/socket",
+    "internal/taskqueue",
     "internal/urlfetch",
     "log",
     "socket",
+    "taskqueue",
     "urlfetch",
   ]
   pruneopts = "UT"
@@ -306,13 +324,18 @@
   input-imports = [
     "cloud.google.com/go/firestore",
     "firebase.google.com/go",
+    "firebase.google.com/go/messaging",
     "github.com/davecgh/go-spew/spew",
     "github.com/go-chi/chi",
     "github.com/unrolled/render",
+    "go.mercari.io/datastore/aedatastore",
+    "go.mercari.io/datastore/boom",
     "golang.org/x/text/encoding/japanese",
     "golang.org/x/text/transform",
+    "google.golang.org/api/iterator",
     "google.golang.org/appengine",
     "google.golang.org/appengine/log",
+    "google.golang.org/appengine/taskqueue",
     "gopkg.in/go-playground/validator.v9",
   ]
   solver-name = "gps-cdcl"

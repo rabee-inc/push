@@ -7,15 +7,40 @@ import (
 	"github.com/aikizoku/push/src/lib/cloudfirestore"
 	"github.com/aikizoku/push/src/lib/util"
 	"github.com/aikizoku/push/src/model"
+	"google.golang.org/api/iterator"
 	"google.golang.org/appengine/log"
 )
 
 type tokenFirestore struct {
 }
 
+func (r *tokenFirestore) GetMultiToUserID(ctx context.Context, userID string) ([]string, error) {
+	var tokens []string
+	cli, err := cloudfirestore.NewClient(ctx)
+	if err != nil {
+		log.Errorf(ctx, "cloudfirestore.NewClient error: %s", err.Error())
+		return tokens, err
+	}
+	iter := cli.Collection(config.CollectionUsers).Doc(userID).Collection(config.CollectionTokens).Documents(ctx)
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			log.Errorf(ctx, "cli.Get error: %s", err.Error())
+			return tokens, err
+		}
+		var token model.TokenFirestore
+		doc.DataTo(&token)
+		tokens = append(tokens, token.Token)
+	}
+	return tokens, nil
+}
+
 func (r *tokenFirestore) Put(ctx context.Context, userID string, platform string, deviceID string, token string) error {
 	docID := model.GenerateTokenDocID(platform, deviceID)
-	src := &model.Token{
+	src := &model.TokenFirestore{
 		Platform:  platform,
 		DeviceID:  deviceID,
 		Token:     token,

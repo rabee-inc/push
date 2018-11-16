@@ -27,7 +27,7 @@
 
 [[constraint]]
   name = "cloud.google.com/go"
-  version = "0.32.0"
+  version = "0.33.1"
 
 [[constraint]]
   name = "firebase.google.com/go"
@@ -46,8 +46,16 @@
   name = "github.com/unrolled/render"
 
 [[constraint]]
+  name = "go.mercari.io/datastore"
+  version = "1.3.0"
+
+[[constraint]]
   name = "golang.org/x/text"
   version = "0.3.0"
+
+[[constraint]]
+  branch = "master"
+  name = "google.golang.org/api"
 
 [[constraint]]
   name = "google.golang.org/appengine"

@@ -10,11 +10,20 @@ import (
 // Routing ... ルーティング設定
 func Routing(r *chi.Mux, d *Dependency) {
 
+	// API
 	r.Route("/api", func(r chi.Router) {
+		// JSONRPC2
 		r.Route("/rpc", func(r chi.Router) {
 			r.Use(d.JSONRPC2.Handle)
 			r.Post("/", handler.Empty)
 		})
+	})
+
+	// Worker
+	r.Route("/worker", func(r chi.Router) {
+		r.Post("/send/users", d.SendHandler.SendUserIDs)
+		r.Post("/send/user", d.SendHandler.SendUserID)
+		r.Post("/send/token", d.SendHandler.SendToken)
 	})
 
 	r.Get("/ping", handler.Ping)
