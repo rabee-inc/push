@@ -2,12 +2,13 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/aikizoku/push/src/config"
+	"github.com/aikizoku/push/src/lib/log"
 	"github.com/aikizoku/push/src/lib/taskqueue"
 	"github.com/aikizoku/push/src/model"
 	"github.com/aikizoku/push/src/repository"
-	"google.golang.org/appengine/log"
 )
 
 type sender struct {
@@ -51,6 +52,11 @@ func (s *sender) SendMessageToUserID(ctx context.Context, userID string, msg *mo
 }
 
 func (s *sender) SendMessageToToken(ctx context.Context, token string, msg *model.Message) error {
+	if token == "" {
+		err := fmt.Errorf("token is empty")
+		log.Errorf(ctx, err.Error())
+		return err
+	}
 	err := s.fRepo.SendMessage(ctx, token, msg)
 	if err != nil {
 		log.Warningf(ctx, "s.fRepo.SendMessage error: %s", err.Error())

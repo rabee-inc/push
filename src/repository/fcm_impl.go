@@ -5,8 +5,8 @@ import (
 
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/messaging"
+	"github.com/aikizoku/push/src/lib/log"
 	"github.com/aikizoku/push/src/model"
-	"google.golang.org/appengine/log"
 )
 
 type fcm struct {
@@ -57,12 +57,11 @@ func (r *fcm) SendMessage(ctx context.Context, token string, src *model.Message)
 		},
 	}
 
-	res, err := cli.Send(ctx, msg)
+	_, err = cli.Send(ctx, msg)
 	if err != nil {
 		log.Errorf(ctx, "cli.Send error: %s", err.Error())
 		return err
 	}
-	log.Debugf(ctx, "%s", res) // TODO 消す
 	return nil
 }
 

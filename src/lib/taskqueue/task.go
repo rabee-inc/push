@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"google.golang.org/appengine/log"
+	"github.com/aikizoku/push/src/lib/log"
 	"google.golang.org/appengine/taskqueue"
 )
 

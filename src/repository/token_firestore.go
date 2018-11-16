@@ -5,10 +5,10 @@ import (
 
 	"github.com/aikizoku/push/src/config"
 	"github.com/aikizoku/push/src/lib/cloudfirestore"
+	"github.com/aikizoku/push/src/lib/log"
 	"github.com/aikizoku/push/src/lib/util"
 	"github.com/aikizoku/push/src/model"
 	"google.golang.org/api/iterator"
-	"google.golang.org/appengine/log"
 )
 
 type tokenFirestore struct {

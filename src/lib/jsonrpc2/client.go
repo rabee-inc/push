@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/aikizoku/push/src/lib/httpclient"
-	"google.golang.org/appengine/log"
+	"github.com/aikizoku/push/src/lib/log"
 )
 
 // Client ... JSONRPC2のリクエストを行う

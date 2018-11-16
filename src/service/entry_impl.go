@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 
+	"github.com/aikizoku/push/src/lib/log"
 	"github.com/aikizoku/push/src/repository"
-	"google.golang.org/appengine/log"
 )
 
 type entry struct {

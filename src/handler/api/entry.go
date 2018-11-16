@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 
+	"github.com/aikizoku/push/src/lib/log"
 	"github.com/aikizoku/push/src/service"
-	"google.golang.org/appengine/log"
 )
 
 // EntryHandler ... エントリーのハンドラ

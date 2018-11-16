@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"google.golang.org/appengine/log"
+	"github.com/aikizoku/push/src/lib/log"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/unrolled/render"
 )

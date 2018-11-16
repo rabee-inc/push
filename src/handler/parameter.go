@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/aikizoku/push/src/lib/log"
 	"github.com/go-chi/chi"
-	"google.golang.org/appengine/log"
 )
 
 // GetURLParam ... リクエストからURLParamを取得する

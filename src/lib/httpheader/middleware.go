@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"google.golang.org/appengine/log"
+	"github.com/aikizoku/push/src/lib/log"
 	"github.com/unrolled/render"
 )
 

@@ -4,11 +4,11 @@ import (
 	"context"
 
 	"github.com/aikizoku/push/src/config"
+	"github.com/aikizoku/push/src/lib/log"
 	"github.com/aikizoku/push/src/lib/util"
 	"github.com/aikizoku/push/src/model"
 	_ "go.mercari.io/datastore/aedatastore" // mercari/datastoreの初期化
 	"go.mercari.io/datastore/boom"
-	"google.golang.org/appengine/log"
 )
 
 type tokenDatastore struct {

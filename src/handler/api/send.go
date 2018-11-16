@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 
 	"github.com/aikizoku/push/src/config"
+	"github.com/aikizoku/push/src/lib/log"
 	"github.com/aikizoku/push/src/lib/taskqueue"
 	"github.com/aikizoku/push/src/model"
 	"github.com/aikizoku/push/src/service"
-	"google.golang.org/appengine/log"
 )
 
 // SendHandler ...  送信のハンドラ
