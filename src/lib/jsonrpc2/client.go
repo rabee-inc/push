@@ -13,7 +13,7 @@ import (
 // Client ... JSONRPC2のリクエストを行う
 type Client struct {
 	URL      string
-	Headers  *map[string]string
+	Headers  map[string]string
 	Requests []*ClientRequest
 }
 
@@ -86,7 +86,7 @@ func (c *Client) DoBatch(ctx context.Context) ([]*ClientResponse, error) {
 }
 
 // NewClient ... Clientを作成する
-func NewClient(url string, headers *map[string]string) *Client {
+func NewClient(url string, headers map[string]string) *Client {
 	return &Client{
 		URL:     url,
 		Headers: headers,
