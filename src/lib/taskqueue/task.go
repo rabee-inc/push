@@ -6,13 +6,24 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/aikizoku/push/src/lib/internalauth"
+
 	"github.com/aikizoku/push/src/lib/log"
 	"google.golang.org/appengine/taskqueue"
 )
 
 // AddTask ... 通常リクエストをEnqueueする
 func AddTask(ctx context.Context, queue string, path string, params url.Values) error {
-	task := taskqueue.NewPOSTTask(queue, params)
+	h := make(http.Header)
+	h.Set("Content-Type", "application/x-www-form-urlencoded")
+	key, value := internalauth.GetHeader()
+	h.Set(key, value)
+	task := &taskqueue.Task{
+		Path:    path,
+		Payload: []byte(params.Encode()),
+		Header:  h,
+		Method:  "POST",
+	}
 	return Add(ctx, queue, task)
 }
 
@@ -20,6 +31,8 @@ func AddTask(ctx context.Context, queue string, path string, params url.Values) 
 func AddTaskToJSON(ctx context.Context, queue string, path string, src interface{}) error {
 	h := make(http.Header)
 	h.Set("Content-Type", "application/json")
+	key, value := internalauth.GetHeader()
+	h.Set(key, value)
 	data, err := json.Marshal(src)
 	if err != nil {
 		log.Errorf(ctx, "json.Marshal error: %s", err.Error())
