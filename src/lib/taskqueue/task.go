@@ -16,8 +16,7 @@ import (
 func AddTask(ctx context.Context, queue string, path string, params url.Values) error {
 	h := make(http.Header)
 	h.Set("Content-Type", "application/x-www-form-urlencoded")
-	key, value := internalauth.GetHeader()
-	h.Set(key, value)
+	h.Set(internalauth.GetHeader())
 	task := &taskqueue.Task{
 		Path:    path,
 		Payload: []byte(params.Encode()),
@@ -31,8 +30,7 @@ func AddTask(ctx context.Context, queue string, path string, params url.Values) 
 func AddTaskToJSON(ctx context.Context, queue string, path string, src interface{}) error {
 	h := make(http.Header)
 	h.Set("Content-Type", "application/json")
-	key, value := internalauth.GetHeader()
-	h.Set(key, value)
+	h.Set(internalauth.GetHeader())
 	data, err := json.Marshal(src)
 	if err != nil {
 		log.Errorf(ctx, "json.Marshal error: %s", err.Error())
