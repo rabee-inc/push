@@ -37,7 +37,7 @@ func (h *SendHandler) Exec(ctx context.Context, method string, params interface{
 		Message: ps.Message,
 	}
 
-	err := taskqueue.AddTaskToJSON(ctx, config.QueueSendUser, "/worker/send/users", src)
+	err := taskqueue.AddTaskByJSON(ctx, config.QueueSendUser, "/worker/send/users", src)
 	if err != nil {
 		log.Errorf(ctx, "taskqueue.NewJSONPostTask error: %s", err.Error())
 		return nil, err

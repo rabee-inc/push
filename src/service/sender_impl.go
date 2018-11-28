@@ -22,7 +22,7 @@ func (s *sender) SendMessageToUserIDs(ctx context.Context, userIDs []string, msg
 			UserID:  userID,
 			Message: msg,
 		}
-		err := taskqueue.AddTaskToJSON(ctx, config.QueueSendUser, "/worker/send/user", src)
+		err := taskqueue.AddTaskByJSON(ctx, config.QueueSendUser, "/worker/send/user", src)
 		if err != nil {
 			log.Warningf(ctx, "taskqueue.NewJSONPostTask error: %s", err.Error())
 			return err
@@ -42,7 +42,7 @@ func (s *sender) SendMessageToUserID(ctx context.Context, userID string, msg *mo
 			Token:   token,
 			Message: msg,
 		}
-		err = taskqueue.AddTaskToJSON(ctx, config.QueueSendToken, "/worker/send/token", src)
+		err = taskqueue.AddTaskByJSON(ctx, config.QueueSendToken, "/worker/send/token", src)
 		if err != nil {
 			log.Warningf(ctx, "taskqueue.NewJSONPostTask error: %s", err.Error())
 			return err
