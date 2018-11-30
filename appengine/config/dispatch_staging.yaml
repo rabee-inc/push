@@ -1,3 +1,5 @@
 dispatch:
-- url: "*push.staging.beego.rabee.jp/*"
+- url: "*api.staging.salontia.rabee.jp/*"
+  service: api
+- url: "*push.staging.salontia.rabee.jp/*"
   service: push

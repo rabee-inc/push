@@ -1,11 +1,6 @@
 package config
 
-import "time"
-
 const (
-	// HTTPRequestTimeout ... デフォルトのHTTPリクエストタイムアウト
-	HTTPRequestTimeout time.Duration = 20
-
 	// CollectionUsers ... FirestoreのUsersコレクション
 	CollectionUsers = "PushUsers"
 	// CollectionTokens ... FirestoreのTokensコレクション
