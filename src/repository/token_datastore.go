@@ -40,7 +40,7 @@ func (r *tokenDatastore) Put(ctx context.Context, userID string, platform string
 		Platform:  platform,
 		DeviceID:  deviceID,
 		Token:     token,
-		CreatedAt: util.TimeNow().Unix(),
+		CreatedAt: util.TimeNowUnix(),
 	}
 	b, err := boom.FromContext(ctx)
 	if err != nil {
