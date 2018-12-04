@@ -9,6 +9,7 @@ import (
 	"github.com/aikizoku/push/src/lib/taskqueue"
 	"github.com/aikizoku/push/src/model"
 	"github.com/aikizoku/push/src/service"
+	"github.com/go-playground/validator"
 )
 
 // SendHandler ...  送信のハンドラ
@@ -17,15 +18,24 @@ type SendHandler struct {
 }
 
 type sendParams struct {
-	UserIDs []string       `json:"user_ids"`
-	Message *model.Message `json:"message"`
+	UserIDs []string       `json:"user_ids" validate:"required"`
+	Message *model.Message `json:"message" validate:"required"`
 }
 
 // DecodeParams ... 受け取ったJSONパラメータをデコードする
 func (h *SendHandler) DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error) {
 	var params sendParams
 	err := json.Unmarshal(*msg, &params)
-	return params, err
+	if err != nil {
+		return params, err
+	}
+
+	// Validation
+	v := validator.New()
+	if err := v.Struct(params); err != nil {
+		return params, err
+	}
+	return params, nil
 }
 
 // Exec ... 処理をする
