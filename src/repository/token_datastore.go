@@ -29,7 +29,7 @@ func (r *tokenDatastore) GetListByUserID(ctx context.Context, userID string) ([]
 	}
 	ids := []string{}
 	for _, key := range keys {
-		ids = append(ids, key.String())
+		ids = append(ids, key.Name())
 	}
 	tokens, err := r.getMulti(ctx, ids)
 	if err != nil {
@@ -72,7 +72,9 @@ func (r *tokenDatastore) getMulti(ctx context.Context, ids []string) ([]string, 
 }
 
 func (r *tokenDatastore) Put(ctx context.Context, userID string, platform string, deviceID string, token string) error {
+	id := model.GeneratePushTokenKey(userID, platform, deviceID)
 	src := &model.PushTokenDatastore{
+		ID:        id,
 		UserID:    userID,
 		Platform:  platform,
 		DeviceID:  deviceID,
