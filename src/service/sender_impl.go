@@ -16,7 +16,7 @@ type sender struct {
 	fRepo repository.Fcm
 }
 
-func (s *sender) SendMessageToUserIDs(ctx context.Context, userIDs []string, msg *model.Message) error {
+func (s *sender) SendMessageByUserIDs(ctx context.Context, userIDs []string, msg *model.Message) error {
 	for _, userID := range userIDs {
 		src := &model.SendUserID{
 			UserID:  userID,
@@ -31,10 +31,10 @@ func (s *sender) SendMessageToUserIDs(ctx context.Context, userIDs []string, msg
 	return nil
 }
 
-func (s *sender) SendMessageToUserID(ctx context.Context, userID string, msg *model.Message) error {
-	tokens, err := s.tRepo.GetMultiToUserID(ctx, userID)
+func (s *sender) SendMessageByUserID(ctx context.Context, userID string, msg *model.Message) error {
+	tokens, err := s.tRepo.GetListByUserID(ctx, userID)
 	if err != nil {
-		log.Errorf(ctx, "s.tRepo.GetMultiToUserID error: %s", err.Error())
+		log.Errorf(ctx, "s.tRepo.GetListByUserID error: %s", err.Error())
 		return err
 	}
 	for _, token := range tokens {
@@ -51,7 +51,7 @@ func (s *sender) SendMessageToUserID(ctx context.Context, userID string, msg *mo
 	return nil
 }
 
-func (s *sender) SendMessageToToken(ctx context.Context, token string, msg *model.Message) error {
+func (s *sender) SendMessageByToken(ctx context.Context, token string, msg *model.Message) error {
 	if token == "" {
 		err := fmt.Errorf("token is empty")
 		log.Errorf(ctx, err.Error())

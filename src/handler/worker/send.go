@@ -23,9 +23,9 @@ func (h *SendHandler) SendUserIDs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.Svc.SendMessageToUserIDs(ctx, param.UserIDs, param.Message)
+	err = h.Svc.SendMessageByUserIDs(ctx, param.UserIDs, param.Message)
 	if err != nil {
-		handler.HandleError(ctx, w, http.StatusBadRequest, "h.Svc.SendMessageToUserIDs: %s", err.Error())
+		handler.HandleError(ctx, w, http.StatusBadRequest, "h.Svc.SendMessageByUserIDs: %s", err.Error())
 		return
 	}
 	handler.RenderSuccess(w)
@@ -40,9 +40,9 @@ func (h *SendHandler) SendUserID(w http.ResponseWriter, r *http.Request) {
 		handler.HandleError(ctx, w, http.StatusBadRequest, "handler.GetJSON: %s", err.Error())
 		return
 	}
-	err = h.Svc.SendMessageToUserID(ctx, param.UserID, param.Message)
+	err = h.Svc.SendMessageByUserID(ctx, param.UserID, param.Message)
 	if err != nil {
-		handler.HandleError(ctx, w, http.StatusBadRequest, "h.Svc.SendMessageToUserID: %s", err.Error())
+		handler.HandleError(ctx, w, http.StatusBadRequest, "h.Svc.SendMessageByUserID: %s", err.Error())
 		return
 	}
 	handler.RenderSuccess(w)
@@ -57,9 +57,9 @@ func (h *SendHandler) SendToken(w http.ResponseWriter, r *http.Request) {
 		handler.HandleError(ctx, w, http.StatusBadRequest, "handler.GetJSON: %s", err.Error())
 		return
 	}
-	err = h.Svc.SendMessageToToken(ctx, param.Token, param.Message)
+	err = h.Svc.SendMessageByToken(ctx, param.Token, param.Message)
 	if err != nil {
-		handler.HandleError(ctx, w, http.StatusBadRequest, "h.Svc.SendMessageToToken: %s", err.Error())
+		handler.HandleError(ctx, w, http.StatusBadRequest, "h.Svc.SendMessageByToken: %s", err.Error())
 		return
 	}
 	handler.RenderSuccess(w)

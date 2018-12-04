@@ -14,7 +14,7 @@ import (
 type tokenFirestore struct {
 }
 
-func (r *tokenFirestore) GetMultiToUserID(ctx context.Context, userID string) ([]string, error) {
+func (r *tokenFirestore) GetListByUserID(ctx context.Context, userID string) ([]string, error) {
 	var tokens []string
 	cli, err := cloudfirestore.NewClient(ctx)
 	if err != nil {
@@ -32,7 +32,11 @@ func (r *tokenFirestore) GetMultiToUserID(ctx context.Context, userID string) ([
 			return tokens, err
 		}
 		var token model.TokenFirestore
-		doc.DataTo(&token)
+		err = doc.DataTo(&token)
+		if err != nil {
+			log.Errorf(ctx, "dsnp.DataTo error: %s", err.Error())
+			return nil, err
+		}
 		tokens = append(tokens, token.Token)
 	}
 	return tokens, nil
@@ -44,7 +48,7 @@ func (r *tokenFirestore) Put(ctx context.Context, userID string, platform string
 		Platform:  platform,
 		DeviceID:  deviceID,
 		Token:     token,
-		CreatedAt: util.TimeNow().Unix(),
+		CreatedAt: util.TimeNowUnix(),
 	}
 	cli, err := cloudfirestore.NewClient(ctx)
 	if err != nil {

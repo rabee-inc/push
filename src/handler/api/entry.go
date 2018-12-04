@@ -39,9 +39,9 @@ func (h *EntryHandler) Exec(ctx context.Context, method string, params interface
 	}
 
 	return struct {
-		Foobar string `json:"foobar,omitempty"`
+		Success bool `json:"success"`
 	}{
-		Foobar: "",
+		Success: true,
 	}, nil
 }
 
