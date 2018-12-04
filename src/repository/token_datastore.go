@@ -7,6 +7,7 @@ import (
 	"github.com/aikizoku/push/src/lib/log"
 	"github.com/aikizoku/push/src/lib/util"
 	"github.com/aikizoku/push/src/model"
+	"go.mercari.io/datastore"
 	_ "go.mercari.io/datastore/aedatastore" // mercari/datastoreの初期化
 	"go.mercari.io/datastore/boom"
 )
@@ -14,22 +15,58 @@ import (
 type tokenDatastore struct {
 }
 
-func (r *tokenDatastore) GetMultiToUserID(ctx context.Context, userID string) ([]string, error) {
+func (r *tokenDatastore) GetListByUserID(ctx context.Context, userID string) ([]string, error) {
+	b, err := boom.FromContext(ctx)
+	if err != nil {
+		log.Errorf(ctx, "boom from context error: %s", err.Error())
+		return []string{}, err
+	}
+	q := b.NewQuery(config.KindPushToken).Filter("UserID =", userID).KeysOnly()
+	keys, err := b.GetAll(q, nil)
+	if err != nil {
+		log.Errorf(ctx, "b.GetAll error: %s", err.Error())
+		return []string{}, err
+	}
+	ids := []string{}
+	for _, key := range keys {
+		ids = append(ids, key.String())
+	}
+	tokens, err := r.getMulti(ctx, ids)
+	if err != nil {
+		log.Errorf(ctx, "r.getMulti error: %s", err.Error())
+		return []string{}, err
+	}
+	return tokens, nil
+}
+
+func (r *tokenDatastore) getMulti(ctx context.Context, ids []string) ([]string, error) {
 	tokens := []string{}
-	ret := []*model.PushTokenDatastore{}
 	b, err := boom.FromContext(ctx)
 	if err != nil {
 		log.Errorf(ctx, "boom from context error: %s", err.Error())
 		return tokens, err
 	}
-	q := b.NewQuery(config.KindPushToken).Filter("UserID =", userID)
-	_, err = b.GetAll(q, &ret)
-	if err != nil {
-		log.Errorf(ctx, "get by query error: "+err.Error())
-		return tokens, err
+	bt := b.Batch()
+	for _, id := range ids {
+		dst := &model.PushTokenDatastore{
+			ID: id,
+		}
+		bt.Get(dst, func(err error) error {
+			if err != nil {
+				if err == datastore.ErrNoSuchEntity {
+					return nil
+				}
+				log.Errorf(ctx, "bt.Get error: %s, id: %s", err.Error(), dst.ID)
+				return err
+			}
+			tokens = append(tokens, dst.Token)
+			return nil
+		})
 	}
-	for _, r := range ret {
-		tokens = append(tokens, r.Token)
+	err = bt.Exec()
+	if err != nil {
+		log.Errorf(ctx, "bt.Exec error: %s", err.Error())
+		return tokens, err
 	}
 	return tokens, nil
 }

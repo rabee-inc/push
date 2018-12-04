@@ -14,7 +14,7 @@ import (
 type tokenFirestore struct {
 }
 
-func (r *tokenFirestore) GetMultiToUserID(ctx context.Context, userID string) ([]string, error) {
+func (r *tokenFirestore) GetListByUserID(ctx context.Context, userID string) ([]string, error) {
 	var tokens []string
 	cli, err := cloudfirestore.NewClient(ctx)
 	if err != nil {

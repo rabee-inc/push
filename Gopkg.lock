@@ -328,6 +328,7 @@
     "github.com/davecgh/go-spew/spew",
     "github.com/go-chi/chi",
     "github.com/unrolled/render",
+    "go.mercari.io/datastore",
     "go.mercari.io/datastore/aedatastore",
     "go.mercari.io/datastore/boom",
     "golang.org/x/text/encoding/japanese",
