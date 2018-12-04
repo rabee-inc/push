@@ -6,6 +6,7 @@ import (
 
 	"github.com/aikizoku/push/src/lib/log"
 	"github.com/aikizoku/push/src/service"
+	"github.com/go-playground/validator"
 )
 
 // EntryHandler ... エントリーのハンドラ
@@ -14,17 +15,26 @@ type EntryHandler struct {
 }
 
 type entryParams struct {
-	UserID   string `json:"user_id"`
-	Platform string `json:"platform"`
+	UserID   string `json:"user_id" validate:"required"`
+	Platform string `json:"platform" validate:"required"`
 	DeviceID string `json:"device_id"`
-	Token    string `json:"token"`
+	Token    string `json:"token" validate:"required"`
 }
 
 // DecodeParams ... 受け取ったJSONパラメータをデコードする
 func (h *EntryHandler) DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error) {
 	var params entryParams
 	err := json.Unmarshal(*msg, &params)
-	return params, err
+	if err != nil {
+		return params, err
+	}
+
+	// Validation
+	v := validator.New()
+	if err := v.Struct(params); err != nil {
+		return params, err
+	}
+	return params, nil
 }
 
 // Exec ... 処理をする
