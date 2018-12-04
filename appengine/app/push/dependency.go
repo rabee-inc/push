@@ -22,7 +22,7 @@ func (d *Dependency) Inject() {
 	iaToken := internalauth.GetToken()
 
 	// Repository
-	tRepo := repository.NewTokenDatastore()
+	tRepo := repository.NewTokenFirestore()
 	fRepo := repository.NewFcm()
 
 	// Service
