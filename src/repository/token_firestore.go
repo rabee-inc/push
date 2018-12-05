@@ -31,8 +31,8 @@ func (r *tokenFirestore) GetListByUserID(ctx context.Context, userID string) ([]
 			log.Errorf(ctx, "cli.Get error: %s", err.Error())
 			return tokens, err
 		}
-		var token model.TokenFirestore
-		err = doc.DataTo(&token)
+		token := &model.TokenFirestore{}
+		err = doc.DataTo(token)
 		if err != nil {
 			log.Errorf(ctx, "dsnp.DataTo error: %s", err.Error())
 			return nil, err
