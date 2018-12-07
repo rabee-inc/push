@@ -4,11 +4,14 @@ import (
 	"net/http"
 
 	"github.com/aikizoku/push/src/handler"
+	"github.com/aikizoku/push/src/lib/log"
 	"github.com/go-chi/chi"
 )
 
 // Routing ... ルーティング設定
 func Routing(r *chi.Mux, d *Dependency) {
+	// ログ
+	r.Use(log.Handle)
 
 	// API
 	r.Route("/api", func(r chi.Router) {
