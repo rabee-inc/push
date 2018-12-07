@@ -18,7 +18,7 @@ type tokenDatastore struct {
 func (r *tokenDatastore) GetListByUserID(ctx context.Context, userID string) ([]string, error) {
 	b, err := boom.FromContext(ctx)
 	if err != nil {
-		log.Errorf(ctx, "boom from context error: %s", err.Error())
+		log.Errorm(ctx, "boom.FromContext", err)
 		return []string{}, err
 	}
 	q := b.NewQuery(config.KindPushToken).Filter("UserID =", userID).KeysOnly()
@@ -43,7 +43,7 @@ func (r *tokenDatastore) getMulti(ctx context.Context, ids []string) ([]string, 
 	tokens := []string{}
 	b, err := boom.FromContext(ctx)
 	if err != nil {
-		log.Errorf(ctx, "boom from context error: %s", err.Error())
+		log.Errorm(ctx, "boom.FromContext", err)
 		return tokens, err
 	}
 	bt := b.Batch()
@@ -83,7 +83,7 @@ func (r *tokenDatastore) Put(ctx context.Context, userID string, platform string
 	}
 	b, err := boom.FromContext(ctx)
 	if err != nil {
-		log.Errorf(ctx, "boom from context error: %s", err.Error())
+		log.Errorm(ctx, "boom.FromContext", err)
 		return err
 	}
 	_, err = b.Put(src)

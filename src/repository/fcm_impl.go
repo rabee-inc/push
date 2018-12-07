@@ -15,7 +15,7 @@ type fcm struct {
 func (r *fcm) SendMessage(ctx context.Context, token string, src *model.Message) error {
 	app, err := firebase.NewApp(ctx, nil)
 	if err != nil {
-		log.Errorf(ctx, "firebase.NewApp error: %s", err.Error())
+		log.Errorm(ctx, "firebase.NewApp", err)
 		return err
 	}
 
