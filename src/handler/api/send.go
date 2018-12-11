@@ -22,6 +22,10 @@ type sendParams struct {
 	Message *model.Message `json:"message" validate:"required"`
 }
 
+type sendResponse struct {
+	Success bool `json:"success"`
+}
+
 // DecodeParams ... 受け取ったJSONパラメータをデコードする
 func (h *SendHandler) DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error) {
 	var params sendParams
@@ -49,13 +53,11 @@ func (h *SendHandler) Exec(ctx context.Context, method string, params interface{
 
 	err := taskqueue.AddTaskByJSON(ctx, config.QueueSendUser, "/worker/send/users", src)
 	if err != nil {
-		log.Errorf(ctx, "taskqueue.NewJSONPostTask error: %s", err.Error())
+		log.Errorm(ctx, "taskqueue.AddTaskByJSON", err)
 		return nil, err
 	}
 
-	return struct {
-		Success bool `json:"success"`
-	}{
+	return sendResponse{
 		Success: true,
 	}, nil
 }

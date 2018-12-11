@@ -24,7 +24,7 @@ func (s *sender) SendMessageByUserIDs(ctx context.Context, userIDs []string, msg
 		}
 		err := taskqueue.AddTaskByJSON(ctx, config.QueueSendUser, "/worker/send/user", src)
 		if err != nil {
-			log.Warningf(ctx, "taskqueue.NewJSONPostTask error: %s", err.Error())
+			log.Warningm(ctx, "taskqueue.AddTaskByJSON", err)
 			return err
 		}
 	}
@@ -34,7 +34,7 @@ func (s *sender) SendMessageByUserIDs(ctx context.Context, userIDs []string, msg
 func (s *sender) SendMessageByUserID(ctx context.Context, userID string, msg *model.Message) error {
 	tokens, err := s.tRepo.GetListByUserID(ctx, userID)
 	if err != nil {
-		log.Errorf(ctx, "s.tRepo.GetListByUserID error: %s", err.Error())
+		log.Errorm(ctx, "s.tRepo.GetListByUserID", err)
 		return err
 	}
 	for _, token := range tokens {
@@ -44,7 +44,7 @@ func (s *sender) SendMessageByUserID(ctx context.Context, userID string, msg *mo
 		}
 		err = taskqueue.AddTaskByJSON(ctx, config.QueueSendToken, "/worker/send/token", src)
 		if err != nil {
-			log.Warningf(ctx, "taskqueue.NewJSONPostTask error: %s", err.Error())
+			log.Warningm(ctx, "taskqueue.AddTaskByJSON", err)
 			return err
 		}
 	}
@@ -59,7 +59,7 @@ func (s *sender) SendMessageByToken(ctx context.Context, token string, msg *mode
 	}
 	err := s.fRepo.SendMessage(ctx, token, msg)
 	if err != nil {
-		log.Warningf(ctx, "s.fRepo.SendMessage error: %s", err.Error())
+		log.Warningm(ctx, "s.fRepo.SendMessage", err)
 		return err
 	}
 	return nil

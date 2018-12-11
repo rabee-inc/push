@@ -24,7 +24,7 @@ func (r *tokenDatastore) GetListByUserID(ctx context.Context, userID string) ([]
 	q := b.NewQuery(config.KindPushToken).Filter("UserID =", userID).KeysOnly()
 	keys, err := b.GetAll(q, nil)
 	if err != nil {
-		log.Errorf(ctx, "b.GetAll error: %s", err.Error())
+		log.Errorm(ctx, "b.GetAll", err)
 		return []string{}, err
 	}
 	ids := []string{}
@@ -33,7 +33,7 @@ func (r *tokenDatastore) GetListByUserID(ctx context.Context, userID string) ([]
 	}
 	tokens, err := r.getMulti(ctx, ids)
 	if err != nil {
-		log.Errorf(ctx, "r.getMulti error: %s", err.Error())
+		log.Errorm(ctx, "r.getMulti", err)
 		return []string{}, err
 	}
 	return tokens, nil
@@ -56,7 +56,7 @@ func (r *tokenDatastore) getMulti(ctx context.Context, ids []string) ([]string, 
 				if err == datastore.ErrNoSuchEntity {
 					return nil
 				}
-				log.Errorf(ctx, "bt.Get error: %s, id: %s", err.Error(), dst.ID)
+				log.Errorm(ctx, "bt.Get", err)
 				return err
 			}
 			tokens = append(tokens, dst.Token)
@@ -65,7 +65,7 @@ func (r *tokenDatastore) getMulti(ctx context.Context, ids []string) ([]string, 
 	}
 	err = bt.Exec()
 	if err != nil {
-		log.Errorf(ctx, "bt.Exec error: %s", err.Error())
+		log.Errorm(ctx, "bt.Exec", err)
 		return tokens, err
 	}
 	return tokens, nil
@@ -88,7 +88,7 @@ func (r *tokenDatastore) Put(ctx context.Context, userID string, platform string
 	}
 	_, err = b.Put(src)
 	if err != nil {
-		log.Errorf(ctx, "b.Put error: %s", err.Error())
+		log.Errorm(ctx, "b.Put", err)
 		return err
 	}
 	return nil

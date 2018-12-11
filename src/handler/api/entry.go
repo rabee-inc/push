@@ -21,6 +21,10 @@ type entryParams struct {
 	Token    string `json:"token" validate:"required"`
 }
 
+type entryResponse struct {
+	Success bool `json:"success"`
+}
+
 // DecodeParams ... 受け取ったJSONパラメータをデコードする
 func (h *EntryHandler) DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error) {
 	var params entryParams
@@ -44,13 +48,11 @@ func (h *EntryHandler) Exec(ctx context.Context, method string, params interface
 
 	err := h.Svc.Token(ctx, ps.UserID, ps.Platform, ps.DeviceID, ps.Token)
 	if err != nil {
-		log.Errorf(ctx, "h.Svc.Token error: %s", err.Error())
+		log.Errorm(ctx, "h.Svc.Token", err)
 		return nil, err
 	}
 
-	return struct {
-		Success bool `json:"success"`
-	}{
+	return entryResponse{
 		Success: true,
 	}, nil
 }

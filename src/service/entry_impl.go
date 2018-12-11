@@ -14,7 +14,7 @@ type entry struct {
 func (s *entry) Token(ctx context.Context, userID string, platform string, deviceID string, token string) error {
 	err := s.repo.Put(ctx, userID, platform, deviceID, token)
 	if err != nil {
-		log.Errorf(ctx, "s.repo.Put error: %s", err.Error())
+		log.Errorm(ctx, "s.repo.Put", err)
 		return err
 	}
 	return nil

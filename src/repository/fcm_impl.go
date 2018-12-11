@@ -21,7 +21,7 @@ func (r *fcm) SendMessage(ctx context.Context, token string, src *model.Message)
 
 	cli, err := app.Messaging(ctx)
 	if err != nil {
-		log.Errorf(ctx, "app.Messaging error: %s", err.Error())
+		log.Errorm(ctx, "app.Messaging", err)
 		return err
 	}
 
@@ -59,7 +59,7 @@ func (r *fcm) SendMessage(ctx context.Context, token string, src *model.Message)
 
 	_, err = cli.Send(ctx, msg)
 	if err != nil {
-		log.Errorf(ctx, "cli.Send error: %s", err.Error())
+		log.Errorm(ctx, "cli.Send", err)
 		return err
 	}
 	return nil

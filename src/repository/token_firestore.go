@@ -18,7 +18,7 @@ func (r *tokenFirestore) GetListByUserID(ctx context.Context, userID string) ([]
 	var tokens []string
 	cli, err := cloudfirestore.NewClient(ctx)
 	if err != nil {
-		log.Errorf(ctx, "cloudfirestore.NewClient error: %s", err.Error())
+		log.Errorm(ctx, "cloudfirestore.NewClient", err)
 		return tokens, err
 	}
 	iter := cli.Collection(config.CollectionUsers).Doc(userID).Collection(config.CollectionTokens).Documents(ctx)
@@ -28,13 +28,13 @@ func (r *tokenFirestore) GetListByUserID(ctx context.Context, userID string) ([]
 			break
 		}
 		if err != nil {
-			log.Errorf(ctx, "cli.Get error: %s", err.Error())
+			log.Errorm(ctx, "iter.Next", err)
 			return tokens, err
 		}
 		token := &model.TokenFirestore{}
 		err = doc.DataTo(token)
 		if err != nil {
-			log.Errorf(ctx, "dsnp.DataTo error: %s", err.Error())
+			log.Errorm(ctx, "doc.DataTo", err)
 			return nil, err
 		}
 		tokens = append(tokens, token.Token)
@@ -52,12 +52,12 @@ func (r *tokenFirestore) Put(ctx context.Context, userID string, platform string
 	}
 	cli, err := cloudfirestore.NewClient(ctx)
 	if err != nil {
-		log.Errorf(ctx, "cloudfirestore.NewClient error: %s", err.Error())
+		log.Errorm(ctx, "cloudfirestore.NewClient", err)
 		return err
 	}
 	ret, err := cli.Collection(config.CollectionUsers).Doc(userID).Collection(config.CollectionTokens).Doc(docID).Set(ctx, src)
 	if err != nil {
-		log.Errorf(ctx, "cli.Set error: %s", err.Error())
+		log.Errorm(ctx, "cli.Set", err)
 		return err
 	}
 	log.Debugf(ctx, "UpdateTime: %s", ret.UpdateTime)
