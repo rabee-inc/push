@@ -15,7 +15,6 @@ init:
 	@mkdir -p deploy/appengine/staging
 	@mkdir -p deploy/appengine/production
 
-	# Push
 	$(call init,staging,push)
 	$(call init,production,push)
 
@@ -74,7 +73,6 @@ define init
 	@ln -s ../../../../appengine/config/queue.yaml deploy/appengine/$1/$2/queue.yaml
 	@ln -s ../../../../appengine/secret/env_variables_$1.yaml deploy/appengine/$1/$2/env_variables.yaml
 	@ln -s ../../../../appengine/secret/google_application_credentials_$1.json deploy/appengine/$1/$2/google_application_credentials.json
-	@ln -s ../../../../src deploy/appengine/$1/$2/src
 endef
 
 define run
