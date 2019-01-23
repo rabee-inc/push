@@ -13,10 +13,7 @@ init:
 	@mkdir -p deploy/appengine/local
 	@mkdir -p deploy/appengine/staging
 	@mkdir -p deploy/appengine/production
-
-	$(call init,local,push)
-	$(call init,staging,push)
-	$(call init,production,push)
+	${call apps}
 
 # [GAE] アプリの実行
 run:
