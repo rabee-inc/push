@@ -1,0 +1,9 @@
+env_variables:
+  # 環境
+  ENV: "production"
+
+  # 最小ログレベル
+  MIN_LOG_LEVEL: "INFO"
+
+  # 内部認証
+  INTERNAL_AUTH_TOKEN: ""

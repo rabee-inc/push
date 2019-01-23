@@ -1,6 +1,4 @@
 GOPHER = 'ʕ◔ϖ◔ʔ'
-STAGING_PROJECT_ID = 'stg-salontia-rabee-jp'
-PRODUCTION_PROJECT_ID = 'salontia-rabee-jp'
 
 .PHONY: hello init run deploy
 
@@ -12,18 +10,17 @@ init:
 	@rm -rf deploy
 	@mkdir -p deploy
 	@mkdir -p deploy/appengine
+	@mkdir -p deploy/appengine/local
 	@mkdir -p deploy/appengine/staging
 	@mkdir -p deploy/appengine/production
 
+	$(call init,local,push)
 	$(call init,staging,push)
 	$(call init,production,push)
 
 # [GAE] アプリの実行
 run:
-	${call run,staging,${app}}
-
-run-production:
-	${call run,production,${app}}
+	${call run,local,${app}}
 
 # [GAE] アプリのデプロイ
 deploy:
@@ -60,6 +57,13 @@ deploy-index:
 deploy-index-production:
 	${call deploy-config,production,index.yaml,${PRODUCTION_PROJECT_ID}}
 
+# [Firestore] 全データ削除
+firestore-delete:
+	${call firestore-delete,${LOCAL_PROJECT_ID}}
+
+firestore-delete-staging:
+	${call firestore-delete,${STAGING_PROJECT_ID}}
+
 # マクロ
 define init
 	@mkdir -p deploy/appengine/$1/$2
@@ -71,8 +75,8 @@ define init
 	@ln -s ../../../../appengine/config/dispatch_$1.yaml deploy/appengine/$1/$2/dispatch.yaml
 	@ln -s ../../../../appengine/config/index.yaml deploy/appengine/$1/$2/index.yaml
 	@ln -s ../../../../appengine/config/queue.yaml deploy/appengine/$1/$2/queue.yaml
-	@ln -s ../../../../appengine/secret/env_variables_$1.yaml deploy/appengine/$1/$2/env_variables.yaml
-	@ln -s ../../../../appengine/secret/google_application_credentials_$1.json deploy/appengine/$1/$2/google_application_credentials.json
+	@ln -s ../../../../appengine/env/values_$1.yaml deploy/appengine/$1/$2/values.yaml
+	@ln -s ../../../../appengine/env/credentials_$1.json deploy/appengine/$1/$2/credentials.json
 endef
 
 define run
@@ -80,9 +84,15 @@ define run
 endef
 
 define deploy
-	@gcloud app deploy -q deploy/appengine/$1/$2/app.yaml --project=$3
+	@gcloud app deploy -q deploy/appengine/$1/$2/app.yaml --project $3
 endef
 
 define deploy-config
-	@gcloud app deploy -q deploy/appengine/$1/push/$2 --project $3
+	@gcloud app deploy -q deploy/appengine/$1/api/$2 --project $3
 endef
+
+define firestore-delete
+	firebase firestore:delete --all-collections --project $1
+endef
+
+include env.mk

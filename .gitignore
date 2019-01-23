@@ -64,11 +64,10 @@ Session.vim
 
 #####=== Project specific settings ===#####
 
-# GCP
-env_variables_staging.yaml
-env_variables_production.yaml
-google_application_credentials_staging.json
-google_application_credentials_production.json
-
-# Beego
+# SKGO
+values_local.yaml
+values_staging.yaml
+values_production.yaml
+credentials_local.json
+env.mk
 /deploy/

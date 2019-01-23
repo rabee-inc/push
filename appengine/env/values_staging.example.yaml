@@ -5,9 +5,6 @@ env_variables:
   # 最小ログレベル
   MIN_LOG_LEVEL: "DEBUG"
 
-  # GCPサービス接続の資格情報
-  GOOGLE_APPLICATION_CREDENTIALS: "./google_application_credentials.json"
-  
   # 内部認証
   INTERNAL_AUTH_TOKEN: ""
 
