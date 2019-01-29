@@ -4,6 +4,11 @@ iOS, Android, Webにプッシュ通知を送信するサーバーです。
 
 # セットアップ
 
+## 準備
+```bash
+dep ensure
+```
+
 ## 実行
 ```bash
 make run app=push
