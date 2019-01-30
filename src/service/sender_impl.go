@@ -16,9 +16,10 @@ type sender struct {
 	fRepo repository.Fcm
 }
 
-func (s *sender) SendMessageByUserIDs(ctx context.Context, userIDs []string, msg *model.Message) error {
+// MessageByUserIDs ... メッセージを複数のユーザーIDに対して送信する
+func (s *sender) MessageByUserIDs(ctx context.Context, userIDs []string, msg *model.Message) error {
 	for _, userID := range userIDs {
-		src := &model.SendUserID{
+		src := &model.TaskQueueParamSendUserID{
 			UserID:  userID,
 			Message: msg,
 		}
@@ -31,14 +32,15 @@ func (s *sender) SendMessageByUserIDs(ctx context.Context, userIDs []string, msg
 	return nil
 }
 
-func (s *sender) SendMessageByUserID(ctx context.Context, userID string, msg *model.Message) error {
+// MessageByUserID ... メッセージをユーザーIDに対して送信する
+func (s *sender) MessageByUserID(ctx context.Context, userID string, msg *model.Message) error {
 	tokens, err := s.tRepo.GetListByUserID(ctx, userID)
 	if err != nil {
 		log.Errorm(ctx, "s.tRepo.GetListByUserID", err)
 		return err
 	}
 	for _, token := range tokens {
-		src := &model.SendToken{
+		src := &model.TaskQueueParamSendToken{
 			Token:   token,
 			Message: msg,
 		}
@@ -51,7 +53,8 @@ func (s *sender) SendMessageByUserID(ctx context.Context, userID string, msg *mo
 	return nil
 }
 
-func (s *sender) SendMessageByToken(ctx context.Context, token string, msg *model.Message) error {
+// MessageByToken ... メッセージをトークンに対して送信する
+func (s *sender) MessageByToken(ctx context.Context, token string, msg *model.Message) error {
 	if token == "" {
 		err := fmt.Errorf("token is empty")
 		log.Errorf(ctx, err.Error())
@@ -65,7 +68,7 @@ func (s *sender) SendMessageByToken(ctx context.Context, token string, msg *mode
 	return nil
 }
 
-// NewSender ... Senderを作成する
+// NewSender ... サービスを作成する
 func NewSender(tRepo repository.Token, fRepo repository.Fcm) Sender {
 	return &sender{
 		tRepo: tRepo,

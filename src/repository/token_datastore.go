@@ -15,6 +15,7 @@ import (
 type tokenDatastore struct {
 }
 
+// GetListByUserID ... ユーザーIDに紐づくトークンリストを取得する
 func (r *tokenDatastore) GetListByUserID(ctx context.Context, userID string) ([]string, error) {
 	b, err := boom.FromContext(ctx)
 	if err != nil {
@@ -71,6 +72,7 @@ func (r *tokenDatastore) getMulti(ctx context.Context, ids []string) ([]string, 
 	return tokens, nil
 }
 
+// Put ... トークンを登録する
 func (r *tokenDatastore) Put(ctx context.Context, userID string, platform string, deviceID string, token string) error {
 	id := model.GeneratePushTokenKey(userID, platform, deviceID)
 	src := &model.PushTokenDatastore{
@@ -94,7 +96,7 @@ func (r *tokenDatastore) Put(ctx context.Context, userID string, platform string
 	return nil
 }
 
-// NewTokenDatastore ... TokenDatastoreを作成する
+// NewTokenDatastore ... リポジトリを作成する
 func NewTokenDatastore() Token {
 	return &tokenDatastore{}
 }

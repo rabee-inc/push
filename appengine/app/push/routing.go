@@ -3,9 +3,9 @@ package main
 import (
 	"net/http"
 
+	"github.com/go-chi/chi"
 	"github.com/rabee-inc/push/src/handler"
 	"github.com/rabee-inc/push/src/lib/log"
-	"github.com/go-chi/chi"
 )
 
 // Routing ... ルーティング設定

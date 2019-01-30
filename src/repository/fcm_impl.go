@@ -12,6 +12,7 @@ import (
 type fcm struct {
 }
 
+// SendMessage ... FCMにプッシュ通知送信を登録する
 func (r *fcm) SendMessage(ctx context.Context, token string, src *model.Message) error {
 	app, err := firebase.NewApp(ctx, nil)
 	if err != nil {
@@ -65,7 +66,7 @@ func (r *fcm) SendMessage(ctx context.Context, token string, src *model.Message)
 	return nil
 }
 
-// NewFcm ... Fcmを作成する
+// NewFcm ... リポジトリを作成する
 func NewFcm() Fcm {
 	return &fcm{}
 }

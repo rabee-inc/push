@@ -9,7 +9,7 @@ import (
 	"github.com/rabee-inc/push/src/lib/taskqueue"
 	"github.com/rabee-inc/push/src/model"
 	"github.com/rabee-inc/push/src/service"
-	"github.com/go-playground/validator"
+	"gopkg.in/go-playground/validator.v9"
 )
 
 // SendHandler ...  送信のハンドラ
@@ -19,7 +19,7 @@ type SendHandler struct {
 
 type sendParams struct {
 	UserIDs []string       `json:"user_ids" validate:"required"`
-	Message *model.Message `json:"message" validate:"required"`
+	Message *model.Message `json:"message"  validate:"required"`
 }
 
 type sendResponse struct {
@@ -46,7 +46,7 @@ func (h *SendHandler) DecodeParams(ctx context.Context, msg *json.RawMessage) (i
 func (h *SendHandler) Exec(ctx context.Context, method string, params interface{}) (interface{}, error) {
 	ps := params.(sendParams)
 
-	src := &model.SendUserIDs{
+	src := &model.TaskQueueParamSendUserIDs{
 		UserIDs: ps.UserIDs,
 		Message: ps.Message,
 	}
