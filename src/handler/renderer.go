@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/aikizoku/push/src/lib/log"
-	"github.com/aikizoku/push/src/model"
+	"github.com/rabee-inc/push/src/lib/log"
+	"github.com/rabee-inc/push/src/model"
 	"github.com/unrolled/render"
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"

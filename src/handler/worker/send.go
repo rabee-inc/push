@@ -3,9 +3,9 @@ package worker
 import (
 	"net/http"
 
-	"github.com/aikizoku/push/src/handler"
-	"github.com/aikizoku/push/src/model"
-	"github.com/aikizoku/push/src/service"
+	"github.com/rabee-inc/push/src/handler"
+	"github.com/rabee-inc/push/src/model"
+	"github.com/rabee-inc/push/src/service"
 )
 
 // SendHandler ... サンプルのハンドラ定義

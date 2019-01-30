@@ -3,7 +3,7 @@ package model
 import (
 	"fmt"
 
-	"github.com/aikizoku/push/src/lib/util"
+	"github.com/rabee-inc/push/src/lib/util"
 )
 
 // PushTokenDatastore ... トークン(DataStore)

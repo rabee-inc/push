@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"github.com/aikizoku/push/src/model"
+	"github.com/rabee-inc/push/src/model"
 )
 
 // Sender ... 通知を送信する

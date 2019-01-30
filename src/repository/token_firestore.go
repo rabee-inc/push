@@ -3,11 +3,11 @@ package repository
 import (
 	"context"
 
-	"github.com/aikizoku/push/src/config"
-	"github.com/aikizoku/push/src/lib/cloudfirestore"
-	"github.com/aikizoku/push/src/lib/log"
-	"github.com/aikizoku/push/src/lib/util"
-	"github.com/aikizoku/push/src/model"
+	"github.com/rabee-inc/push/src/config"
+	"github.com/rabee-inc/push/src/lib/cloudfirestore"
+	"github.com/rabee-inc/push/src/lib/log"
+	"github.com/rabee-inc/push/src/lib/util"
+	"github.com/rabee-inc/push/src/model"
 	"google.golang.org/api/iterator"
 )
 

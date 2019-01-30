@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/aikizoku/push/src/handler/api"
-	"github.com/aikizoku/push/src/handler/worker"
-	"github.com/aikizoku/push/src/lib/internalauth"
-	"github.com/aikizoku/push/src/lib/jsonrpc2"
-	"github.com/aikizoku/push/src/repository"
-	"github.com/aikizoku/push/src/service"
+	"github.com/rabee-inc/push/src/handler/api"
+	"github.com/rabee-inc/push/src/handler/worker"
+	"github.com/rabee-inc/push/src/lib/internalauth"
+	"github.com/rabee-inc/push/src/lib/jsonrpc2"
+	"github.com/rabee-inc/push/src/repository"
+	"github.com/rabee-inc/push/src/service"
 )
 
 // Dependency ... 依存性

@@ -5,7 +5,7 @@ import (
 
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
-	"github.com/aikizoku/push/src/lib/log"
+	"github.com/rabee-inc/push/src/lib/log"
 )
 
 // NewClient ... Firestoreのクライアントを取得する

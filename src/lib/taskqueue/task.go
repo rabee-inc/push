@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/aikizoku/push/src/lib/internalauth"
+	"github.com/rabee-inc/push/src/lib/internalauth"
 
-	"github.com/aikizoku/push/src/lib/log"
+	"github.com/rabee-inc/push/src/lib/log"
 	"google.golang.org/appengine/taskqueue"
 )
 

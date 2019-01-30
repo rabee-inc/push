@@ -5,8 +5,8 @@ import (
 
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/messaging"
-	"github.com/aikizoku/push/src/lib/log"
-	"github.com/aikizoku/push/src/model"
+	"github.com/rabee-inc/push/src/lib/log"
+	"github.com/rabee-inc/push/src/model"
 )
 
 type fcm struct {

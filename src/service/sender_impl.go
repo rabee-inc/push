@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/aikizoku/push/src/config"
-	"github.com/aikizoku/push/src/lib/log"
-	"github.com/aikizoku/push/src/lib/taskqueue"
-	"github.com/aikizoku/push/src/model"
-	"github.com/aikizoku/push/src/repository"
+	"github.com/rabee-inc/push/src/config"
+	"github.com/rabee-inc/push/src/lib/log"
+	"github.com/rabee-inc/push/src/lib/taskqueue"
+	"github.com/rabee-inc/push/src/model"
+	"github.com/rabee-inc/push/src/repository"
 )
 
 type sender struct {

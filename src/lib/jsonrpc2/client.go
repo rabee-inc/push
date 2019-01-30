@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/aikizoku/push/src/lib/httpclient"
-	"github.com/aikizoku/push/src/lib/log"
+	"github.com/rabee-inc/push/src/lib/httpclient"
+	"github.com/rabee-inc/push/src/lib/log"
 )
 
 // Client ... JSONRPC2のリクエストを行う

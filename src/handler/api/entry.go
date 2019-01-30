@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/aikizoku/push/src/lib/log"
-	"github.com/aikizoku/push/src/service"
+	"github.com/rabee-inc/push/src/lib/log"
+	"github.com/rabee-inc/push/src/service"
 	"github.com/go-playground/validator"
 )
 
