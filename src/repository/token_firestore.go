@@ -14,6 +14,7 @@ import (
 type tokenFirestore struct {
 }
 
+// GetListByUserID ... ユーザーIDに紐づくトークンリストを取得する
 func (r *tokenFirestore) GetListByUserID(ctx context.Context, userID string) ([]string, error) {
 	var tokens []string
 	cli, err := cloudfirestore.NewClient(ctx)
@@ -42,6 +43,7 @@ func (r *tokenFirestore) GetListByUserID(ctx context.Context, userID string) ([]
 	return tokens, nil
 }
 
+// Put ... トークンを登録する
 func (r *tokenFirestore) Put(ctx context.Context, userID string, platform string, deviceID string, token string) error {
 	docID := model.GenerateTokenDocID(platform, deviceID)
 	src := &model.TokenFirestore{
@@ -64,7 +66,7 @@ func (r *tokenFirestore) Put(ctx context.Context, userID string, platform string
 	return nil
 }
 
-// NewTokenFirestore ... TokenFirestoreを作成する
+// NewTokenFirestore ... リポジトリを作成する
 func NewTokenFirestore() Token {
 	return &tokenFirestore{}
 }

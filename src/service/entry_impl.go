@@ -11,6 +11,7 @@ type entry struct {
 	repo repository.Token
 }
 
+// Token ... 各プラットフォームで取得したプッシュ通知トークンを登録する
 func (s *entry) Token(ctx context.Context, userID string, platform string, deviceID string, token string) error {
 	err := s.repo.Put(ctx, userID, platform, deviceID, token)
 	if err != nil {
@@ -20,7 +21,7 @@ func (s *entry) Token(ctx context.Context, userID string, platform string, devic
 	return nil
 }
 
-// NewEntry ... Entryを作成する
+// NewEntry ... サービスを作成する
 func NewEntry(repo repository.Token) Entry {
 	return &entry{
 		repo: repo,

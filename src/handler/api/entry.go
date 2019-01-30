@@ -6,7 +6,7 @@ import (
 
 	"github.com/rabee-inc/push/src/lib/log"
 	"github.com/rabee-inc/push/src/service"
-	"github.com/go-playground/validator"
+	"gopkg.in/go-playground/validator.v9"
 )
 
 // EntryHandler ... エントリーのハンドラ
@@ -15,10 +15,10 @@ type EntryHandler struct {
 }
 
 type entryParams struct {
-	UserID   string `json:"user_id" validate:"required"`
-	Platform string `json:"platform" validate:"required"`
+	UserID   string `json:"user_id"   validate:"required"`
+	Platform string `json:"platform"  validate:"required"`
 	DeviceID string `json:"device_id"`
-	Token    string `json:"token" validate:"required"`
+	Token    string `json:"token"     validate:"required"`
 }
 
 type entryResponse struct {

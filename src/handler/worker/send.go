@@ -16,16 +16,16 @@ type SendHandler struct {
 // SendUserIDs ... UserIDsからUserIDに分割してプッシュ通知を送信する
 func (h *SendHandler) SendUserIDs(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	var param model.SendUserIDs
+	var param model.TaskQueueParamSendUserIDs
 	err := handler.GetJSON(r, &param)
 	if err != nil {
 		handler.HandleError(ctx, w, http.StatusBadRequest, "handler.GetJSON: %s", err.Error())
 		return
 	}
 
-	err = h.Svc.SendMessageByUserIDs(ctx, param.UserIDs, param.Message)
+	err = h.Svc.MessageByUserIDs(ctx, param.UserIDs, param.Message)
 	if err != nil {
-		handler.HandleError(ctx, w, http.StatusBadRequest, "h.Svc.SendMessageByUserIDs: %s", err.Error())
+		handler.HandleError(ctx, w, http.StatusBadRequest, "h.Svc.MessageByUserIDs: %s", err.Error())
 		return
 	}
 	handler.RenderSuccess(w)
@@ -34,15 +34,15 @@ func (h *SendHandler) SendUserIDs(w http.ResponseWriter, r *http.Request) {
 // SendUserID ... UserIDからTokenを引いてプッシュ通知を送信する
 func (h *SendHandler) SendUserID(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	var param model.SendUserID
+	var param model.TaskQueueParamSendUserID
 	err := handler.GetJSON(r, &param)
 	if err != nil {
 		handler.HandleError(ctx, w, http.StatusBadRequest, "handler.GetJSON: %s", err.Error())
 		return
 	}
-	err = h.Svc.SendMessageByUserID(ctx, param.UserID, param.Message)
+	err = h.Svc.MessageByUserID(ctx, param.UserID, param.Message)
 	if err != nil {
-		handler.HandleError(ctx, w, http.StatusBadRequest, "h.Svc.SendMessageByUserID: %s", err.Error())
+		handler.HandleError(ctx, w, http.StatusBadRequest, "h.Svc.MessageByUserID: %s", err.Error())
 		return
 	}
 	handler.RenderSuccess(w)
@@ -51,15 +51,15 @@ func (h *SendHandler) SendUserID(w http.ResponseWriter, r *http.Request) {
 // SendToken ... Tokenでプッシュ通知を送信する
 func (h *SendHandler) SendToken(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	var param model.SendToken
+	var param model.TaskQueueParamSendToken
 	err := handler.GetJSON(r, &param)
 	if err != nil {
 		handler.HandleError(ctx, w, http.StatusBadRequest, "handler.GetJSON: %s", err.Error())
 		return
 	}
-	err = h.Svc.SendMessageByToken(ctx, param.Token, param.Message)
+	err = h.Svc.MessageByToken(ctx, param.Token, param.Message)
 	if err != nil {
-		handler.HandleError(ctx, w, http.StatusBadRequest, "h.Svc.SendMessageByToken: %s", err.Error())
+		handler.HandleError(ctx, w, http.StatusBadRequest, "h.Svc.MessageByToken: %s", err.Error())
 		return
 	}
 	handler.RenderSuccess(w)

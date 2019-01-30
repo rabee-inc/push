@@ -1,19 +1,19 @@
 package model
 
-// SendUserIDs ... UserIDsでプッシュ通知を送信するパラメータ
-type SendUserIDs struct {
+// TaskQueueParamSendUserIDs ... UserIDsでプッシュ通知を送信するパラメータ
+type TaskQueueParamSendUserIDs struct {
 	UserIDs []string `json:"user_ids"`
 	Message *Message `json:"message"`
 }
 
-// SendUserID ... UserIDでプッシュ通知を送信するパラメータ
-type SendUserID struct {
+// TaskQueueParamSendUserID ... UserIDでプッシュ通知を送信するパラメータ
+type TaskQueueParamSendUserID struct {
 	UserID  string   `json:"user_id"`
 	Message *Message `json:"message"`
 }
 
-// SendToken ... Tokenでプッシュ通知を送信するパラメータ
-type SendToken struct {
+// TaskQueueParamSendToken ... Tokenでプッシュ通知を送信するパラメータ
+type TaskQueueParamSendToken struct {
 	Token   string   `json:"token"`
 	Message *Message `json:"message"`
 }
