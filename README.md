@@ -22,6 +22,12 @@ iOS, Android, Webにプッシュ通知を送信するサーバーです。
 
 ## 準備
 ```bash
+cp env.example.mk env.mk
+cp appengine/env/credentials_local.example.json appengine/env/credentials_local.json
+cp appengine/env/values_local.example.yaml appengine/env/values_local.yaml
+cp appengine/env/values_staging.example.yaml appengine/env/values_staging.yaml
+cp appengine/env/values_production.example.yaml appengine/env/values_production.yaml
+
 dep ensure
 ```
 
