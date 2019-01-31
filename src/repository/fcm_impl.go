@@ -26,6 +26,18 @@ func (r *fcm) SendMessage(ctx context.Context, token string, src *model.Message)
 		return err
 	}
 
+	if src.IOS == nil {
+		src.IOS = &model.MessageIOS{
+			Badge: 1,
+		}
+	}
+	if src.Android == nil {
+		src.Android = &model.MessageAndroid{}
+	}
+	if src.Web == nil {
+		src.Web = &model.MessageWeb{}
+	}
+
 	msg := &messaging.Message{
 		Token: token,
 		Notification: &messaging.Notification{
