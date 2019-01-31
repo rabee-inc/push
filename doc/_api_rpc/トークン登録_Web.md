@@ -22,8 +22,8 @@ POST
 /api/rpc
 
 【Headers】
-Authorization: XXXXXXXXXX
 Content-Type: application/json
+Authorization: XXXXXXXXXX
 
 
 【Params】

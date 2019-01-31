@@ -47,9 +47,9 @@ func (s *normal) Send() {
 		"message": map[string]interface{}{
 			"title": "テストタイトル",
 			"body":  "テストボディ",
-			"data": map[string]interface{}{
+			"data": map[string]string{
 				"hoge": "任意のデータ",
-				"fuga": 12345,
+				"fuga": "12345",
 			},
 			"ios": map[string]interface{}{
 				"badge": 1,
