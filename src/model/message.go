@@ -12,8 +12,8 @@ type Message struct {
 
 // MessageIOS ... プッシュ通知メッセージ(iOS独自部分)
 type MessageIOS struct {
-	Sound string `json:"sound,omitempty"`
 	Badge int    `json:"badge,omitempty"`
+	Sound string `json:"sound,omitempty"`
 }
 
 // MessageAndroid ... プッシュ通知メッセージ(Android独自部分)
