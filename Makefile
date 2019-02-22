@@ -85,7 +85,7 @@ define deploy
 endef
 
 define deploy-config
-	@gcloud app deploy -q deploy/appengine/$1/api/$2 --project $3
+	@gcloud app deploy -q deploy/appengine/$1/push/$2 --project $3
 endef
 
 define firestore-delete
