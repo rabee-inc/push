@@ -1,6 +1,10 @@
 package main
 
 import (
+	"os"
+
+	"github.com/rabee-inc/push/src/lib/cloudfirestore"
+
 	"github.com/rabee-inc/push/src/handler/api"
 	"github.com/rabee-inc/push/src/handler/worker"
 	"github.com/rabee-inc/push/src/lib/internalauth"
@@ -20,9 +24,19 @@ type Dependency struct {
 func (d *Dependency) Inject() {
 	// Config
 	iaToken := internalauth.GetToken()
+	crePath := os.Getenv("GOOGLE_APPLICATION_CREDENTIALS")
+	if crePath == "" {
+		panic("no config GOOGLE_APPLICATION_CREDENTIALS")
+	}
+
+	// Client
+	fCli, err := cloudfirestore.NewClient(crePath)
+	if err != nil {
+		panic(err.Error())
+	}
 
 	// Repository
-	tRepo := repository.NewTokenFirestore()
+	tRepo := repository.NewTokenFirestore(fCli)
 	fRepo := repository.NewFcm()
 
 	// Service

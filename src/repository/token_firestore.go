@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 
+	"cloud.google.com/go/firestore"
 	"github.com/rabee-inc/push/src/config"
-	"github.com/rabee-inc/push/src/lib/cloudfirestore"
 	"github.com/rabee-inc/push/src/lib/log"
 	"github.com/rabee-inc/push/src/lib/util"
 	"github.com/rabee-inc/push/src/model"
@@ -12,17 +12,13 @@ import (
 )
 
 type tokenFirestore struct {
+	client *firestore.Client
 }
 
 // GetListByUserID ... ユーザーIDに紐づくトークンリストを取得する
 func (r *tokenFirestore) GetListByUserID(ctx context.Context, userID string) ([]string, error) {
 	var tokens []string
-	cli, err := cloudfirestore.NewClient(ctx)
-	if err != nil {
-		log.Errorm(ctx, "cloudfirestore.NewClient", err)
-		return tokens, err
-	}
-	iter := cli.Collection(config.CollectionUsers).Doc(userID).Collection(config.CollectionTokens).Documents(ctx)
+	iter := r.client.Collection(config.CollectionUsers).Doc(userID).Collection(config.CollectionTokens).Documents(ctx)
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -52,14 +48,9 @@ func (r *tokenFirestore) Put(ctx context.Context, userID string, platform string
 		Token:     token,
 		CreatedAt: util.TimeNowUnix(),
 	}
-	cli, err := cloudfirestore.NewClient(ctx)
+	ret, err := r.client.Collection(config.CollectionUsers).Doc(userID).Collection(config.CollectionTokens).Doc(docID).Set(ctx, src)
 	if err != nil {
-		log.Errorm(ctx, "cloudfirestore.NewClient", err)
-		return err
-	}
-	ret, err := cli.Collection(config.CollectionUsers).Doc(userID).Collection(config.CollectionTokens).Doc(docID).Set(ctx, src)
-	if err != nil {
-		log.Errorm(ctx, "cli.Set", err)
+		log.Errorm(ctx, "r.client.Set", err)
 		return err
 	}
 	log.Debugf(ctx, "UpdateTime: %s", ret.UpdateTime)
@@ -67,6 +58,8 @@ func (r *tokenFirestore) Put(ctx context.Context, userID string, platform string
 }
 
 // NewTokenFirestore ... リポジトリを作成する
-func NewTokenFirestore() Token {
-	return &tokenFirestore{}
+func NewTokenFirestore(client *firestore.Client) Token {
+	return &tokenFirestore{
+		client: client,
+	}
 }
