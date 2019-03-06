@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/messaging"
@@ -10,6 +11,7 @@ import (
 )
 
 type fcm struct {
+	svrKey string
 }
 
 // SendMessage ... FCMにプッシュ通知送信を登録する
@@ -64,6 +66,10 @@ func (r *fcm) SendMessage(ctx context.Context, token string, src *model.Message)
 			},
 		},
 		Webpush: &messaging.WebpushConfig{
+			Headers: map[string]string{
+				"Content-Type":  "application/json",
+				"Authorization": fmt.Sprintf("Bearer %s", r.svrKey),
+			},
 			Notification: &messaging.WebpushNotification{
 				Icon: src.Web.Icon,
 			},
@@ -79,6 +85,8 @@ func (r *fcm) SendMessage(ctx context.Context, token string, src *model.Message)
 }
 
 // NewFcm ... リポジトリを作成する
-func NewFcm() Fcm {
-	return &fcm{}
+func NewFcm(svrKey string) Fcm {
+	return &fcm{
+		svrKey: svrKey,
+	}
 }

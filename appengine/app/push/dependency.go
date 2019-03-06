@@ -28,6 +28,10 @@ func (d *Dependency) Inject() {
 	if crePath == "" {
 		panic("no config GOOGLE_APPLICATION_CREDENTIALS")
 	}
+	svrKey := os.Getenv("FCM_SERVER_KEY")
+	if svrKey == "" {
+		panic("no config FCM_SERVER_KEY")
+	}
 
 	// Client
 	fCli, err := cloudfirestore.NewClient(crePath)
@@ -37,7 +41,7 @@ func (d *Dependency) Inject() {
 
 	// Repository
 	tRepo := repository.NewTokenFirestore(fCli)
-	fRepo := repository.NewFcm()
+	fRepo := repository.NewFcm(svrKey)
 
 	// Service
 	eSvc := service.NewEntry(tRepo)
@@ -45,6 +49,8 @@ func (d *Dependency) Inject() {
 
 	// Middleware
 	d.InternalAuth = internalauth.NewMiddleware(iaToken)
+
+	// JSONRPC2
 	d.JSONRPC2 = jsonrpc2.NewMiddleware()
 	d.JSONRPC2.Register("entry", api.NewEntryHandler(eSvc))
 	d.JSONRPC2.Register("send", api.NewSendHandler(sSvc))

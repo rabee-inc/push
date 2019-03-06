@@ -2,9 +2,9 @@ package config
 
 const (
 	// CollectionUsers ... FirestoreのUsersコレクション
-	CollectionUsers = "PushUsers"
+	CollectionUsers = "push_users"
 	// CollectionTokens ... FirestoreのTokensコレクション
-	CollectionTokens = "Tokens"
+	CollectionTokens = "tokens"
 
 	// KindPushToken ... DatastoreのPushTokenカインド
 	KindPushToken = "PushTokenDatastore"

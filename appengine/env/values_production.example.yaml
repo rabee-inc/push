@@ -10,3 +10,6 @@ env_variables:
 
   # 内部認証
   INTERNAL_AUTH_TOKEN: ""
+
+  # FCMサーバーキー
+  FCM_SERVER_KEY: ""
