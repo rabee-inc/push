@@ -96,6 +96,25 @@ func (r *tokenDatastore) Put(ctx context.Context, userID string, platform string
 	return nil
 }
 
+// Delete ... トークンを削除する
+func (r *tokenDatastore) Delete(ctx context.Context, userID string, platform string, deviceID string) error {
+	id := model.GeneratePushTokenKey(userID, platform, deviceID)
+	src := &model.PushTokenDatastore{
+		ID: id,
+	}
+	b, err := boom.FromContext(ctx)
+	if err != nil {
+		log.Errorm(ctx, "boom.FromContext", err)
+		return err
+	}
+	err = b.Delete(src)
+	if err != nil {
+		log.Errorm(ctx, "b.Delete", err)
+		return err
+	}
+	return nil
+}
+
 // NewTokenDatastore ... リポジトリを作成する
 func NewTokenDatastore() Token {
 	return &tokenDatastore{}

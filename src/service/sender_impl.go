@@ -54,10 +54,6 @@ func (s *sender) MessageByUserID(ctx context.Context, userID string, msg *model.
 
 // MessageByToken ... メッセージをトークンに対して送信する
 func (s *sender) MessageByToken(ctx context.Context, token string, msg *model.Message) error {
-	if token == "" {
-		err := log.Errore(ctx, "token is empty")
-		return err
-	}
 	err := s.fRepo.SendMessage(ctx, token, msg)
 	if err != nil {
 		log.Warningm(ctx, "s.fRepo.SendMessage", err)

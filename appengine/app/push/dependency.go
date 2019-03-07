@@ -44,7 +44,7 @@ func (d *Dependency) Inject() {
 	fRepo := repository.NewFcm(svrKey)
 
 	// Service
-	eSvc := service.NewEntry(tRepo)
+	rSvc := service.NewRegister(tRepo)
 	sSvc := service.NewSender(tRepo, fRepo)
 
 	// Middleware
@@ -52,7 +52,8 @@ func (d *Dependency) Inject() {
 
 	// JSONRPC2
 	d.JSONRPC2 = jsonrpc2.NewMiddleware()
-	d.JSONRPC2.Register("entry", api.NewEntryHandler(eSvc))
+	d.JSONRPC2.Register("entry", api.NewEntryHandler(rSvc))
+	d.JSONRPC2.Register("leave", api.NewLeaveHandler(rSvc))
 	d.JSONRPC2.Register("send", api.NewSendHandler(sSvc))
 
 	// Handler

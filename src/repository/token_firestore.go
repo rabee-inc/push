@@ -18,7 +18,11 @@ type tokenFirestore struct {
 // GetListByUserID ... ユーザーIDに紐づくトークンリストを取得する
 func (r *tokenFirestore) GetListByUserID(ctx context.Context, userID string) ([]string, error) {
 	var tokens []string
-	iter := r.client.Collection(config.CollectionUsers).Doc(userID).Collection(config.CollectionTokens).Documents(ctx)
+	iter := r.client.
+		Collection(config.CollectionUsers).
+		Doc(userID).
+		Collection(config.CollectionTokens).
+		Documents(ctx)
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -48,12 +52,32 @@ func (r *tokenFirestore) Put(ctx context.Context, userID string, platform string
 		Token:     token,
 		CreatedAt: util.TimeNowUnix(),
 	}
-	ret, err := r.client.Collection(config.CollectionUsers).Doc(userID).Collection(config.CollectionTokens).Doc(docID).Set(ctx, src)
+	_, err := r.client.
+		Collection(config.CollectionUsers).
+		Doc(userID).
+		Collection(config.CollectionTokens).
+		Doc(docID).
+		Set(ctx, src)
 	if err != nil {
 		log.Errorm(ctx, "r.client.Set", err)
 		return err
 	}
-	log.Debugf(ctx, "UpdateTime: %s", ret.UpdateTime)
+	return nil
+}
+
+// Delete ... トークンを削除する
+func (r *tokenFirestore) Delete(ctx context.Context, userID string, platform string, deviceID string) error {
+	docID := model.GenerateTokenDocID(platform, deviceID)
+	_, err := r.client.
+		Collection(config.CollectionUsers).
+		Doc(userID).
+		Collection(config.CollectionTokens).
+		Doc(docID).
+		Delete(ctx)
+	if err != nil {
+		log.Errorm(ctx, "r.client.Delete", err)
+		return err
+	}
 	return nil
 }
 
