@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 
 	"github.com/rabee-inc/push/command/common"
 )
@@ -10,7 +9,6 @@ import (
 func main() {
 	var (
 		env = flag.String("env", "local", "environment")
-		app = flag.String("app", "api", "appengine application name")
 	)
 	flag.Parse()
 
@@ -21,11 +19,10 @@ func main() {
 	pIDs := common.GetProjectIDs(e)
 
 	common.ExecCommand(
-		"gcloud",
-		"app",
-		"deploy",
-		"-q",
-		fmt.Sprintf("deploy/appengine/%s/%s/app.yaml", *env, *app),
+		"firebase",
+		"firestore:delete",
+		"-y",
+		"--all-collections",
 		"--project",
 		pIDs.GetByEnv(*env),
 	)

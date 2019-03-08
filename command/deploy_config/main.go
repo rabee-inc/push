@@ -10,7 +10,7 @@ import (
 func main() {
 	var (
 		env = flag.String("env", "local", "environment")
-		app = flag.String("app", "api", "appengine application name")
+		cfg = flag.String("cfg", "", "appengine config name")
 	)
 	flag.Parse()
 
@@ -25,7 +25,7 @@ func main() {
 		"app",
 		"deploy",
 		"-q",
-		fmt.Sprintf("deploy/appengine/%s/%s/app.yaml", *env, *app),
+		fmt.Sprintf("deploy/appengine/%s/%s.yaml", *env, *cfg),
 		"--project",
 		pIDs.GetByEnv(*env),
 	)

@@ -25,46 +25,56 @@ run-production:
 # [GAE] アプリのデプロイ
 deploy:
 	${call init}
-	${call deploy,staging,${app},${STAGING_PROJECT_ID}}
+	${call deploy,staging,${app}}
 
 deploy-production:
 	${call init}
-	${call deploy,production,${app},${PRODUCTION_PROJECT_ID}}
+	${call deploy,production,${app}}
 
 # [GAE] ディスパッチ設定をデプロイ
 deploy-dispatch:
-	${call deploy-config,staging,dispatch.yaml,${STAGING_PROJECT_ID}}
+	${call init}
+	${call deploy-config,staging,dispatch}
 
 deploy-dispatch-production:
-	${call deploy-config,production,dispatch.yaml,${PRODUCTION_PROJECT_ID}}
+	${call init}
+	${call deploy-config,production,dispatch}
 
 # [GAE] Cron設定をデプロイ
 deploy-cron:
-	${call deploy-config,staging,cron.yaml,${STAGING_PROJECT_ID}}
+	${call init}
+	${call deploy-config,staging,cron}
 
 deploy-cron-production:
-	${call deploy-config,production,cron.yaml,${PRODUCTION_PROJECT_ID}}
+	${call init}
+	${call deploy-config,production,cron}
 
 # [GAE] Queue設定をデプロイ
 deploy-queue:
-	${call deploy-config,staging,queue.yaml,${STAGING_PROJECT_ID}}
+	${call init}
+	${call deploy-config,staging,queue}
 
 deploy-queue-production:
-	${call deploy-config,production,queue.yaml,${PRODUCTION_PROJECT_ID}}
+	${call init}
+	${call deploy-config,production,queue}
 
 # [GAE] Datastoreの複合インデックス定義をデプロイ
 deploy-index:
-	${call deploy-config,staging,index.yaml,${STAGING_PROJECT_ID}}
+	${call init}
+	${call deploy-config,staging,index}
 
 deploy-index-production:
-	${call deploy-config,production,index.yaml,${PRODUCTION_PROJECT_ID}}
+	${call init}
+	${call deploy-config,production,index}
 
 # [Firestore] 全データ削除
 firestore-delete:
-	${call firestore-delete,${LOCAL_PROJECT_ID}}
+	${call init}
+	${call firestore-delete,local}
 
 firestore-delete-staging:
-	${call firestore-delete,${STAGING_PROJECT_ID}}
+	${call init}
+	${call firestore-delete,staging}
 
 # マクロ
 define init
@@ -76,15 +86,13 @@ define run
 endef
 
 define deploy
-	@gcloud app deploy -q deploy/appengine/$1/$2/app.yaml --project $3
+	@go run ./command/deploy/main.go -env $1 -app $2
 endef
 
 define deploy-config
-	@gcloud app deploy -q deploy/appengine/$1/push/$2 --project $3
+	@go run ./command/deploy_config/main.go -env $1 -cfg $2
 endef
 
 define firestore-delete
-	firebase firestore:delete --all-collections --project $1
+	@go run ./command/firestore_delete/main.go -env $1
 endef
-
-include deploy/env.mk

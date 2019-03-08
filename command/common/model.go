@@ -1,5 +1,9 @@
 package common
 
+import (
+	"fmt"
+)
+
 // Env ... 環境変数ファイルの定義
 type Env struct {
 	Apps        []string `json:"apps"`
@@ -19,4 +23,18 @@ type ProjectIDs struct {
 	Local      string
 	Staging    string
 	Production string
+}
+
+// GetByEnv ... 指定した環境のProjectIDを取得する
+func (m *ProjectIDs) GetByEnv(env string) string {
+	switch env {
+	case Local:
+		return m.Local
+	case Staging:
+		return m.Staging
+	case Production:
+		return m.Production
+	default:
+		panic(fmt.Errorf("invalid env: %s", env))
+	}
 }

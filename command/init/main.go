@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/rabee-inc/push/command/common"
 	"gopkg.in/yaml.v2"
@@ -21,7 +20,6 @@ func main() {
 	os.RemoveAll("./deploy")
 
 	// 初期化
-	createEnvMakeFile(pIDs)
 	for _, app := range env.Apps {
 		createDeployDir(common.Local, app)
 		createHotReloadLinks(common.Local, app)
@@ -40,24 +38,16 @@ func main() {
 	}
 }
 
-func createEnvMakeFile(pIDs common.ProjectIDs) {
-	texts := []string{
-		fmt.Sprintf("LOCAL_PROJECT_ID = '%s'", pIDs.Local),
-		fmt.Sprintf("STAGING_PROJECT_ID = '%s'", pIDs.Staging),
-		fmt.Sprintf("PRODUCTION_PROJECT_ID = '%s'", pIDs.Production),
-	}
-	os.MkdirAll("./deploy", 0755)
-	common.CreateFile("./deploy/env.mk", strings.Join(texts, "\n"))
-}
-
 func createDeployDir(env string, app string) {
 	os.MkdirAll(fmt.Sprintf("./deploy/appengine/%s/%s", env, app), 0755)
 }
 
 func createHotReloadLinks(env string, app string) {
+	// app.yaml
 	os.Symlink(
 		fmt.Sprintf("../../../../appengine/app/%s/app_%s.yaml", app, env),
 		fmt.Sprintf("deploy/appengine/%s/%s/app.yaml", env, app))
+	// go
 	os.Symlink(
 		fmt.Sprintf("../../../../appengine/app/%s/main.go", app),
 		fmt.Sprintf("deploy/appengine/%s/%s/main.go", env, app))
@@ -67,21 +57,39 @@ func createHotReloadLinks(env string, app string) {
 	os.Symlink(
 		fmt.Sprintf("../../../../appengine/app/%s/routing.go", app),
 		fmt.Sprintf("deploy/appengine/%s/%s/routing.go", env, app))
+	// cron.yaml
 	os.Symlink(
 		fmt.Sprintf("../../../../appengine/config/cron.yaml"),
 		fmt.Sprintf("deploy/appengine/%s/%s/cron.yaml", env, app))
 	os.Symlink(
+		fmt.Sprintf("../../../appengine/config/cron.yaml"),
+		fmt.Sprintf("deploy/appengine/%s/cron.yaml", env))
+	// dispatch.yaml
+	os.Symlink(
 		fmt.Sprintf("../../../../appengine/config/dispatch_%s.yaml", env),
 		fmt.Sprintf("deploy/appengine/%s/%s/dispatch.yaml", env, app))
+	os.Symlink(
+		fmt.Sprintf("../../../appengine/config/dispatch_%s.yaml", env),
+		fmt.Sprintf("deploy/appengine/%s/dispatch.yaml", env))
+	// index.yaml
 	os.Symlink(
 		fmt.Sprintf("../../../../appengine/config/index.yaml"),
 		fmt.Sprintf("deploy/appengine/%s/%s/index.yaml", env, app))
 	os.Symlink(
+		fmt.Sprintf("../../../appengine/config/index.yaml"),
+		fmt.Sprintf("deploy/appengine/%s/index.yaml", env))
+	// queue.yaml
+	os.Symlink(
 		fmt.Sprintf("../../../../appengine/config/queue.yaml"),
 		fmt.Sprintf("deploy/appengine/%s/%s/queue.yaml", env, app))
 	os.Symlink(
+		fmt.Sprintf("../../../appengine/config/queue.yaml"),
+		fmt.Sprintf("deploy/appengine/%s/queue.yaml", env))
+	// src
+	os.Symlink(
 		fmt.Sprintf("../../../../src"),
 		fmt.Sprintf("deploy/appengine/%s/%s/src", env, app))
+	// .gcloudignore
 	os.Symlink(
 		fmt.Sprintf("../../../../.gcloudignore"),
 		fmt.Sprintf("deploy/appengine/%s/%s/.gcloudignore", env, app))
