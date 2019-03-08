@@ -7,23 +7,28 @@ hello:
 
 # 準備
 init:
-	@rm -rf deploy
-	@mkdir -p deploy
-	@mkdir -p deploy/appengine
-	@mkdir -p deploy/appengine/local
-	@mkdir -p deploy/appengine/staging
-	@mkdir -p deploy/appengine/production
-	${call apps}
+	${call init}
 
 # [GAE] アプリの実行
 run:
+	${call init}
 	${call run,local,${app}}
+
+run-staging:
+	${call init}
+	${call run,staging,${app}}
+
+run-production:
+	${call init}
+	${call run,production,${app}}
 
 # [GAE] アプリのデプロイ
 deploy:
+	${call init}
 	${call deploy,staging,${app},${STAGING_PROJECT_ID}}
 
 deploy-production:
+	${call init}
 	${call deploy,production,${app},${PRODUCTION_PROJECT_ID}}
 
 # [GAE] ディスパッチ設定をデプロイ
@@ -63,23 +68,11 @@ firestore-delete-staging:
 
 # マクロ
 define init
-	@mkdir -p deploy/appengine/$1/$2
-	@ln -s ../../../../appengine/app/$2/app_$1.yaml deploy/appengine/$1/$2/app.yaml
-	@ln -s ../../../../appengine/app/$2/main.go deploy/appengine/$1/$2/main.go
-	@ln -s ../../../../appengine/app/$2/dependency.go deploy/appengine/$1/$2/dependency.go
-	@ln -s ../../../../appengine/app/$2/routing.go deploy/appengine/$1/$2/routing.go
-	@ln -s ../../../../appengine/config/cron.yaml deploy/appengine/$1/$2/cron.yaml
-	@ln -s ../../../../appengine/config/dispatch_$1.yaml deploy/appengine/$1/$2/dispatch.yaml
-	@ln -s ../../../../appengine/config/index.yaml deploy/appengine/$1/$2/index.yaml
-	@ln -s ../../../../appengine/config/queue.yaml deploy/appengine/$1/$2/queue.yaml
-	@ln -s ../../../../appengine/env/values_$1.yaml deploy/appengine/$1/$2/values.yaml
-	@ln -s ../../../../appengine/env/credentials_$1.json deploy/appengine/$1/$2/credentials.json
-	@ln -s ../../../../src deploy/appengine/$1/$2/src
-	@ln -s ../../../../.gcloudignore deploy/appengine/$1/$2/.gcloudignore
+	@go run ./command/init/main.go 
 endef
 
 define run
-	dev_appserver.py deploy/appengine/$1/$2/app.yaml
+	@go run ./command/run/main.go -env $1 -app $2
 endef
 
 define deploy
@@ -94,4 +87,4 @@ define firestore-delete
 	firebase firestore:delete --all-collections --project $1
 endef
 
-include env.mk
+include deploy/env.mk
