@@ -1,5 +1,0 @@
-dispatch:
-- url: "*api.salontia.rabee.jp/*"
-  service: api
-- url: "*push.salontia.rabee.jp/*"
-  service: push
