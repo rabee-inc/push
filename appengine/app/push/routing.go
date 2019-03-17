@@ -10,6 +10,8 @@ import (
 
 // Routing ... ルーティング設定
 func Routing(r *chi.Mux, d *Dependency) {
+	registActions(d)
+
 	// ログ
 	r.Use(log.Handle)
 
@@ -19,10 +21,7 @@ func Routing(r *chi.Mux, d *Dependency) {
 		r.Use(d.InternalAuth.Handle)
 
 		// JSONRPC2
-		r.Route("/rpc", func(r chi.Router) {
-			r.Use(d.JSONRPC2.Handle)
-			r.Post("/", handler.Empty)
-		})
+		r.Post("/rpc", d.JSONRPC2Handler.Handle)
 	})
 
 	// Worker
@@ -39,4 +38,10 @@ func Routing(r *chi.Mux, d *Dependency) {
 	r.Get("/ping", handler.Ping)
 
 	http.Handle("/", r)
+}
+
+func registActions(d *Dependency) {
+	d.JSONRPC2Handler.Register("entry", d.EntryAction)
+	d.JSONRPC2Handler.Register("leave", d.LeaveAction)
+	d.JSONRPC2Handler.Register("send", d.SendAction)
 }

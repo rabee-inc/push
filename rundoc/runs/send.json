@@ -1,0 +1,35 @@
+{
+    "description": "ユーザーにプッシュ通知を送信する",
+    "path": "/api/rpc",
+    "method": "post",
+    "headers": {},
+    "params": {
+        "jsonrpc": "2.0",
+        "id": "1",
+        "method": "send",
+        "params": {
+            "message": {
+                "title": "テストタイトル",
+                "body": "テストボディ",
+                "data": {
+                    "hoge": "任意のデータ"
+                },
+                "ios": {
+                    "badge": 1,
+                    "sound": "好きなサウンドファイル名（空でデフォルト音）"
+                },
+                "android": {
+                    "click_action": "任意のaction名",
+                    "sound": "好きなサウンドファイル名（空でデフォルト音）",
+                    "tag": "タグ"
+                },
+                "web": {
+                    "icon": "アイコン"
+                }
+            },
+            "user_ids": [
+                "test_user_id"
+            ]
+        }
+    }
+}

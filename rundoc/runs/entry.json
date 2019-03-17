@@ -1,0 +1,17 @@
+{
+    "description": "ユーザーをプッシュ通知に登録する",
+    "path": "/api/rpc",
+    "method": "post",
+    "headers": {},
+    "params": {
+        "jsonrpc": "2.0",
+        "id": "1",
+        "method": "entry",
+        "params": {
+            "user_id": "test_user_id",
+            "platform": "ios",
+            "device_id": "test_device_id",
+            "token": "test_token"
+        }
+    }
+}

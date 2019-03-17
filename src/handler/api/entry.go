@@ -9,8 +9,8 @@ import (
 	"gopkg.in/go-playground/validator.v9"
 )
 
-// EntryHandler ... エントリーのハンドラ
-type EntryHandler struct {
+// EntryAction ... エントリーのアクション
+type EntryAction struct {
 	Svc service.Register
 }
 
@@ -26,7 +26,7 @@ type entryResponse struct {
 }
 
 // DecodeParams ... 受け取ったJSONパラメータをデコードする
-func (h *EntryHandler) DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error) {
+func (h *EntryAction) DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error) {
 	var params entryParams
 	err := json.Unmarshal(*msg, &params)
 	if err != nil {
@@ -42,7 +42,7 @@ func (h *EntryHandler) DecodeParams(ctx context.Context, msg *json.RawMessage) (
 }
 
 // Exec ... 処理をする
-func (h *EntryHandler) Exec(ctx context.Context, method string, params interface{}) (interface{}, error) {
+func (h *EntryAction) Exec(ctx context.Context, method string, params interface{}) (interface{}, error) {
 	// パラメータを取得
 	ps := params.(entryParams)
 
@@ -57,9 +57,9 @@ func (h *EntryHandler) Exec(ctx context.Context, method string, params interface
 	}, nil
 }
 
-// NewEntryHandler ... ハンドラを作成する
-func NewEntryHandler(svc service.Register) *EntryHandler {
-	return &EntryHandler{
+// NewEntryAction ... アクションを作成する
+func NewEntryAction(svc service.Register) *EntryAction {
+	return &EntryAction{
 		Svc: svc,
 	}
 }

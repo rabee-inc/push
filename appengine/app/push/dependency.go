@@ -15,9 +15,12 @@ import (
 
 // Dependency ... 依存性
 type Dependency struct {
-	InternalAuth *internalauth.Middleware
-	JSONRPC2     *jsonrpc2.Middleware
-	SendHandler  *worker.SendHandler
+	InternalAuth    *internalauth.Middleware
+	JSONRPC2Handler *jsonrpc2.Handler
+	EntryAction     *api.EntryAction
+	LeaveAction     *api.LeaveAction
+	SendAction      *api.SendAction
+	SendHandler     *worker.SendHandler
 }
 
 // Inject ... 依存性を注入する
@@ -50,12 +53,12 @@ func (d *Dependency) Inject() {
 	// Middleware
 	d.InternalAuth = internalauth.NewMiddleware(iaToken)
 
-	// JSONRPC2
-	d.JSONRPC2 = jsonrpc2.NewMiddleware()
-	d.JSONRPC2.Register("entry", api.NewEntryHandler(rSvc))
-	d.JSONRPC2.Register("leave", api.NewLeaveHandler(rSvc))
-	d.JSONRPC2.Register("send", api.NewSendHandler(sSvc))
+	// Action
+	d.EntryAction = api.NewEntryAction(rSvc)
+	d.LeaveAction = api.NewLeaveAction(rSvc)
+	d.SendAction = api.NewSendAction(sSvc)
 
 	// Handler
+	d.JSONRPC2Handler = jsonrpc2.NewHandler()
 	d.SendHandler = worker.NewSendHandler(sSvc)
 }

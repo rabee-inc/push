@@ -9,8 +9,8 @@ import (
 	"gopkg.in/go-playground/validator.v9"
 )
 
-// LeaveHandler ... 離脱のハンドラ
-type LeaveHandler struct {
+// LeaveAction ... 離脱のアクション
+type LeaveAction struct {
 	Svc service.Register
 }
 
@@ -25,7 +25,7 @@ type leaveResponse struct {
 }
 
 // DecodeParams ... 受け取ったJSONパラメータをデコードする
-func (h *LeaveHandler) DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error) {
+func (h *LeaveAction) DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error) {
 	var params leaveParams
 	err := json.Unmarshal(*msg, &params)
 	if err != nil {
@@ -41,7 +41,7 @@ func (h *LeaveHandler) DecodeParams(ctx context.Context, msg *json.RawMessage) (
 }
 
 // Exec ... 処理をする
-func (h *LeaveHandler) Exec(ctx context.Context, method string, params interface{}) (interface{}, error) {
+func (h *LeaveAction) Exec(ctx context.Context, method string, params interface{}) (interface{}, error) {
 	// パラメータを取得
 	ps := params.(leaveParams)
 
@@ -56,9 +56,9 @@ func (h *LeaveHandler) Exec(ctx context.Context, method string, params interface
 	}, nil
 }
 
-// NewLeaveHandler ... ハンドラを作成する
-func NewLeaveHandler(svc service.Register) *LeaveHandler {
-	return &LeaveHandler{
+// NewLeaveAction ... アクションを作成する
+func NewLeaveAction(svc service.Register) *LeaveAction {
+	return &LeaveAction{
 		Svc: svc,
 	}
 }

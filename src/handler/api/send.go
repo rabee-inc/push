@@ -12,8 +12,8 @@ import (
 	"gopkg.in/go-playground/validator.v9"
 )
 
-// SendHandler ...  送信のハンドラ
-type SendHandler struct {
+// SendAction ...  送信のアクション
+type SendAction struct {
 	Svc service.Sender
 }
 
@@ -27,7 +27,7 @@ type sendResponse struct {
 }
 
 // DecodeParams ... 受け取ったJSONパラメータをデコードする
-func (h *SendHandler) DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error) {
+func (h *SendAction) DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error) {
 	var params sendParams
 	err := json.Unmarshal(*msg, &params)
 	if err != nil {
@@ -43,7 +43,7 @@ func (h *SendHandler) DecodeParams(ctx context.Context, msg *json.RawMessage) (i
 }
 
 // Exec ... 処理をする
-func (h *SendHandler) Exec(ctx context.Context, method string, params interface{}) (interface{}, error) {
+func (h *SendAction) Exec(ctx context.Context, method string, params interface{}) (interface{}, error) {
 	ps := params.(sendParams)
 
 	src := &model.TaskQueueParamSendUserIDs{
@@ -62,9 +62,9 @@ func (h *SendHandler) Exec(ctx context.Context, method string, params interface{
 	}, nil
 }
 
-// NewSendHandler ... SendHandlerを作成する
-func NewSendHandler(svc service.Sender) *SendHandler {
-	return &SendHandler{
+// NewSendAction ... SendActionを作成する
+func NewSendAction(svc service.Sender) *SendAction {
+	return &SendAction{
 		Svc: svc,
 	}
 }
