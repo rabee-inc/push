@@ -57,7 +57,7 @@ func (r *tokenMySQL) Put(ctx context.Context, userID string, platform string, de
 		Set(mysql.UpsertOption([]string{"token", "updated_at"})).
 		Create(src)
 	if err := mysql.HandleErrors(db); err != nil {
-		log.Errorm(ctx, "db.Find", err)
+		log.Errorm(ctx, "db.Create", err)
 		return err
 	}
 	return nil
