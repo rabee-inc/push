@@ -7,10 +7,10 @@ iOS, Android, Webにプッシュ通知を送信するサーバーです。
 
 # 対応状況
 
-## データベース
+## 対応しているデータベース
 - Cloud Datastore
 - Cloud Firestore
-- Cloud SQL ToBe...
+- MySQL
 
 ## 機能
 - ユーザー＆Token登録
@@ -24,6 +24,18 @@ iOS, Android, Webにプッシュ通知を送信するサーバーです。
 ```bash
 cp env.example.json env.json
 dep ensure
+```
+
+## Docker(LocalのMySQLを使う場合)
+```bash
+# build
+docker-compose build
+
+# start
+docker-compose up -d
+
+# stop
+docker-compose down
 ```
 
 ## 実行
