@@ -48,8 +48,8 @@ func (d *Dependency) Inject() {
 		tRepo := repository.NewTokenFirestore(fCli)
 	*/
 
-	// Repository(MySQL)
 	/*
+		// Repository(MySQL)
 		mCfg := mysql.NewConfig("push")
 		mCli := mysql.NewClient(mCfg)
 		tRepo := repository.NewTokenMySQL(mCli)
