@@ -49,7 +49,7 @@ func (r *tokenDatastore) getMulti(ctx context.Context, ids []string) ([]string, 
 	}
 	bt := b.Batch()
 	for _, id := range ids {
-		dst := &model.PushTokenDatastore{
+		dst := &model.PushToken{
 			ID: id,
 		}
 		bt.Get(dst, func(err error) error {
@@ -75,7 +75,7 @@ func (r *tokenDatastore) getMulti(ctx context.Context, ids []string) ([]string, 
 // Put ... トークンを登録する
 func (r *tokenDatastore) Put(ctx context.Context, userID string, platform string, deviceID string, token string) error {
 	id := model.GeneratePushTokenKey(userID, platform, deviceID)
-	src := &model.PushTokenDatastore{
+	src := &model.PushToken{
 		ID:        id,
 		UserID:    userID,
 		Platform:  platform,
@@ -99,7 +99,7 @@ func (r *tokenDatastore) Put(ctx context.Context, userID string, platform string
 // Delete ... トークンを削除する
 func (r *tokenDatastore) Delete(ctx context.Context, userID string, platform string, deviceID string) error {
 	id := model.GeneratePushTokenKey(userID, platform, deviceID)
-	src := &model.PushTokenDatastore{
+	src := &model.PushToken{
 		ID: id,
 	}
 	b, err := boom.FromContext(ctx)

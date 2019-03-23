@@ -3,8 +3,6 @@ package main
 import (
 	"os"
 
-	"github.com/rabee-inc/push/src/lib/cloudfirestore"
-
 	"github.com/rabee-inc/push/src/handler/api"
 	"github.com/rabee-inc/push/src/handler/worker"
 	"github.com/rabee-inc/push/src/lib/internalauth"
@@ -36,14 +34,31 @@ func (d *Dependency) Inject() {
 		panic("no config FCM_SERVER_KEY")
 	}
 
-	// Client
-	fCli, err := cloudfirestore.NewClient(crePath)
-	if err != nil {
-		panic(err.Error())
-	}
+	/*
+		// Repository(Datastore)
+		tRepo := repository.NewTokenDatastore()
+	*/
+
+	/*
+		// Repository(Firestore)
+		fCli, err := cloudfirestore.NewClient(crePath)
+		if err != nil {
+			panic(err.Error())
+		}
+		tRepo := repository.NewTokenFirestore(fCli)
+	*/
+
+	// Repository(MySQL)
+	/*
+		mCfg := mysql.NewConfig("push")
+		mCli := mysql.NewClient(mCfg)
+		tRepo := repository.NewTokenMySQL(mCli)
+	*/
+
+	// Repository(Dummy)
+	tRepo := repository.NewTokenDummy()
 
 	// Repository
-	tRepo := repository.NewTokenFirestore(fCli)
 	fRepo := repository.NewFcm(svrKey)
 
 	// Service
