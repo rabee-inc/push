@@ -35,7 +35,7 @@ func (h *SendHandler) SendUserIDs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.Svc.MessageByUserIDs(ctx, param.UserIDs, param.Message)
+	err = h.Svc.MessageByUserIDs(ctx, param.AppID, param.UserIDs, param.Message)
 	if err != nil {
 		h.handleError(ctx, w, http.StatusBadRequest, "h.Svc.MessageByUserIDs: %s", err.Error())
 		return
@@ -61,7 +61,7 @@ func (h *SendHandler) SendUserID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.Svc.MessageByUserID(ctx, param.UserID, param.Message)
+	err = h.Svc.MessageByUserID(ctx, param.AppID, param.UserID, param.Message)
 	if err != nil {
 		h.handleError(ctx, w, http.StatusBadRequest, "h.Svc.MessageByUserID: %s", err.Error())
 		return

@@ -5,6 +5,7 @@ import (
 
 	"github.com/rabee-inc/push/src/handler/api"
 	"github.com/rabee-inc/push/src/handler/worker"
+	"github.com/rabee-inc/push/src/lib/cloudfirestore"
 	"github.com/rabee-inc/push/src/lib/internalauth"
 	"github.com/rabee-inc/push/src/lib/jsonrpc2"
 	"github.com/rabee-inc/push/src/repository"
@@ -39,14 +40,12 @@ func (d *Dependency) Inject() {
 		tRepo := repository.NewTokenDatastore()
 	*/
 
-	/*
-		// Repository(Firestore)
-		fCli, err := cloudfirestore.NewClient(crePath)
-		if err != nil {
-			panic(err.Error())
-		}
-		tRepo := repository.NewTokenFirestore(fCli)
-	*/
+	// Repository(Firestore)
+	fCli, err := cloudfirestore.NewClient(crePath)
+	if err != nil {
+		panic(err.Error())
+	}
+	tRepo := repository.NewTokenFirestore(fCli)
 
 	/*
 		// Repository(MySQL)
@@ -55,8 +54,10 @@ func (d *Dependency) Inject() {
 		tRepo := repository.NewTokenMySQL(mCli)
 	*/
 
-	// Repository(Dummy)
-	tRepo := repository.NewTokenDummy()
+	/*
+		// Repository(Dummy)
+		tRepo := repository.NewTokenDummy()
+	*/
 
 	// Repository
 	fRepo := repository.NewFcm(svrKey)
