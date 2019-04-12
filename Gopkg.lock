@@ -2,7 +2,7 @@
 
 
 [[projects]]
-  digest = "1:c3bb873898df5e5707d6bc02eb0754c7f56658dbdf40a70f84defc502f3756dd"
+  digest = "1:cafc909e6e0975ed1df09adb489ba827c1cbe7597f26f75198e5a63e205c1c0a"
   name = "cloud.google.com/go"
   packages = [
     "compute/metadata",
@@ -18,8 +18,8 @@
     "storage",
   ]
   pruneopts = "UT"
-  revision = "458e1f376a2b44413160b5d301183b65debaa3f6"
-  version = "v0.37.2"
+  revision = "fcb9a2d5f791d07be64506ab54434de65989d370"
+  version = "v0.37.4"
 
 [[projects]]
   digest = "1:15e132c9fdea7f9c5e2c55fac3db41a9fb61ca4271525610f2906be88c201fc9"
@@ -162,7 +162,7 @@
   version = "v1.4.0"
 
 [[projects]]
-  digest = "1:d1ff17c57578bd01afead8838fcb1d5a1e47ad35c610e047ae549a23bb977037"
+  digest = "1:b55b18883730e7d4b34687685cb27b9c576ebc29ae75f72918935015eaaccaa2"
   name = "go.opencensus.io"
   packages = [
     ".",
@@ -184,8 +184,8 @@
     "trace/tracestate",
   ]
   pruneopts = "UT"
-  revision = "46618d076d80f4eab85adbcb3be9a370be1dc4e0"
-  version = "v0.20.0"
+  revision = "75c0cca22312e51bfd4fafdbe9197ae399e18b38"
+  version = "v0.20.2"
 
 [[projects]]
   branch = "master"
@@ -220,11 +220,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:cf353a5a9ffb2d6f850e9c773e25388a425a70c270546480427ed069e87b136a"
+  digest = "1:3e01c69b34e7c3fa4b7a118ca95a6beaecea00f7f4fb701545d83eacd3badb3c"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "4b34438f7a67ee5f45cc6132e2bad873a20324e9"
+  revision = "b44545bcd369ef9ff9bebcfebf5f3370ef9b1932"
 
 [[projects]]
   digest = "1:df8ea9d0bfb9d8caec6f3890804c12b7c2f35a71e25ce8f6076d86ba636b1c46"
@@ -272,8 +272,8 @@
     "transport/http/internal/propagation",
   ]
   pruneopts = "UT"
-  revision = "bce707a4d0ea3488942724b3bcc1c8338f38f991"
-  version = "v0.3.0"
+  revision = "0cbcb99a9ea0c8023c794b2693cbe1def82ed4d7"
+  version = "v0.3.2"
 
 [[projects]]
   digest = "1:a3e4f8f9a351076555c7b34c66ba4e94a827998596a1382a5c05d6626f4fda8f"
@@ -317,7 +317,7 @@
   revision = "64821d5d210748c883cd2b809589555ae4654203"
 
 [[projects]]
-  digest = "1:4abdd62fcb53e7fb898e708754e3ec03254a870b35e826649b974c6811041808"
+  digest = "1:e4d28d0044f64a65dc8870149fb789f2cae1f3158c2ef94e601e7d1e3881591f"
   name = "google.golang.org/grpc"
   packages = [
     ".",
@@ -335,6 +335,7 @@
     "grpclog",
     "internal",
     "internal/backoff",
+    "internal/balancerload",
     "internal/binarylog",
     "internal/channelz",
     "internal/envconfig",
@@ -354,8 +355,8 @@
     "tap",
   ]
   pruneopts = "UT"
-  revision = "3507fb8e1a5ad030303c106fef3a47c9fdad16ad"
-  version = "v1.19.1"
+  revision = "236199dd5f8031d698fb64091194aecd1c3895b2"
+  version = "v1.20.0"
 
 [[projects]]
   digest = "1:7bb1ad654b21fb8f44c77c07840007d6796f70d42d1b470600f943a508ff8a72"

@@ -41,10 +41,7 @@ func (d *Dependency) Inject() {
 	*/
 
 	// Repository(Firestore)
-	fCli, err := cloudfirestore.NewClient(crePath)
-	if err != nil {
-		panic(err.Error())
-	}
+	fCli := cloudfirestore.NewClient(crePath)
 	tRepo := repository.NewTokenFirestore(fCli)
 
 	/*
