@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS `push`.`tokens` (
   `id`         varchar(32)         NOT NULL,
+  `app_id`     varchar(255)        NOT NULL,
   `user_id`    varchar(255)        NOT NULL,
   `platform`   varchar(20)         NOT NULL,
   `device_id`  varchar(255)        NOT NULL DEFAULT '',
@@ -13,6 +14,7 @@ COMMENT 'プッシュ通知のトークン';
 
 CREATE TABLE IF NOT EXISTS `push`.`reserves` (
   `id`          varchar(32)         NOT NULL,
+  `app_id`      varchar(255)        NOT NULL,
   `title`       varchar(255)        NOT NULL,
   `body`        varchar(255)        NOT NULL,
   `data`        json                NOT NULL,
@@ -25,4 +27,3 @@ CREATE TABLE IF NOT EXISTS `push`.`reserves` (
   KEY idx_reserved_at  (`reserved_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 COMMENT 'プッシュ通知の予約';
-

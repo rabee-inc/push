@@ -18,6 +18,7 @@ type SendAction struct {
 }
 
 type sendParams struct {
+	AppID   string         `json:"app_id"   validate:"required"`
 	UserIDs []string       `json:"user_ids" validate:"required"`
 	Message *model.Message `json:"message"  validate:"required"`
 }
@@ -47,6 +48,7 @@ func (h *SendAction) Exec(ctx context.Context, method string, params interface{}
 	ps := params.(sendParams)
 
 	src := &model.TaskQueueParamSendUserIDs{
+		AppID:   ps.AppID,
 		UserIDs: ps.UserIDs,
 		Message: ps.Message,
 	}

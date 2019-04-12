@@ -7,7 +7,6 @@ import (
 	"net/url"
 
 	"github.com/rabee-inc/push/src/lib/internalauth"
-
 	"github.com/rabee-inc/push/src/lib/log"
 	"google.golang.org/appengine/taskqueue"
 )

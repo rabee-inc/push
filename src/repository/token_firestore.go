@@ -16,9 +16,11 @@ type tokenFirestore struct {
 }
 
 // GetListByUserID ... ユーザーIDに紐づくトークンリストを取得する
-func (r *tokenFirestore) GetListByUserID(ctx context.Context, userID string) ([]string, error) {
+func (r *tokenFirestore) GetListByUserID(ctx context.Context, appID string, userID string) ([]string, error) {
 	var tokens []string
 	iter := r.client.
+		Collection(config.CollectionApps).
+		Doc(appID).
 		Collection(config.CollectionUsers).
 		Doc(userID).
 		Collection(config.CollectionTokens).
@@ -44,7 +46,7 @@ func (r *tokenFirestore) GetListByUserID(ctx context.Context, userID string) ([]
 }
 
 // Put ... トークンを登録する
-func (r *tokenFirestore) Put(ctx context.Context, userID string, platform string, deviceID string, token string) error {
+func (r *tokenFirestore) Put(ctx context.Context, appID string, userID string, platform string, deviceID string, token string) error {
 	docID := model.GenerateTokenDocID(platform, deviceID)
 	src := &model.TokenFirestore{
 		Platform:  platform,
@@ -53,6 +55,8 @@ func (r *tokenFirestore) Put(ctx context.Context, userID string, platform string
 		CreatedAt: util.TimeNowUnix(),
 	}
 	_, err := r.client.
+		Collection(config.CollectionApps).
+		Doc(appID).
 		Collection(config.CollectionUsers).
 		Doc(userID).
 		Collection(config.CollectionTokens).
@@ -66,9 +70,11 @@ func (r *tokenFirestore) Put(ctx context.Context, userID string, platform string
 }
 
 // Delete ... トークンを削除する
-func (r *tokenFirestore) Delete(ctx context.Context, userID string, platform string, deviceID string) error {
+func (r *tokenFirestore) Delete(ctx context.Context, appID string, userID string, platform string, deviceID string) error {
 	docID := model.GenerateTokenDocID(platform, deviceID)
 	_, err := r.client.
+		Collection(config.CollectionApps).
+		Doc(appID).
 		Collection(config.CollectionUsers).
 		Doc(userID).
 		Collection(config.CollectionTokens).

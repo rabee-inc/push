@@ -8,6 +8,10 @@
         "id": "1",
         "method": "send",
         "params": {
+            "app_id": "test_app_id",
+            "user_ids": [
+                "test_user_id"
+            ],
             "message": {
                 "title": "テストタイトル",
                 "body": "テストボディ",
@@ -26,10 +30,7 @@
                 "web": {
                     "icon": "アイコン"
                 }
-            },
-            "user_ids": [
-                "test_user_id"
-            ]
+            }
         }
     }
 }

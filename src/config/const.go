@@ -1,13 +1,15 @@
 package config
 
 const (
+	// CollectionApps ... FirestoreのAppsコレクション
+	CollectionApps = "push_apps"
 	// CollectionUsers ... FirestoreのUsersコレクション
-	CollectionUsers = "push_users"
+	CollectionUsers = "users"
 	// CollectionTokens ... FirestoreのTokensコレクション
 	CollectionTokens = "tokens"
 
 	// KindPushToken ... DatastoreのPushTokenカインド
-	KindPushToken = "PushTokenDatastore"
+	KindPushToken = "PushToken"
 
 	// QueueSendUser ... UserID変換処理のQueue
 	QueueSendUser = "PushSendUser"

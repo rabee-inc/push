@@ -14,12 +14,13 @@ type tokenMySQL struct {
 }
 
 // GetListByUserID ... ユーザーIDに紐づくトークンリストを取得する
-func (r *tokenMySQL) GetListByUserID(ctx context.Context, userID string) ([]string, error) {
+func (r *tokenMySQL) GetListByUserID(ctx context.Context, appID string, userID string) ([]string, error) {
 	dsts := []string{}
 	var tokens []*model.TokenMySQL
 	db := r.client.GetDB(ctx).
 		Select(
 			"id",
+			"app_id",
 			"user_id",
 			"platform",
 			"device_id",
@@ -27,6 +28,7 @@ func (r *tokenMySQL) GetListByUserID(ctx context.Context, userID string) ([]stri
 			"created_at",
 			"updated_at").
 		Table("tokens").
+		Where("app_id = ?", appID).
 		Where("user_id = ?", userID).
 		Find(&tokens)
 	if err := mysql.HandleErrors(db); err != nil {
@@ -40,11 +42,12 @@ func (r *tokenMySQL) GetListByUserID(ctx context.Context, userID string) ([]stri
 }
 
 // Put ... トークンを登録する
-func (r *tokenMySQL) Put(ctx context.Context, userID string, platform string, deviceID string, token string) error {
-	id := model.GenerateTokenID(userID, platform, deviceID)
+func (r *tokenMySQL) Put(ctx context.Context, appID string, userID string, platform string, deviceID string, token string) error {
+	id := model.GenerateTokenID(appID, userID, platform, deviceID)
 	now := util.TimeNowUnix()
 	src := &model.TokenMySQL{
 		ID:        id,
+		AppID:     appID,
 		UserID:    userID,
 		Platform:  platform,
 		DeviceID:  deviceID,
@@ -64,9 +67,10 @@ func (r *tokenMySQL) Put(ctx context.Context, userID string, platform string, de
 }
 
 // Delete ... トークンを削除する
-func (r *tokenMySQL) Delete(ctx context.Context, userID string, platform string, deviceID string) error {
+func (r *tokenMySQL) Delete(ctx context.Context, appID string, userID string, platform string, deviceID string) error {
 	db := r.client.GetDB(ctx).
 		Table("tokens").
+		Where("app_id = ?", appID).
 		Where("user_id = ?", userID).
 		Where("platform = ?", platform).
 		Where("device_id = ?", deviceID).

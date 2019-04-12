@@ -15,6 +15,7 @@ type EntryAction struct {
 }
 
 type entryParams struct {
+	AppID    string `json:"app_id"    validate:"required"`
 	UserID   string `json:"user_id"   validate:"required"`
 	Platform string `json:"platform"  validate:"required"`
 	DeviceID string `json:"device_id"`
@@ -46,7 +47,7 @@ func (h *EntryAction) Exec(ctx context.Context, method string, params interface{
 	// パラメータを取得
 	ps := params.(entryParams)
 
-	err := h.Svc.SetToken(ctx, ps.UserID, ps.Platform, ps.DeviceID, ps.Token)
+	err := h.Svc.SetToken(ctx, ps.AppID, ps.UserID, ps.Platform, ps.DeviceID, ps.Token)
 	if err != nil {
 		log.Errorm(ctx, "h.Svc.SetToken", err)
 		return nil, err

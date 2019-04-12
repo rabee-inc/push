@@ -2,23 +2,17 @@
 
 ユーザーをプッシュ通知に登録する
 
-|ENV|URL|
-|---|---|
-|Local|http://localhost:8080|
-|Staging|https://push-dot-staging.appspot.com|
-|Production|https://push-dot.appspot.com|
-
 ## Request
 
+|ENV|URL|
+|---|---|
+|Local|`POST` http://localhost:8080/api/rpc|
+|Staging|`POST` https://push-dot-staging.appspot.com/api/rpc|
+|Production|`POST` https://push-dot.appspot.com/api/rpc|
+
 ```
-POST
-```
-```
-/api/rpc
-```
-```
-Content-Type: application/json
 Authorization: xxxxxxxxxx
+Content-Type: application/json
 ```
 ```json
 {
@@ -26,6 +20,7 @@ Authorization: xxxxxxxxxx
     "jsonrpc": "2.0",
     "method": "entry",
     "params": {
+        "app_id": "test_app_id",
         "device_id": "test_device_id",
         "platform": "ios",
         "token": "test_token",
@@ -37,7 +32,7 @@ Authorization: xxxxxxxxxx
 ## Response
 
 ```
-200
+Status 200
 ```
 ```json
 {

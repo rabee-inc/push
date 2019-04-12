@@ -15,6 +15,7 @@ type LeaveAction struct {
 }
 
 type leaveParams struct {
+	AppID    string `json:"app_id"    validate:"required"`
 	UserID   string `json:"user_id"   validate:"required"`
 	Platform string `json:"platform"  validate:"required"`
 	DeviceID string `json:"device_id"`
@@ -45,7 +46,7 @@ func (h *LeaveAction) Exec(ctx context.Context, method string, params interface{
 	// パラメータを取得
 	ps := params.(leaveParams)
 
-	err := h.Svc.DeleteToken(ctx, ps.UserID, ps.Platform, ps.DeviceID)
+	err := h.Svc.DeleteToken(ctx, ps.AppID, ps.UserID, ps.Platform, ps.DeviceID)
 	if err != nil {
 		log.Errorm(ctx, "h.Svc.DeleteToken", err)
 		return nil, err

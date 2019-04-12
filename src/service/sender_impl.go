@@ -16,9 +16,10 @@ type sender struct {
 }
 
 // MessageByUserIDs ... メッセージを複数のユーザーIDに対して送信する
-func (s *sender) MessageByUserIDs(ctx context.Context, userIDs []string, msg *model.Message) error {
+func (s *sender) MessageByUserIDs(ctx context.Context, appID string, userIDs []string, msg *model.Message) error {
 	for _, userID := range userIDs {
 		src := &model.TaskQueueParamSendUserID{
+			AppID:   appID,
 			UserID:  userID,
 			Message: msg,
 		}
@@ -32,14 +33,15 @@ func (s *sender) MessageByUserIDs(ctx context.Context, userIDs []string, msg *mo
 }
 
 // MessageByUserID ... メッセージをユーザーIDに対して送信する
-func (s *sender) MessageByUserID(ctx context.Context, userID string, msg *model.Message) error {
-	tokens, err := s.tRepo.GetListByUserID(ctx, userID)
+func (s *sender) MessageByUserID(ctx context.Context, appID string, userID string, msg *model.Message) error {
+	tokens, err := s.tRepo.GetListByUserID(ctx, appID, userID)
 	if err != nil {
 		log.Errorm(ctx, "s.tRepo.GetListByUserID", err)
 		return err
 	}
 	for _, token := range tokens {
 		src := &model.TaskQueueParamSendToken{
+			AppID:   appID,
 			Token:   token,
 			Message: msg,
 		}
