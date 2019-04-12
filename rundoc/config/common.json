@@ -1,0 +1,10 @@
+{
+    "endpoints": {
+        "local": "http://localhost:8080",
+        "staging": "https://push-dot-staging.appspot.com",
+        "production": "https://push-dot.appspot.com"
+    },
+    "headers": {
+        "Content-Type": "application/json"
+    }
+}

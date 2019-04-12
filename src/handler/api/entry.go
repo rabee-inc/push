@@ -9,12 +9,13 @@ import (
 	"gopkg.in/go-playground/validator.v9"
 )
 
-// EntryHandler ... エントリーのハンドラ
-type EntryHandler struct {
-	Svc service.Entry
+// EntryAction ... エントリーのアクション
+type EntryAction struct {
+	Svc service.Register
 }
 
 type entryParams struct {
+	AppID    string `json:"app_id"    validate:"required"`
 	UserID   string `json:"user_id"   validate:"required"`
 	Platform string `json:"platform"  validate:"required"`
 	DeviceID string `json:"device_id"`
@@ -26,7 +27,7 @@ type entryResponse struct {
 }
 
 // DecodeParams ... 受け取ったJSONパラメータをデコードする
-func (h *EntryHandler) DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error) {
+func (h *EntryAction) DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error) {
 	var params entryParams
 	err := json.Unmarshal(*msg, &params)
 	if err != nil {
@@ -42,13 +43,13 @@ func (h *EntryHandler) DecodeParams(ctx context.Context, msg *json.RawMessage) (
 }
 
 // Exec ... 処理をする
-func (h *EntryHandler) Exec(ctx context.Context, method string, params interface{}) (interface{}, error) {
+func (h *EntryAction) Exec(ctx context.Context, method string, params interface{}) (interface{}, error) {
 	// パラメータを取得
 	ps := params.(entryParams)
 
-	err := h.Svc.Token(ctx, ps.UserID, ps.Platform, ps.DeviceID, ps.Token)
+	err := h.Svc.SetToken(ctx, ps.AppID, ps.UserID, ps.Platform, ps.DeviceID, ps.Token)
 	if err != nil {
-		log.Errorm(ctx, "h.Svc.Token", err)
+		log.Errorm(ctx, "h.Svc.SetToken", err)
 		return nil, err
 	}
 
@@ -57,9 +58,9 @@ func (h *EntryHandler) Exec(ctx context.Context, method string, params interface
 	}, nil
 }
 
-// NewEntryHandler ... EntryHandlerを作成する
-func NewEntryHandler(svc service.Entry) *EntryHandler {
-	return &EntryHandler{
+// NewEntryAction ... アクションを作成する
+func NewEntryAction(svc service.Register) *EntryAction {
+	return &EntryAction{
 		Svc: svc,
 	}
 }

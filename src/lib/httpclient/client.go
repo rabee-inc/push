@@ -58,7 +58,6 @@ func GetForm(ctx context.Context, u string, params map[string]string, opt *HTTPO
 		query.Add(key, value)
 	}
 
-	req.URL.RawQuery = query.Encode()
 	return send(ctx, req, opt)
 }
 
@@ -110,7 +109,9 @@ func PostJSON(ctx context.Context, url string, json []byte, opt *HTTPOption) (in
 	}
 
 	if opt == nil {
-		opt = &HTTPOption{}
+		opt = &HTTPOption{
+			Headers: map[string]string{},
+		}
 	}
 	for key, value := range opt.Headers {
 		req.Header.Set(key, value)

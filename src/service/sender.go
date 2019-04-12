@@ -8,7 +8,7 @@ import (
 
 // Sender ... 通知を送信する
 type Sender interface {
-	MessageByUserIDs(ctx context.Context, userIDs []string, msg *model.Message) error
-	MessageByUserID(ctx context.Context, userID string, msg *model.Message) error
+	MessageByUserIDs(ctx context.Context, appID string, userIDs []string, msg *model.Message) error
+	MessageByUserID(ctx context.Context, appID string, userID string, msg *model.Message) error
 	MessageByToken(ctx context.Context, token string, msg *model.Message) error
 }

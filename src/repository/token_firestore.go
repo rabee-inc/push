@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 
+	"cloud.google.com/go/firestore"
 	"github.com/rabee-inc/push/src/config"
-	"github.com/rabee-inc/push/src/lib/cloudfirestore"
 	"github.com/rabee-inc/push/src/lib/log"
 	"github.com/rabee-inc/push/src/lib/util"
 	"github.com/rabee-inc/push/src/model"
@@ -12,17 +12,19 @@ import (
 )
 
 type tokenFirestore struct {
+	client *firestore.Client
 }
 
 // GetListByUserID ... ユーザーIDに紐づくトークンリストを取得する
-func (r *tokenFirestore) GetListByUserID(ctx context.Context, userID string) ([]string, error) {
+func (r *tokenFirestore) GetListByUserID(ctx context.Context, appID string, userID string) ([]string, error) {
 	var tokens []string
-	cli, err := cloudfirestore.NewClient(ctx)
-	if err != nil {
-		log.Errorm(ctx, "cloudfirestore.NewClient", err)
-		return tokens, err
-	}
-	iter := cli.Collection(config.CollectionUsers).Doc(userID).Collection(config.CollectionTokens).Documents(ctx)
+	iter := r.client.
+		Collection(config.CollectionApps).
+		Doc(appID).
+		Collection(config.CollectionUsers).
+		Doc(userID).
+		Collection(config.CollectionTokens).
+		Documents(ctx)
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -44,7 +46,7 @@ func (r *tokenFirestore) GetListByUserID(ctx context.Context, userID string) ([]
 }
 
 // Put ... トークンを登録する
-func (r *tokenFirestore) Put(ctx context.Context, userID string, platform string, deviceID string, token string) error {
+func (r *tokenFirestore) Put(ctx context.Context, appID string, userID string, platform string, deviceID string, token string) error {
 	docID := model.GenerateTokenDocID(platform, deviceID)
 	src := &model.TokenFirestore{
 		Platform:  platform,
@@ -52,21 +54,42 @@ func (r *tokenFirestore) Put(ctx context.Context, userID string, platform string
 		Token:     token,
 		CreatedAt: util.TimeNowUnix(),
 	}
-	cli, err := cloudfirestore.NewClient(ctx)
+	_, err := r.client.
+		Collection(config.CollectionApps).
+		Doc(appID).
+		Collection(config.CollectionUsers).
+		Doc(userID).
+		Collection(config.CollectionTokens).
+		Doc(docID).
+		Set(ctx, src)
 	if err != nil {
-		log.Errorm(ctx, "cloudfirestore.NewClient", err)
+		log.Errorm(ctx, "r.client.Set", err)
 		return err
 	}
-	ret, err := cli.Collection(config.CollectionUsers).Doc(userID).Collection(config.CollectionTokens).Doc(docID).Set(ctx, src)
+	return nil
+}
+
+// Delete ... トークンを削除する
+func (r *tokenFirestore) Delete(ctx context.Context, appID string, userID string, platform string, deviceID string) error {
+	docID := model.GenerateTokenDocID(platform, deviceID)
+	_, err := r.client.
+		Collection(config.CollectionApps).
+		Doc(appID).
+		Collection(config.CollectionUsers).
+		Doc(userID).
+		Collection(config.CollectionTokens).
+		Doc(docID).
+		Delete(ctx)
 	if err != nil {
-		log.Errorm(ctx, "cli.Set", err)
+		log.Errorm(ctx, "r.client.Delete", err)
 		return err
 	}
-	log.Debugf(ctx, "UpdateTime: %s", ret.UpdateTime)
 	return nil
 }
 
 // NewTokenFirestore ... リポジトリを作成する
-func NewTokenFirestore() Token {
-	return &tokenFirestore{}
+func NewTokenFirestore(client *firestore.Client) Token {
+	return &tokenFirestore{
+		client: client,
+	}
 }
