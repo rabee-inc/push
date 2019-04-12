@@ -40,15 +40,15 @@ docker-compose down
 
 ## 実行
 ```bash
-make run app=push
+make run app=default
 ```
 
 ## デプロイ
 ```bash
-make deploy app=push
-make deploy-production app=push
+make deploy app=default
+make deploy-production app=default
 ```
 
 # API
 JSONRPC2.0を使用しています。
-詳細はdoc内を参照してください。
+詳細はrundoc/docs内を参照してください。
