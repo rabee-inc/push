@@ -2,20 +2,14 @@
 
 ユーザーにプッシュ通知を送信する
 
-|ENV|URL|
-|---|---|
-|Local|http://localhost:8080|
-|Staging|https://push-dot-staging.appspot.com|
-|Production|https://push-dot.appspot.com|
-
 ## Request
 
-```
-POST
-```
-```
-/api/rpc
-```
+|ENV|URL|
+|---|---|
+|Local|`POST` http://localhost:8080/api/rpc|
+|Staging|`POST` https://push-dot-staging.appspot.com/api/rpc|
+|Production|`POST` https://push-dot.appspot.com/api/rpc|
+
 ```
 Authorization: xxxxxxxxxx
 Content-Type: application/json
@@ -26,6 +20,7 @@ Content-Type: application/json
     "jsonrpc": "2.0",
     "method": "send",
     "params": {
+        "app_id": "test_app_id",
         "message": {
             "android": {
                 "click_action": "任意のaction名",
@@ -55,7 +50,7 @@ Content-Type: application/json
 ## Response
 
 ```
-200
+Status 200
 ```
 ```json
 {

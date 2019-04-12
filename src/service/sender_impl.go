@@ -41,6 +41,7 @@ func (s *sender) MessageByUserID(ctx context.Context, appID string, userID strin
 	}
 	for _, token := range tokens {
 		src := &model.TaskQueueParamSendToken{
+			AppID:   appID,
 			Token:   token,
 			Message: msg,
 		}
