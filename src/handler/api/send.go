@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 
 	"github.com/rabee-inc/push/src/config"
-	"github.com/rabee-inc/push/src/lib/log"
 	"github.com/rabee-inc/push/src/lib/taskqueue"
 	"github.com/rabee-inc/push/src/model"
 	"github.com/rabee-inc/push/src/service"
@@ -55,7 +54,6 @@ func (h *SendAction) Exec(ctx context.Context, method string, params interface{}
 
 	err := taskqueue.AddTaskByJSON(ctx, config.QueueSendUser, "/worker/send/users", src)
 	if err != nil {
-		log.Errorm(ctx, "taskqueue.AddTaskByJSON", err)
 		return nil, err
 	}
 

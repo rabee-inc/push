@@ -1,12 +1,10 @@
 package worker
 
 import (
-	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/rabee-inc/push/src/handler"
-	"github.com/rabee-inc/push/src/lib/log"
+	"github.com/rabee-inc/push/src/lib/errcode"
 	"github.com/rabee-inc/push/src/model"
 	"github.com/rabee-inc/push/src/service"
 	"gopkg.in/go-playground/validator.v9"
@@ -24,20 +22,22 @@ func (h *SendHandler) SendUserIDs(w http.ResponseWriter, r *http.Request) {
 	var param model.TaskQueueParamSendUserIDs
 	err := handler.GetJSON(r, &param)
 	if err != nil {
-		h.handleError(ctx, w, http.StatusBadRequest, "handler.GetJSON: %s", err.Error())
+		err = errcode.Set(err, http.StatusBadRequest)
+		handler.HandleError(ctx, w, "handler.GetJSON", err)
 		return
 	}
 
 	// Validation
 	v := validator.New()
 	if err := v.Struct(param); err != nil {
-		h.handleError(ctx, w, http.StatusBadRequest, "v.Struct: %s", err.Error())
+		err = errcode.Set(err, http.StatusBadRequest)
+		handler.HandleError(ctx, w, "v.Struct", err)
 		return
 	}
 
 	err = h.Svc.MessageByUserIDs(ctx, param.AppID, param.UserIDs, param.Message)
 	if err != nil {
-		h.handleError(ctx, w, http.StatusBadRequest, "h.Svc.MessageByUserIDs: %s", err.Error())
+		handler.HandleError(ctx, w, "h.Svc.MessageByUserIDs", err)
 		return
 	}
 	handler.RenderSuccess(w)
@@ -50,20 +50,22 @@ func (h *SendHandler) SendUserID(w http.ResponseWriter, r *http.Request) {
 	var param model.TaskQueueParamSendUserID
 	err := handler.GetJSON(r, &param)
 	if err != nil {
-		h.handleError(ctx, w, http.StatusBadRequest, "handler.GetJSON: %s", err.Error())
+		err = errcode.Set(err, http.StatusBadRequest)
+		handler.HandleError(ctx, w, "handler.GetJSON", err)
 		return
 	}
 
 	// Validation
 	v := validator.New()
 	if err := v.Struct(param); err != nil {
-		h.handleError(ctx, w, http.StatusBadRequest, "v.Struct: %s", err.Error())
+		err = errcode.Set(err, http.StatusBadRequest)
+		handler.HandleError(ctx, w, "v.Struct", err)
 		return
 	}
 
 	err = h.Svc.MessageByUserID(ctx, param.AppID, param.UserID, param.Message)
 	if err != nil {
-		h.handleError(ctx, w, http.StatusBadRequest, "h.Svc.MessageByUserID: %s", err.Error())
+		handler.HandleError(ctx, w, "h.Svc.MessageByUserID", err)
 		return
 	}
 	handler.RenderSuccess(w)
@@ -76,29 +78,25 @@ func (h *SendHandler) SendToken(w http.ResponseWriter, r *http.Request) {
 	var param model.TaskQueueParamSendToken
 	err := handler.GetJSON(r, &param)
 	if err != nil {
-		h.handleError(ctx, w, http.StatusBadRequest, "handler.GetJSON: %s", err.Error())
+		err = errcode.Set(err, http.StatusBadRequest)
+		handler.HandleError(ctx, w, "handler.GetJSON", err)
 		return
 	}
 
 	// Validation
 	v := validator.New()
 	if err := v.Struct(param); err != nil {
-		h.handleError(ctx, w, http.StatusBadRequest, "v.Struct: %s", err.Error())
+		err = errcode.Set(err, http.StatusBadRequest)
+		handler.HandleError(ctx, w, "v.Struct", err)
 		return
 	}
 
 	err = h.Svc.MessageByToken(ctx, param.Token, param.Message)
 	if err != nil {
-		h.handleError(ctx, w, http.StatusBadRequest, "h.Svc.MessageByToken: %s", err.Error())
+		handler.HandleError(ctx, w, "h.Svc.MessageByToken", err)
 		return
 	}
 	handler.RenderSuccess(w)
-}
-
-func (h *SendHandler) handleError(ctx context.Context, w http.ResponseWriter, status int, format string, args ...interface{}) {
-	msg := fmt.Sprintf(format, args...)
-	log.Warningf(ctx, msg)
-	handler.RenderError(w, status, msg)
 }
 
 // NewSendHandler ... SendHandlerを作成する

@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/rabee-inc/push/src/lib/log"
 	"github.com/rabee-inc/push/src/service"
 	"gopkg.in/go-playground/validator.v9"
 )
@@ -49,7 +48,6 @@ func (h *EntryAction) Exec(ctx context.Context, method string, params interface{
 
 	err := h.Svc.SetToken(ctx, ps.AppID, ps.UserID, ps.Platform, ps.DeviceID, ps.Token)
 	if err != nil {
-		log.Errorm(ctx, "h.Svc.SetToken", err)
 		return nil, err
 	}
 

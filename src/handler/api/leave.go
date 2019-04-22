@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/rabee-inc/push/src/lib/log"
 	"github.com/rabee-inc/push/src/service"
 	"gopkg.in/go-playground/validator.v9"
 )
@@ -48,7 +47,6 @@ func (h *LeaveAction) Exec(ctx context.Context, method string, params interface{
 
 	err := h.Svc.DeleteToken(ctx, ps.AppID, ps.UserID, ps.Platform, ps.DeviceID)
 	if err != nil {
-		log.Errorm(ctx, "h.Svc.DeleteToken", err)
 		return nil, err
 	}
 
