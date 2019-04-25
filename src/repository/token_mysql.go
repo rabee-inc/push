@@ -18,7 +18,7 @@ func (r *tokenMySQL) GetListByUserID(ctx context.Context, appID string, userID s
 	dsts := []string{}
 	var tokens []*model.TokenMySQL
 	db := r.client.GetDB(ctx).
-		Select(
+		Select([]string{
 			"id",
 			"app_id",
 			"user_id",
@@ -26,7 +26,8 @@ func (r *tokenMySQL) GetListByUserID(ctx context.Context, appID string, userID s
 			"device_id",
 			"token",
 			"created_at",
-			"updated_at").
+			"updated_at",
+		}).
 		Table("tokens").
 		Where("app_id = ?", appID).
 		Where("user_id = ?", userID).
