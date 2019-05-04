@@ -1,4 +1,4 @@
-package model
+package renderer
 
 // ResponseOK ... 成功レスポンス
 type ResponseOK struct {

@@ -3,8 +3,9 @@ package worker
 import (
 	"net/http"
 
-	"github.com/rabee-inc/push/src/handler"
 	"github.com/rabee-inc/push/src/lib/errcode"
+	"github.com/rabee-inc/push/src/lib/parameter"
+	"github.com/rabee-inc/push/src/lib/renderer"
 	"github.com/rabee-inc/push/src/model"
 	"github.com/rabee-inc/push/src/service"
 	"gopkg.in/go-playground/validator.v9"
@@ -20,10 +21,10 @@ func (h *SendHandler) SendUserIDs(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	var param model.TaskQueueParamSendUserIDs
-	err := handler.GetJSON(r, &param)
+	err := parameter.GetJSON(r, &param)
 	if err != nil {
 		err = errcode.Set(err, http.StatusBadRequest)
-		handler.HandleError(ctx, w, "handler.GetJSON", err)
+		renderer.HandleError(ctx, w, "parameter.GetJSON", err)
 		return
 	}
 
@@ -31,16 +32,16 @@ func (h *SendHandler) SendUserIDs(w http.ResponseWriter, r *http.Request) {
 	v := validator.New()
 	if err := v.Struct(param); err != nil {
 		err = errcode.Set(err, http.StatusBadRequest)
-		handler.HandleError(ctx, w, "v.Struct", err)
+		renderer.HandleError(ctx, w, "v.Struct", err)
 		return
 	}
 
 	err = h.Svc.MessageByUserIDs(ctx, param.AppID, param.UserIDs, param.Message)
 	if err != nil {
-		handler.HandleError(ctx, w, "h.Svc.MessageByUserIDs", err)
+		renderer.HandleError(ctx, w, "h.Svc.MessageByUserIDs", err)
 		return
 	}
-	handler.RenderSuccess(w)
+	renderer.Success(w)
 }
 
 // SendUserID ... UserIDからTokenを引いてプッシュ通知を送信する
@@ -48,10 +49,10 @@ func (h *SendHandler) SendUserID(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	var param model.TaskQueueParamSendUserID
-	err := handler.GetJSON(r, &param)
+	err := parameter.GetJSON(r, &param)
 	if err != nil {
 		err = errcode.Set(err, http.StatusBadRequest)
-		handler.HandleError(ctx, w, "handler.GetJSON", err)
+		renderer.HandleError(ctx, w, "parameter.GetJSON", err)
 		return
 	}
 
@@ -59,16 +60,16 @@ func (h *SendHandler) SendUserID(w http.ResponseWriter, r *http.Request) {
 	v := validator.New()
 	if err := v.Struct(param); err != nil {
 		err = errcode.Set(err, http.StatusBadRequest)
-		handler.HandleError(ctx, w, "v.Struct", err)
+		renderer.HandleError(ctx, w, "v.Struct", err)
 		return
 	}
 
 	err = h.Svc.MessageByUserID(ctx, param.AppID, param.UserID, param.Message)
 	if err != nil {
-		handler.HandleError(ctx, w, "h.Svc.MessageByUserID", err)
+		renderer.HandleError(ctx, w, "h.Svc.MessageByUserID", err)
 		return
 	}
-	handler.RenderSuccess(w)
+	renderer.Success(w)
 }
 
 // SendToken ... Tokenでプッシュ通知を送信する
@@ -76,10 +77,10 @@ func (h *SendHandler) SendToken(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	var param model.TaskQueueParamSendToken
-	err := handler.GetJSON(r, &param)
+	err := parameter.GetJSON(r, &param)
 	if err != nil {
 		err = errcode.Set(err, http.StatusBadRequest)
-		handler.HandleError(ctx, w, "handler.GetJSON", err)
+		renderer.HandleError(ctx, w, "parameter.GetJSON", err)
 		return
 	}
 
@@ -87,16 +88,16 @@ func (h *SendHandler) SendToken(w http.ResponseWriter, r *http.Request) {
 	v := validator.New()
 	if err := v.Struct(param); err != nil {
 		err = errcode.Set(err, http.StatusBadRequest)
-		handler.HandleError(ctx, w, "v.Struct", err)
+		renderer.HandleError(ctx, w, "v.Struct", err)
 		return
 	}
 
 	err = h.Svc.MessageByToken(ctx, param.Token, param.Message)
 	if err != nil {
-		handler.HandleError(ctx, w, "h.Svc.MessageByToken", err)
+		renderer.HandleError(ctx, w, "h.Svc.MessageByToken", err)
 		return
 	}
-	handler.RenderSuccess(w)
+	renderer.Success(w)
 }
 
 // NewSendHandler ... SendHandlerを作成する
