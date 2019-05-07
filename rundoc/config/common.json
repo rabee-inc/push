@@ -1,8 +1,8 @@
 {
     "endpoints": {
         "local": "http://localhost:8080",
-        "staging": "https://push-dot-staging.appspot.com",
-        "production": "https://push-dot.appspot.com"
+        "staging": "https://staging-push-rabee-jp.appspot.com/",
+        "production": "https://push-rabee-jp.appspot.com/"
     },
     "headers": {
         "Content-Type": "application/json"
