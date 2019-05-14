@@ -56,12 +56,13 @@ func (r *tokenMySQL) Put(ctx context.Context, appID string, userID string, platf
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
-	db := r.client.GetDB(ctx).
-		Table("tokens").
-		Set(mysql.UpsertOption([]string{"token", "updated_at"})).
-		Create(src)
+	db := mysql.Upsert(
+		r.client.GetDB(ctx),
+		"tokens",
+		src,
+		[]string{"token", "updated_at"})
 	if err := mysql.HandleErrors(db); err != nil {
-		log.Errorm(ctx, "db.Create", err)
+		log.Errorm(ctx, "mysql.Upsert", err)
 		return err
 	}
 	return nil
