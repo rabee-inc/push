@@ -8,7 +8,6 @@ iOS, Android, Webにプッシュ通知を送信するサーバーです。
 # 対応状況
 
 ## 対応しているデータベース
-- Cloud Datastore
 - Cloud Firestore
 - MySQL
 

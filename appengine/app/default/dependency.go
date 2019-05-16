@@ -35,11 +35,6 @@ func (d *Dependency) Inject() {
 		panic("no config FCM_SERVER_KEY")
 	}
 
-	/*
-		// Repository(Datastore)
-		tRepo := repository.NewTokenDatastore()
-	*/
-
 	// Repository(Firestore)
 	fCli := cloudfirestore.NewClient(crePath)
 	tRepo := repository.NewTokenFirestore(fCli)

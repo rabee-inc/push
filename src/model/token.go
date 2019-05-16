@@ -6,22 +6,6 @@ import (
 	"github.com/rabee-inc/push/src/lib/util"
 )
 
-// PushToken ... トークン(DataStore)
-type PushToken struct {
-	ID        string `datastore:"-" boom:"id"`
-	AppID     string `datastore:""`
-	UserID    string `datastore:""`
-	Platform  string `datastore:",noindex"`
-	DeviceID  string `datastore:",noindex"`
-	Token     string `datastore:",noindex"`
-	CreatedAt int64  `datastore:",noindex"`
-}
-
-// GeneratePushTokenKey ... Datastore用のKeyを作成する
-func GeneratePushTokenKey(appID string, userID string, pf string, deviceID string) string {
-	return util.StrToMD5(fmt.Sprintf("%s::%s::%s::%s", appID, userID, pf, deviceID))
-}
-
 // TokenFirestore ... トークン(FireStore)
 type TokenFirestore struct {
 	Platform  string `firestore:"platform"`
@@ -45,6 +29,23 @@ type TokenMySQL struct {
 	Token     string
 	CreatedAt int64
 	UpdatedAt int64
+}
+
+// TableName ... TableNameを取得する
+func (m *TokenMySQL) TableName() string {
+	return "tokens"
+}
+
+// InsertColumns ... InsertColumnsを取得する
+func (m *TokenMySQL) InsertColumns() []string {
+	return []string{
+		"app_id",
+		"user_id",
+		"platform_id",
+		"token",
+		"created_at",
+		"updated_at",
+	}
 }
 
 // GenerateTokenID ... MySQL用のIDを作成する

@@ -8,9 +8,6 @@ const (
 	// CollectionTokens ... FirestoreのTokensコレクション
 	CollectionTokens = "tokens"
 
-	// KindPushToken ... DatastoreのPushTokenカインド
-	KindPushToken = "PushToken"
-
 	// QueueSendUser ... UserID変換処理のQueue
 	QueueSendUser = "PushSendUser"
 	// QueueSendToken ... Tokenから通知を送信するQueue
