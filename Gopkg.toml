@@ -27,7 +27,7 @@
 
 [[constraint]]
   name = "cloud.google.com/go"
-  version = "0.37.4"
+  version = "0.39.0"
 
 [[constraint]]
   name = "firebase.google.com/go"
@@ -47,27 +47,35 @@
 
 [[constraint]]
   name = "github.com/jinzhu/gorm"
-  version = "1.9.2"
+  version = "1.9.8"
+
+[[constraint]]
+  name = "github.com/rakyll/statik"
+  version = "0.1.6"
+
+[[constraint]]
+  name = "github.com/rs/xid"
+  version = "1.2.1"
 
 [[constraint]]
   name = "github.com/unrolled/render"
   version = "1.0.0"
 
 [[constraint]]
-  name = "go.mercari.io/datastore"
-  version = "1.4.0"
+  branch = "master"
+  name = "golang.org/x/oauth2"
 
 [[constraint]]
   name = "golang.org/x/text"
-  version = "0.3.0"
-
-[[constraint]]
-  name = "google.golang.org/api"
   version = "0.3.2"
 
 [[constraint]]
+  name = "google.golang.org/api"
+  version = "0.5.0"
+
+[[constraint]]
   name = "google.golang.org/appengine"
-  version = "1.5.0"
+  version = "1.6.0"
 
 [[constraint]]
   name = "gopkg.in/go-playground/validator.v9"
