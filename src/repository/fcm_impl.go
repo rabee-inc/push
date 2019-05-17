@@ -4,30 +4,18 @@ import (
 	"context"
 	"fmt"
 
-	firebase "firebase.google.com/go"
 	"firebase.google.com/go/messaging"
 	"github.com/rabee-inc/push/src/lib/log"
 	"github.com/rabee-inc/push/src/model"
 )
 
 type fcm struct {
-	svrKey string
+	fClis   map[string]*messaging.Client
+	svrKeys map[string]string
 }
 
 // SendMessage ... FCMにプッシュ通知送信を登録する
-func (r *fcm) SendMessage(ctx context.Context, token string, src *model.Message) error {
-	app, err := firebase.NewApp(ctx, nil)
-	if err != nil {
-		log.Errorm(ctx, "firebase.NewApp", err)
-		return err
-	}
-
-	cli, err := app.Messaging(ctx)
-	if err != nil {
-		log.Errorm(ctx, "app.Messaging", err)
-		return err
-	}
-
+func (r *fcm) SendMessage(ctx context.Context, appID string, token string, src *model.Message) error {
 	if src.IOS == nil {
 		src.IOS = &model.MessageIOS{
 			Badge: 1,
@@ -68,7 +56,7 @@ func (r *fcm) SendMessage(ctx context.Context, token string, src *model.Message)
 		Webpush: &messaging.WebpushConfig{
 			Headers: map[string]string{
 				"Content-Type":  "application/json",
-				"Authorization": fmt.Sprintf("Bearer %s", r.svrKey),
+				"Authorization": fmt.Sprintf("Bearer %s", r.svrKeys[appID]),
 			},
 			Notification: &messaging.WebpushNotification{
 				Icon: src.Web.Icon,
@@ -76,7 +64,7 @@ func (r *fcm) SendMessage(ctx context.Context, token string, src *model.Message)
 		},
 	}
 
-	_, err = cli.Send(ctx, msg)
+	_, err := r.fClis[appID].Send(ctx, msg)
 	if err != nil {
 		log.Warningm(ctx, "cli.Send", err)
 		return err
@@ -85,8 +73,9 @@ func (r *fcm) SendMessage(ctx context.Context, token string, src *model.Message)
 }
 
 // NewFcm ... リポジトリを作成する
-func NewFcm(svrKey string) Fcm {
+func NewFcm(fClis map[string]*messaging.Client, svrKeys map[string]string) Fcm {
 	return &fcm{
-		svrKey: svrKey,
+		fClis:   fClis,
+		svrKeys: svrKeys,
 	}
 }

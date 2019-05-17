@@ -3,6 +3,9 @@ package main
 import (
 	"os"
 
+	"github.com/rabee-inc/push/src/config"
+
+	"firebase.google.com/go/messaging"
 	"github.com/rabee-inc/push/src/handler/api"
 	"github.com/rabee-inc/push/src/handler/worker"
 	"github.com/rabee-inc/push/src/lib/cloudfirestore"
@@ -30,9 +33,21 @@ func (d *Dependency) Inject() {
 	if crePath == "" {
 		panic("no config GOOGLE_APPLICATION_CREDENTIALS")
 	}
-	svrKey := os.Getenv("FCM_SERVER_KEY")
-	if svrKey == "" {
-		panic("no config FCM_SERVER_KEY")
+
+	// FCM
+	var env string
+	appIDs := config.GetFCMAppIDs()
+	fcmClients := map[string]*messaging.Client{}
+	fcmServerKeys := map[string]string{}
+	if config.IsEnvProduction() {
+		env = "production"
+	} else {
+		env = "staging"
+	}
+	for _, appID := range appIDs {
+		fcmEnv := config.GetFCMEnv(env, appID)
+		fcmClients[appID] = config.GetClient(env, appID)
+		fcmServerKeys[appID] = fcmEnv.ServerKey
 	}
 
 	// Repository(Firestore)
@@ -52,7 +67,7 @@ func (d *Dependency) Inject() {
 	*/
 
 	// Repository
-	fRepo := repository.NewFcm(svrKey)
+	fRepo := repository.NewFcm(fcmClients, fcmServerKeys)
 
 	// Service
 	rSvc := service.NewRegister(tRepo)

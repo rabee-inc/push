@@ -8,5 +8,5 @@ import (
 
 // Fcm ... FCMに関するリポジトリ
 type Fcm interface {
-	SendMessage(ctx context.Context, token string, src *model.Message) error
+	SendMessage(ctx context.Context, appID string, token string, src *model.Message) error
 }

@@ -55,8 +55,8 @@ func (s *sender) MessageByUserID(ctx context.Context, appID string, userID strin
 }
 
 // MessageByToken ... メッセージをトークンに対して送信する
-func (s *sender) MessageByToken(ctx context.Context, token string, msg *model.Message) error {
-	err := s.fRepo.SendMessage(ctx, token, msg)
+func (s *sender) MessageByToken(ctx context.Context, appID string, token string, msg *model.Message) error {
+	err := s.fRepo.SendMessage(ctx, appID, token, msg)
 	if err != nil {
 		log.Warningm(ctx, "s.fRepo.SendMessage", err)
 		return err

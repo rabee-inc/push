@@ -51,3 +51,9 @@ make deploy-production app=default
 # API
 JSONRPC2.0を使用しています。
 詳細はrundoc/docs内を参照してください。
+
+# サービスの追加
+```bash
+cd src
+statik -src=../fcm
+```

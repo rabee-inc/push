@@ -92,7 +92,7 @@ func (h *SendHandler) SendToken(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.Svc.MessageByToken(ctx, param.Token, param.Message)
+	err = h.Svc.MessageByToken(ctx, param.AppID, param.Token, param.Message)
 	if err != nil {
 		renderer.HandleError(ctx, w, "h.Svc.MessageByToken", err)
 		return
