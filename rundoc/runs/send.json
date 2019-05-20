@@ -8,9 +8,9 @@
         "id": "1",
         "method": "send",
         "params": {
-            "app_id": "test_app_id",
+            "app_id": "rec",
             "user_ids": [
-                "test_user_id"
+                "C88c5iD97Yd9r99OFnxBSLev7dj2"
             ],
             "message": {
                 "title": "テストタイトル",

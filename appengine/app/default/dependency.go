@@ -3,9 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/rabee-inc/push/src/config"
-
 	"firebase.google.com/go/messaging"
+	"github.com/rabee-inc/push/src/config"
 	"github.com/rabee-inc/push/src/handler/api"
 	"github.com/rabee-inc/push/src/handler/worker"
 	"github.com/rabee-inc/push/src/lib/cloudfirestore"

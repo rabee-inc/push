@@ -10,7 +10,6 @@ import (
 	"firebase.google.com/go/messaging"
 	_ "github.com/rabee-inc/push/src/statik" // バイナリ化したファイル
 	"github.com/rakyll/statik/fs"
-	"golang.org/x/oauth2/google"
 	"google.golang.org/api/option"
 )
 
@@ -40,11 +39,7 @@ func GetFCMAppIDs() []string {
 func GetClient(e string, appID string) *messaging.Client {
 	ctx := context.Background()
 	jsonData := getFile(fmt.Sprintf("/credentials/%s/%s.json", e, appID))
-	cre, err := google.CredentialsFromJSON(ctx, jsonData)
-	if err != nil {
-		panic(err)
-	}
-	opt := option.WithCredentials(cre)
+	opt := option.WithCredentialsJSON(jsonData)
 	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
 		panic(err)
