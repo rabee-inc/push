@@ -1,6 +1,7 @@
 {
     "app_ids": [
         "salontia",
-        "rec"
+        "rec",
+        "nearby"
     ]
 }
