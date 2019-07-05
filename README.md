@@ -22,7 +22,8 @@ iOS, Android, Webにプッシュ通知を送信するサーバーです。
 ## 準備
 ```bash
 cp env.example.json env.json
-dep ensure
+cd appengine/app/default
+GO111MODULE=on go test
 ```
 
 ## Docker(LocalのMySQLを使う場合)

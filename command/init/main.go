@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/rabee-inc/push/command/common"
 	"gopkg.in/yaml.v2"
+
+	"github.com/rabee-inc/push/command/common"
 )
 
 func main() {
@@ -49,9 +50,6 @@ func createHotReloadLinks(env string, app string) {
 		fmt.Sprintf("./appengine/app/%s/app_%s.yaml", app, env),
 		fmt.Sprintf("./deploy/appengine/%s/%s/app.yaml", env, app),
 	)
-	os.Symlink(
-		fmt.Sprintf("../../../../appengine/app/%s/app_%s.yaml", app, env),
-		fmt.Sprintf("deploy/appengine/%s/%s/app.yaml", env, app))
 	// go
 	os.Symlink(
 		fmt.Sprintf("../../../../appengine/app/%s/main.go", app),
@@ -62,6 +60,16 @@ func createHotReloadLinks(env string, app string) {
 	os.Symlink(
 		fmt.Sprintf("../../../../appengine/app/%s/routing.go", app),
 		fmt.Sprintf("deploy/appengine/%s/%s/routing.go", env, app))
+	goModFile := fmt.Sprintf("./deploy/appengine/%s/%s/go.mod", env, app)
+	common.ExecCommand(
+		"cp",
+		fmt.Sprintf("./appengine/app/%s/go.mod", app),
+		goModFile,
+	)
+	common.ReplaceFile(goModFile, "../../../src", "./src")
+	os.Symlink(
+		fmt.Sprintf("../../../../appengine/app/%s/go.sum", app),
+		fmt.Sprintf("deploy/appengine/%s/%s/go.sum", env, app))
 	// cron.yaml
 	os.Symlink(
 		fmt.Sprintf("../../../../appengine/config/cron.yaml"),
@@ -69,20 +77,6 @@ func createHotReloadLinks(env string, app string) {
 	os.Symlink(
 		fmt.Sprintf("../../../appengine/config/cron.yaml"),
 		fmt.Sprintf("deploy/appengine/%s/cron.yaml", env))
-	// dispatch.yaml
-	os.Symlink(
-		fmt.Sprintf("../../../../appengine/config/dispatch_%s.yaml", env),
-		fmt.Sprintf("deploy/appengine/%s/%s/dispatch.yaml", env, app))
-	os.Symlink(
-		fmt.Sprintf("../../../appengine/config/dispatch_%s.yaml", env),
-		fmt.Sprintf("deploy/appengine/%s/dispatch.yaml", env))
-	// index.yaml
-	os.Symlink(
-		fmt.Sprintf("../../../../appengine/config/index.yaml"),
-		fmt.Sprintf("deploy/appengine/%s/%s/index.yaml", env, app))
-	os.Symlink(
-		fmt.Sprintf("../../../appengine/config/index.yaml"),
-		fmt.Sprintf("deploy/appengine/%s/index.yaml", env))
 	// queue.yaml
 	os.Symlink(
 		fmt.Sprintf("../../../../appengine/config/queue.yaml"),
