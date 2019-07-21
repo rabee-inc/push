@@ -46,7 +46,7 @@ func (d *Dependency) Inject(e *Environment) {
 	}
 
 	// Client
-	tCli := cloudtasks.NewClient(e.CredentialsPath, e.Port, e.Deploy, e.ProjectID, e.LocationID, e.ServiceID, e.InternalAuthToken)
+	tCli := cloudtasks.NewClient(e.CredentialsPath, e.Port, e.Deploy, e.ProjectID, e.LocationID, e.InternalAuthToken)
 	var lCli log.Writer
 	if deploy.IsLocal() {
 		lCli = log.NewWriterStdout()
@@ -75,7 +75,7 @@ func (d *Dependency) Inject(e *Environment) {
 
 	// Service
 	rSvc := service.NewRegister(tRepo)
-	sSvc := service.NewSender(tRepo, fRepo, tCli)
+	sSvc := service.NewSender(tRepo, fRepo, tCli, e.ServiceID)
 
 	// Middleware
 	d.Log = log.NewMiddleware(lCli, e.MinLogSeverity)
@@ -84,7 +84,7 @@ func (d *Dependency) Inject(e *Environment) {
 	// Action
 	d.EntryAction = api.NewEntryAction(rSvc)
 	d.LeaveAction = api.NewLeaveAction(rSvc)
-	d.SendAction = api.NewSendAction(sSvc, tCli)
+	d.SendAction = api.NewSendAction(sSvc, tCli, e.ServiceID)
 
 	// Handler
 	d.JSONRPC2Handler = jsonrpc2.NewHandler()

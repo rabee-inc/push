@@ -14,8 +14,9 @@ import (
 
 // SendAction ...  送信のアクション
 type SendAction struct {
-	Svc  service.Sender
-	tCli *cloudtasks.Client
+	Svc             service.Sender
+	tCli            *cloudtasks.Client
+	workerServiceID string
 }
 
 type sendParams struct {
@@ -54,7 +55,7 @@ func (h *SendAction) Exec(ctx context.Context, method string, params interface{}
 		Message: ps.Message,
 	}
 
-	err := h.tCli.AddTask(ctx, config.QueueSendUser, "/worker/send/users", src)
+	err := h.tCli.AddTask(ctx, config.QueueSendUser, h.workerServiceID, "/worker/send/users", src)
 	if err != nil {
 		return nil, err
 	}
@@ -65,9 +66,10 @@ func (h *SendAction) Exec(ctx context.Context, method string, params interface{}
 }
 
 // NewSendAction ... SendActionを作成する
-func NewSendAction(svc service.Sender, tCli *cloudtasks.Client) *SendAction {
+func NewSendAction(svc service.Sender, tCli *cloudtasks.Client, workerServiceID string) *SendAction {
 	return &SendAction{
-		Svc:  svc,
-		tCli: tCli,
+		Svc:             svc,
+		tCli:            tCli,
+		workerServiceID: workerServiceID,
 	}
 }

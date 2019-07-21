@@ -11,9 +11,10 @@ import (
 )
 
 type sender struct {
-	tRepo repository.Token
-	fRepo repository.Fcm
-	tCli  *cloudtasks.Client
+	tRepo           repository.Token
+	fRepo           repository.Fcm
+	tCli            *cloudtasks.Client
+	workerServiceID string
 }
 
 // MessageByUserIDs ... メッセージを複数のユーザーIDに対して送信する
@@ -24,7 +25,7 @@ func (s *sender) MessageByUserIDs(ctx context.Context, appID string, userIDs []s
 			UserID:  userID,
 			Message: msg,
 		}
-		err := s.tCli.AddTask(ctx, config.QueueSendUser, "/worker/send/user", src)
+		err := s.tCli.AddTask(ctx, config.QueueSendUser, s.workerServiceID, "/worker/send/user", src)
 		if err != nil {
 			log.Warningm(ctx, "s.tCli.AddTask", err)
 			return err
@@ -46,7 +47,7 @@ func (s *sender) MessageByUserID(ctx context.Context, appID string, userID strin
 			Token:   token,
 			Message: msg,
 		}
-		err = s.tCli.AddTask(ctx, config.QueueSendToken, "/worker/send/token", src)
+		err = s.tCli.AddTask(ctx, config.QueueSendToken, s.workerServiceID, "/worker/send/token", src)
 		if err != nil {
 			log.Warningm(ctx, "s.tCli.AddTask", err)
 			return err
@@ -66,10 +67,15 @@ func (s *sender) MessageByToken(ctx context.Context, appID string, token string,
 }
 
 // NewSender ... サービスを作成する
-func NewSender(tRepo repository.Token, fRepo repository.Fcm, tCli *cloudtasks.Client) Sender {
+func NewSender(
+	tRepo repository.Token,
+	fRepo repository.Fcm,
+	tCli *cloudtasks.Client,
+	workerServiceID string) Sender {
 	return &sender{
-		tRepo: tRepo,
-		fRepo: fRepo,
-		tCli:  tCli,
+		tRepo:           tRepo,
+		fRepo:           fRepo,
+		tCli:            tCli,
+		workerServiceID: workerServiceID,
 	}
 }
