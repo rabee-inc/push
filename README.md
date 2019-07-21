@@ -40,13 +40,13 @@ docker-compose down
 
 ## 実行
 ```bash
-make run app=default
+make run name=default
 ```
 
 ## デプロイ
 ```bash
-make deploy app=default
-make deploy-production app=default
+make deploy name=default
+make deploy-production name=default
 ```
 
 # API
@@ -56,5 +56,5 @@ JSONRPC2.0を使用しています。
 # サービスの追加
 ```bash
 cd src
-statik -src=../fcm
+$GOPATH/bin/statik -src=../fcm
 ```
