@@ -22,7 +22,7 @@ iOS, Android, Webにプッシュ通知を送信するサーバーです。
 ## 準備
 ```bash
 cp env.example.json env.json
-cd appengine/app/default
+cd appengine/default
 GO111MODULE=on go test
 ```
 
@@ -40,11 +40,13 @@ docker-compose down
 
 ## 実行
 ```bash
+cd appengine
 make run name=default
 ```
 
 ## デプロイ
 ```bash
+cd appengine
 make deploy name=default
 make deploy-production name=default
 ```
@@ -55,6 +57,6 @@ JSONRPC2.0を使用しています。
 
 # サービスの追加
 ```bash
-cd src
-$GOPATH/bin/statik -src=../fcm
+cd appengine/src
+$GOPATH/bin/statik -src=../../fcm
 ```
