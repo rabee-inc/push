@@ -9,12 +9,10 @@ import (
 	"github.com/rabee-inc/push/appengine/default/src/config"
 	"github.com/rabee-inc/push/appengine/default/src/lib/cloudtasks"
 	"github.com/rabee-inc/push/appengine/default/src/model"
-	"github.com/rabee-inc/push/appengine/default/src/service"
 )
 
 // SendAction ...  送信のアクション
 type SendAction struct {
-	Svc  service.Sender
 	tCli *cloudtasks.Client
 }
 
@@ -65,9 +63,8 @@ func (h *SendAction) Exec(ctx context.Context, method string, params interface{}
 }
 
 // NewSendAction ... SendActionを作成する
-func NewSendAction(svc service.Sender, tCli *cloudtasks.Client) *SendAction {
+func NewSendAction(tCli *cloudtasks.Client) *SendAction {
 	return &SendAction{
-		Svc:  svc,
 		tCli: tCli,
 	}
 }

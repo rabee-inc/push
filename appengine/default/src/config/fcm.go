@@ -6,11 +6,12 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"firebase.google.com/go"
+	firebase "firebase.google.com/go"
 	"firebase.google.com/go/messaging"
-	_ "github.com/rabee-inc/push/appengine/default/src/statik" // バイナリ化したファイル
 	"github.com/rakyll/statik/fs"
 	"google.golang.org/api/option"
+
+	_ "github.com/rabee-inc/push/appengine/default/src/statik" // バイナリ化したファイル
 )
 
 // FCMApps ... FCMのApps

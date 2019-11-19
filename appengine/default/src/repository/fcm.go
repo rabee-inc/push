@@ -10,5 +10,6 @@ import (
 type Fcm interface {
 	SubscribeTopic(ctx context.Context, appID string, topic string, tokens []string) error
 	UnsubscribeTopic(ctx context.Context, appID string, topic string, tokens []string) error
-	SendMessage(ctx context.Context, appID string, token string, src *model.Message) error
+	SendMessageByTokens(ctx context.Context, appID string, tokens []string, src *model.Message) error
+	SendMessageByTopic(ctx context.Context, appID string, topic string, src *model.Message) error
 }

@@ -11,7 +11,7 @@ import (
 
 // LeaveAction ... 離脱のアクション
 type LeaveAction struct {
-	Svc service.Register
+	rSvc service.Register
 }
 
 type leaveParams struct {
@@ -45,7 +45,7 @@ func (h *LeaveAction) DecodeParams(ctx context.Context, msg *json.RawMessage) (i
 func (h *LeaveAction) Exec(ctx context.Context, method string, params interface{}) (interface{}, error) {
 	ps := params.(leaveParams)
 
-	err := h.Svc.DeleteToken(ctx, ps.AppID, ps.UserID, ps.Platform, ps.DeviceID)
+	err := h.rSvc.DeleteToken(ctx, ps.AppID, ps.UserID, ps.Platform, ps.DeviceID)
 	if err != nil {
 		return nil, err
 	}
@@ -56,8 +56,8 @@ func (h *LeaveAction) Exec(ctx context.Context, method string, params interface{
 }
 
 // NewLeaveAction ... アクションを作成する
-func NewLeaveAction(svc service.Register) *LeaveAction {
+func NewLeaveAction(rSvc service.Register) *LeaveAction {
 	return &LeaveAction{
-		Svc: svc,
+		rSvc: rSvc,
 	}
 }

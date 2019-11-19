@@ -11,7 +11,7 @@ import (
 
 // EntryAction ... エントリーのアクション
 type EntryAction struct {
-	Svc service.Register
+	rSvc service.Register
 }
 
 type entryParams struct {
@@ -46,7 +46,7 @@ func (h *EntryAction) DecodeParams(ctx context.Context, msg *json.RawMessage) (i
 func (h *EntryAction) Exec(ctx context.Context, method string, params interface{}) (interface{}, error) {
 	ps := params.(entryParams)
 
-	err := h.Svc.SetToken(ctx, ps.AppID, ps.UserID, ps.Platform, ps.DeviceID, ps.Token)
+	err := h.rSvc.SetToken(ctx, ps.AppID, ps.UserID, ps.Platform, ps.DeviceID, ps.Token)
 	if err != nil {
 		return nil, err
 	}
@@ -57,8 +57,8 @@ func (h *EntryAction) Exec(ctx context.Context, method string, params interface{
 }
 
 // NewEntryAction ... アクションを作成する
-func NewEntryAction(svc service.Register) *EntryAction {
+func NewEntryAction(rSvc service.Register) *EntryAction {
 	return &EntryAction{
-		Svc: svc,
+		rSvc: rSvc,
 	}
 }

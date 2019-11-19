@@ -15,7 +15,6 @@ type token struct {
 	fCli *firestore.Client
 }
 
-// Get ... トークンを取得する
 func (r *token) Get(ctx context.Context, appID string, userID string, platform string, deviceID string) (string, error) {
 	docID := model.GenerateTokenDocID(platform, deviceID)
 	docRef := model.TokenRef(r.fCli, appID, userID).Doc(docID)
@@ -28,7 +27,6 @@ func (r *token) Get(ctx context.Context, appID string, userID string, platform s
 	return dst.Token, nil
 }
 
-// ListByUser ... ユーザーに紐づくトークンリストを取得する
 func (r *token) ListByUser(ctx context.Context, appID string, userID string) ([]string, error) {
 	q := model.TokenRef(r.fCli, appID, userID).Query
 	tokens := []*model.Token{}
@@ -44,7 +42,6 @@ func (r *token) ListByUser(ctx context.Context, appID string, userID string) ([]
 	return dsts, nil
 }
 
-// Put ... トークンを登録する
 func (r *token) Put(ctx context.Context, appID string, userID string, platform string, deviceID string, token string) error {
 	src := &model.Token{
 		Platform:  platform,
@@ -62,7 +59,6 @@ func (r *token) Put(ctx context.Context, appID string, userID string, platform s
 	return nil
 }
 
-// Delete ... トークンを削除する
 func (r *token) Delete(ctx context.Context, appID string, userID string, platform string, deviceID string) error {
 	docID := model.GenerateTokenDocID(platform, deviceID)
 	docRef := model.TokenRef(r.fCli, appID, userID).Doc(docID)

@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	cloud.google.com/go v0.43.0
-	firebase.google.com/go v3.8.1+incompatible
+	firebase.google.com/go v3.10.0+incompatible
 	github.com/davecgh/go-spew v1.1.1
 	github.com/eknkc/amber v0.0.0-20171010120322-cdade1c07385 // indirect
 	github.com/go-chi/chi v4.0.2+incompatible

@@ -13,10 +13,3 @@ type CloudTasksParamSendUserID struct {
 	UserID  string   `json:"user_id" validate:"required"`
 	Message *Message `json:"message" validate:"required"`
 }
-
-// CloudTasksParamSendToken ... Tokenでプッシュ通知を送信するパラメータ
-type CloudTasksParamSendToken struct {
-	AppID   string   `json:"app_id"  validate:"required"`
-	Token   string   `json:"token"   validate:"required"`
-	Message *Message `json:"message" validate:"required"`
-}

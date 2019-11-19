@@ -25,7 +25,6 @@ func Routing(r *chi.Mux, d *Dependency) {
 	r.Route("/worker", func(r chi.Router) {
 		r.With(d.InternalAuth.Handle).Post("/send/users", d.SendHandler.SendUserIDs)
 		r.With(d.InternalAuth.Handle).Post("/send/user", d.SendHandler.SendUserID)
-		r.With(d.InternalAuth.Handle).Post("/send/token", d.SendHandler.SendToken)
 	})
 
 	http.Handle("/", r)
@@ -35,4 +34,5 @@ func registActions(d *Dependency) {
 	d.JSONRPC2Handler.Register("entry", d.EntryAction)
 	d.JSONRPC2Handler.Register("leave", d.LeaveAction)
 	d.JSONRPC2Handler.Register("send", d.SendAction)
+	d.JSONRPC2Handler.Register("send_by_all", d.SendByAllAction)
 }

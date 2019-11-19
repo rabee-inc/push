@@ -11,6 +11,6 @@ type Sample struct {
 	FCli *firestore.Client
 }
 
-// Generate ... シードデータを作成する
-func (m *Sample) Generate(ctx context.Context) {
+// Migrate ... マイグレーションを実行する
+func (m *Sample) Migrate(ctx context.Context) {
 }

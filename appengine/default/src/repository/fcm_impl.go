@@ -45,8 +45,36 @@ func (r *fcm) UnsubscribeTopic(ctx context.Context, appID string, topic string, 
 	return nil
 }
 
-// SendMessage ... FCMにプッシュ通知送信を登録する
-func (r *fcm) SendMessage(ctx context.Context, appID string, token string, src *model.Message) error {
+func (r *fcm) SendMessageByTokens(ctx context.Context, appID string, tokens []string, src *model.Message) error {
+	msg := r.generateMessage(ctx, appID, src)
+	mmsg := &messaging.MulticastMessage{
+		Tokens:       tokens,
+		Notification: msg.Notification,
+		Data:         msg.Data,
+		APNS:         msg.APNS,
+		Android:      msg.Android,
+		Webpush:      msg.Webpush,
+	}
+	_, err := r.fClis[appID].SendMulticast(ctx, mmsg)
+	if err != nil {
+		log.Warningm(ctx, "r.fClis[appID].SendMulticast", err)
+		return err
+	}
+	return nil
+}
+
+func (r *fcm) SendMessageByTopic(ctx context.Context, appID string, topic string, src *model.Message) error {
+	msg := r.generateMessage(ctx, appID, src)
+	msg.Topic = topic
+	_, err := r.fClis[appID].Send(ctx, msg)
+	if err != nil {
+		log.Warningm(ctx, "r.fClis[appID].Send", err)
+		return err
+	}
+	return nil
+}
+
+func (r *fcm) generateMessage(ctx context.Context, appID string, src *model.Message) *messaging.Message {
 	if src.IOS == nil {
 		src.IOS = &model.MessageIOS{
 			Badge: 1,
@@ -60,7 +88,6 @@ func (r *fcm) SendMessage(ctx context.Context, appID string, token string, src *
 	}
 
 	msg := &messaging.Message{
-		Token: token,
 		Notification: &messaging.Notification{
 			Title: src.Title,
 			Body:  src.Body,
@@ -94,13 +121,7 @@ func (r *fcm) SendMessage(ctx context.Context, appID string, token string, src *
 			},
 		},
 	}
-
-	_, err := r.fClis[appID].Send(ctx, msg)
-	if err != nil {
-		log.Warningm(ctx, "r.fClis[appID].Send", err)
-		return err
-	}
-	return nil
+	return msg
 }
 
 // NewFcm ... リポジトリを作成する

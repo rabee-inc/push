@@ -14,7 +14,6 @@ type register struct {
 	fRepo repository.Fcm
 }
 
-// SetToken ... 各プラットフォームで取得したプッシュ通知トークンを登録する
 func (s *register) SetToken(ctx context.Context, appID string, userID string, platform string, deviceID string, token string) error {
 	// 保存
 	err := s.tRepo.Put(ctx, appID, userID, platform, deviceID, token)
@@ -23,7 +22,7 @@ func (s *register) SetToken(ctx context.Context, appID string, userID string, pl
 		return err
 	}
 
-	// トピックに登録
+	// 全員のトピックに登録
 	err = s.fRepo.SubscribeTopic(ctx, appID, config.TopicAll, []string{token})
 	if err != nil {
 		log.Errorm(ctx, "s.fRepo.SubscribeTopic", err)
@@ -32,7 +31,6 @@ func (s *register) SetToken(ctx context.Context, appID string, userID string, pl
 	return nil
 }
 
-// DeleteToken ... 指定したプッシュ通知トークンを削除する
 func (s *register) DeleteToken(ctx context.Context, appID string, userID string, platform string, deviceID string) error {
 	// 取得
 	token, err := s.tRepo.Get(ctx, appID, userID, platform, deviceID)
@@ -52,7 +50,7 @@ func (s *register) DeleteToken(ctx context.Context, appID string, userID string,
 		return err
 	}
 
-	// トピックから削除
+	// 全員のトピックから削除
 	err = s.fRepo.UnsubscribeTopic(ctx, appID, config.TopicAll, []string{token})
 	if err != nil {
 		log.Errorm(ctx, "s.fRepo.UnsubscribeTopic", err)

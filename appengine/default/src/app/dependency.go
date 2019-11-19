@@ -24,6 +24,7 @@ type Dependency struct {
 	EntryAction     *api.EntryAction
 	LeaveAction     *api.LeaveAction
 	SendAction      *api.SendAction
+	SendByAllAction *api.SendByAllAction
 	SendHandler     *worker.SendHandler
 }
 
@@ -74,5 +75,6 @@ func (d *Dependency) Inject(e *Environment) {
 	// Action
 	d.EntryAction = api.NewEntryAction(rSvc)
 	d.LeaveAction = api.NewLeaveAction(rSvc)
-	d.SendAction = api.NewSendAction(sSvc, tCli)
+	d.SendAction = api.NewSendAction(tCli)
+	d.SendByAllAction = api.NewSendByAllAction(sSvc)
 }

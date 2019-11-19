@@ -16,7 +16,16 @@ type sender struct {
 	tCli  *cloudtasks.Client
 }
 
-// MessageByUserIDs ... メッセージを複数のユーザーIDに対して送信する
+func (s *sender) MessageByAll(ctx context.Context, appID string, msg *model.Message) error {
+	// プッシュ通知を送信
+	err := s.fRepo.SendMessageByTopic(ctx, appID, config.TopicAll, msg)
+	if err != nil {
+		log.Warningm(ctx, "s.fRepo.SendMessageByTopic", err)
+		return err
+	}
+	return nil
+}
+
 func (s *sender) MessageByUserIDs(ctx context.Context, appID string, userIDs []string, msg *model.Message) error {
 	for _, userID := range userIDs {
 		src := &model.CloudTasksParamSendUserID{
@@ -33,31 +42,16 @@ func (s *sender) MessageByUserIDs(ctx context.Context, appID string, userIDs []s
 	return nil
 }
 
-// MessageByUserID ... メッセージをユーザーIDに対して送信する
 func (s *sender) MessageByUserID(ctx context.Context, appID string, userID string, msg *model.Message) error {
+	// ユーザーに紐づくTokenを取得
 	tokens, err := s.tRepo.ListByUser(ctx, appID, userID)
 	if err != nil {
 		log.Errorm(ctx, "s.tRepo.GetListByUserID", err)
 		return err
 	}
-	for _, token := range tokens {
-		src := &model.CloudTasksParamSendToken{
-			AppID:   appID,
-			Token:   token,
-			Message: msg,
-		}
-		err = s.tCli.AddTask(ctx, config.QueueSendToken, "/worker/send/token", src)
-		if err != nil {
-			log.Warningm(ctx, "s.tCli.AddTask", err)
-			return err
-		}
-	}
-	return nil
-}
 
-// MessageByToken ... メッセージをトークンに対して送信する
-func (s *sender) MessageByToken(ctx context.Context, appID string, token string, msg *model.Message) error {
-	err := s.fRepo.SendMessage(ctx, appID, token, msg)
+	// プッシュ通知を送信
+	err = s.fRepo.SendMessageByTokens(ctx, appID, tokens, msg)
 	if err != nil {
 		log.Warningm(ctx, "s.fRepo.SendMessage", err)
 		return err
