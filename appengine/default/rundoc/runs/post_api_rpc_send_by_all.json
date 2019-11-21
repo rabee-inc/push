@@ -1,0 +1,18 @@
+{
+    "description": "プッシュ通知",
+    "path": "/api/rpc",
+    "method": "post",
+    "headers": {},
+    "params": {
+        "jsonrpc": "2.0",
+        "id": "0",
+        "method": "send_by_all",
+        "params": {
+            "app_id": "rec",
+            "message": {
+                "title": "test_title",
+                "body": "test_body"
+            }
+        }
+    }
+}
