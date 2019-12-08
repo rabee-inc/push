@@ -18,14 +18,18 @@ import (
 
 // Dependency ... 依存性
 type Dependency struct {
-	Log             *log.Middleware
-	InternalAuth    *internalauth.Middleware
-	JSONRPC2Handler *jsonrpc2.Handler
-	EntryAction     *api.EntryAction
-	LeaveAction     *api.LeaveAction
-	SendAction      *api.SendAction
-	SendByAllAction *api.SendByAllAction
-	SendHandler     *worker.SendHandler
+	Log                  *log.Middleware
+	InternalAuth         *internalauth.Middleware
+	JSONRPC2Handler      *jsonrpc2.Handler
+	EntryAction          *api.EntryAction
+	LeaveAction          *api.LeaveAction
+	SendByUsersAction    *api.SendByUsersAction
+	SendByAllUsersAction *api.SendByAllUsersAction
+	GetReserve           *api.GetReserveAction
+	ListReserve          *api.ListReserveAction
+	CreateReserve        *api.CreateReserveAction
+	UpdateReserve        *api.UpdateReserveAction
+	SendHandler          *worker.SendHandler
 }
 
 // Inject ... 依存性を注入する
@@ -59,10 +63,12 @@ func (d *Dependency) Inject(e *Environment) {
 	// Repository
 	tRepo := repository.NewToken(fCli)
 	fRepo := repository.NewFcm(fcmClients, fcmServerKeys)
+	rRepo := repository.NewReserve(fCli)
 
 	// Service
-	rSvc := service.NewRegister(tRepo, fRepo)
-	sSvc := service.NewSender(tRepo, fRepo, tCli)
+	rgSvc := service.NewRegister(tRepo, fRepo)
+	sSvc := service.NewSender(tRepo, fRepo, rRepo, tCli, fCli)
+	rSvc := service.NewReserve(rRepo, fCli)
 
 	// Middleware
 	d.Log = log.NewMiddleware(lCli, e.MinLogSeverity)
@@ -70,11 +76,15 @@ func (d *Dependency) Inject(e *Environment) {
 
 	// Handler
 	d.JSONRPC2Handler = jsonrpc2.NewHandler()
-	d.SendHandler = worker.NewSendHandler(sSvc)
+	d.SendHandler = worker.NewSendHandler(sSvc, rSvc)
 
 	// Action
-	d.EntryAction = api.NewEntryAction(rSvc)
-	d.LeaveAction = api.NewLeaveAction(rSvc)
-	d.SendAction = api.NewSendAction(tCli)
-	d.SendByAllAction = api.NewSendByAllAction(sSvc)
+	d.EntryAction = api.NewEntryAction(rgSvc)
+	d.LeaveAction = api.NewLeaveAction(rgSvc)
+	d.SendByUsersAction = api.NewSendByUsersAction(tCli)
+	d.SendByAllUsersAction = api.NewSendByAllUsersAction(sSvc)
+	d.GetReserve = api.NewGetReserveAction(rSvc)
+	d.ListReserve = api.NewListReserveAction(rSvc)
+	d.CreateReserve = api.NewCreateReserveAction(rSvc)
+	d.UpdateReserve = api.NewUpdateReserveAction(rSvc)
 }

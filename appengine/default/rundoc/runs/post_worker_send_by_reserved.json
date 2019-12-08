@@ -1,0 +1,9 @@
+{
+    "description": "予約されたプッシュ通知を全員に送信する",
+    "path": "/worker/send/reserved",
+    "method": "post",
+    "headers": {},
+    "params": {
+        "app_id": "rec"
+    }
+}

@@ -1,6 +1,6 @@
-# post_api_rpc_send
+# post_api_rpc_send_by_reserved
 
-プッシュ通知
+予約されたプッシュ通知を全員に送信する
 
 ## Request
 
@@ -18,16 +18,9 @@ Content-Type: application/json
 {
     "id": "0",
     "jsonrpc": "2.0",
-    "method": "send",
+    "method": "send_by_reserved",
     "params": {
-        "app_id": "rec",
-        "message": {
-            "body": "test_body",
-            "title": "test_title"
-        },
-        "user_ids": [
-            "sample_user_id"
-        ]
+        "app_id": "rec"
     }
 }
 ```
@@ -41,8 +34,9 @@ Status 200
 {
     "jsonrpc": "2.0",
     "id": "0",
-    "result": {
-        "success": true
+    "error": {
+        "code": 400,
+        "message": "method not found: send_by_reserved"
     }
 }
 ```

@@ -11,24 +11,24 @@ import (
 	"github.com/rabee-inc/push/appengine/default/src/model"
 )
 
-// SendAction ...  送信のアクション
-type SendAction struct {
+// SendByUsersAction ...  送信のアクション
+type SendByUsersAction struct {
 	tCli *cloudtasks.Client
 }
 
-type sendParams struct {
+type sendByUsersParams struct {
 	AppID   string         `json:"app_id"   validate:"required"`
 	UserIDs []string       `json:"user_ids" validate:"required"`
 	Message *model.Message `json:"message"  validate:"required"`
 }
 
-type sendResponse struct {
+type sendByUsersResponse struct {
 	Success bool `json:"success"`
 }
 
 // DecodeParams ... 受け取ったJSONパラメータをデコードする
-func (h *SendAction) DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error) {
-	var params sendParams
+func (h *SendByUsersAction) DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error) {
+	var params sendByUsersParams
 	err := json.Unmarshal(*msg, &params)
 	if err != nil {
 		return params, err
@@ -43,10 +43,10 @@ func (h *SendAction) DecodeParams(ctx context.Context, msg *json.RawMessage) (in
 }
 
 // Exec ... 処理をする
-func (h *SendAction) Exec(ctx context.Context, method string, params interface{}) (interface{}, error) {
-	ps := params.(sendParams)
+func (h *SendByUsersAction) Exec(ctx context.Context, method string, params interface{}) (interface{}, error) {
+	ps := params.(sendByUsersParams)
 
-	src := &model.CloudTasksParamSendUserIDs{
+	src := &model.CloudTasksParamSendUsers{
 		AppID:   ps.AppID,
 		UserIDs: ps.UserIDs,
 		Message: ps.Message,
@@ -57,14 +57,14 @@ func (h *SendAction) Exec(ctx context.Context, method string, params interface{}
 		return nil, err
 	}
 
-	return sendResponse{
+	return sendByUsersResponse{
 		Success: true,
 	}, nil
 }
 
-// NewSendAction ... SendActionを作成する
-func NewSendAction(tCli *cloudtasks.Client) *SendAction {
-	return &SendAction{
+// NewSendByUsersAction ... SendByUsersActionを作成する
+func NewSendByUsersAction(tCli *cloudtasks.Client) *SendByUsersAction {
+	return &SendByUsersAction{
 		tCli: tCli,
 	}
 }

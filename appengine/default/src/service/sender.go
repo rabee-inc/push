@@ -8,7 +8,21 @@ import (
 
 // Sender ... 通知を送信する
 type Sender interface {
-	MessageByAll(ctx context.Context, appID string, msg *model.Message) error
-	MessageByUserIDs(ctx context.Context, appID string, userIDs []string, msg *model.Message) error
-	MessageByUserID(ctx context.Context, appID string, userID string, msg *model.Message) error
+	AllUsers(
+		ctx context.Context,
+		appID string,
+		msg *model.Message) error
+	Users(
+		ctx context.Context,
+		appID string,
+		userIDs []string,
+		msg *model.Message) error
+	User(
+		ctx context.Context,
+		appID string,
+		userID string,
+		msg *model.Message) error
+	Reserved(
+		ctx context.Context,
+		appID string) error
 }

@@ -1,0 +1,15 @@
+{
+    "description": "プッシュ通知の予約リストを取得する",
+    "path": "/api/rpc",
+    "method": "post",
+    "headers": {},
+    "params": {
+        "jsonrpc": "2.0",
+        "id": "0",
+        "method": "list_reserve",
+        "params": {
+            "app_id": "rec",
+            "reserve_id": ""
+        }
+    }
+}

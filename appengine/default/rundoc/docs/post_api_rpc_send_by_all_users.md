@@ -1,6 +1,6 @@
-# post_api_rpc_send_by_all
+# post_api_rpc_send_by_all_users
 
-プッシュ通知
+プッシュ通知を全員に送信する
 
 ## Request
 
@@ -18,12 +18,12 @@ Content-Type: application/json
 {
     "id": "0",
     "jsonrpc": "2.0",
-    "method": "send_by_all",
+    "method": "send_by_all_users",
     "params": {
         "app_id": "rec",
         "message": {
-            "body": "test_body",
-            "title": "test_title"
+            "body": "test_body_all",
+            "title": "test_title_all"
         }
     }
 }

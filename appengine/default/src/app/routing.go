@@ -23,8 +23,9 @@ func Routing(r *chi.Mux, d *Dependency) {
 
 	// Worker
 	r.Route("/worker", func(r chi.Router) {
-		r.With(d.InternalAuth.Handle).Post("/send/users", d.SendHandler.SendUserIDs)
-		r.With(d.InternalAuth.Handle).Post("/send/user", d.SendHandler.SendUserID)
+		r.With(d.InternalAuth.Handle).Post("/send/users", d.SendHandler.SendByUsers)
+		r.With(d.InternalAuth.Handle).Post("/send/user", d.SendHandler.SendByUser)
+		r.With(d.InternalAuth.Handle).Post("/send/reserved", d.SendHandler.SendByReserved)
 	})
 
 	http.Handle("/", r)
@@ -33,6 +34,13 @@ func Routing(r *chi.Mux, d *Dependency) {
 func registActions(d *Dependency) {
 	d.JSONRPC2Handler.Register("entry", d.EntryAction)
 	d.JSONRPC2Handler.Register("leave", d.LeaveAction)
-	d.JSONRPC2Handler.Register("send", d.SendAction)
-	d.JSONRPC2Handler.Register("send_by_all", d.SendByAllAction)
+	d.JSONRPC2Handler.Register("send_by_users", d.SendByUsersAction)
+	d.JSONRPC2Handler.Register("send_by_all_users", d.SendByAllUsersAction)
+	d.JSONRPC2Handler.Register("get_reserve", d.GetReserve)
+	d.JSONRPC2Handler.Register("list_reserve", d.ListReserve)
+	d.JSONRPC2Handler.Register("create_reserve", d.CreateReserve)
+	d.JSONRPC2Handler.Register("update_reserve", d.UpdateReserve)
+
+	// Deprecated
+	d.JSONRPC2Handler.Register("send", d.SendByUsersAction)
 }

@@ -23,7 +23,7 @@ func GenerateTokenDocID(pf string, deviceID string) string {
 	return util.StrToMD5(fmt.Sprintf("%s::%s", pf, deviceID))
 }
 
-// TokenRef ... コレクションの参照を取得
+// TokenRef ... コレクション参照を取得
 func TokenRef(fCli *firestore.Client, appID string, userID string) *firestore.CollectionRef {
 	return fCli.Collection("push_apps").Doc(appID).Collection("users").Doc(userID).Collection("tokens")
 }

@@ -19,10 +19,13 @@ func (r *token) Get(ctx context.Context, appID string, userID string, platform s
 	docID := model.GenerateTokenDocID(platform, deviceID)
 	docRef := model.TokenRef(r.fCli, appID, userID).Doc(docID)
 	dst := &model.Token{}
-	_, err := cloudfirestore.Get(ctx, docRef, dst)
+	exist, err := cloudfirestore.Get(ctx, docRef, dst)
 	if err != nil {
 		log.Errorm(ctx, "cloudfirestore.Get", err)
 		return "", err
+	}
+	if !exist {
+		return "", nil
 	}
 	return dst.Token, nil
 }

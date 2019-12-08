@@ -1,5 +1,5 @@
 {
-    "description": "プッシュ通知",
+    "description": "プッシュ通知に登録する",
     "path": "/api/rpc",
     "method": "post",
     "headers": {},
@@ -9,10 +9,10 @@
         "method": "entry",
         "params": {
             "app_id": "rec",
-            "user_id": "sample_user_id",
+            "user_id": "wnuLkLqflFWWtuhu7dvML0sy6Rh1",
             "platform": "ios",
-            "device_id": "sample_device_id",
-            "token": "sample_token"
+            "device_id": "75BF4085-F382-4600-A949-AF1A27EF5F11",
+            "token": "eo4L3IORW-4:APA91bHydj7jiMSbB4vKt1ht6fIyjHyHqybwb1P5h55li_b21BjBHIzCjv2FnRGnmmZ8_pOWVhDwHT1ef1Bqus2Kp3y8nQmyd8sv7fUjBIOMaC49_B0jDYOXcNg3_RgOSaRgXCUEbHPX"
         }
     }
 }

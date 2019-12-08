@@ -1,0 +1,33 @@
+# post_worker_send_by_reserved
+
+予約されたプッシュ通知を全員に送信する
+
+## Request
+
+|ENV|URL|
+|---|---|
+|Local|`POST` http://localhost:8080/worker/send/reserved|
+|Staging|`POST` https://staging.appspot.com/worker/send/reserved|
+|Production|`POST` https://appspot.com/worker/send/reserved|
+
+```
+Authorization: xxxxxxxxxx
+Content-Type: application/json
+```
+```json
+{
+    "app_id": "rec"
+}
+```
+
+## Response
+
+```
+Status 200
+```
+```json
+{
+    "status": 200
+}
+```
+

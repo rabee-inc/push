@@ -10,23 +10,23 @@ import (
 	"github.com/rabee-inc/push/appengine/default/src/service"
 )
 
-// SendByAllAction ...  送信のアクション
-type SendByAllAction struct {
+// SendByAllUsersAction ...  全員送信のアクション
+type SendByAllUsersAction struct {
 	sSvc service.Sender
 }
 
-type sendByAllParams struct {
+type sendByAllUsersParams struct {
 	AppID   string         `json:"app_id"   validate:"required"`
 	Message *model.Message `json:"message"  validate:"required"`
 }
 
-type sendByAllResponse struct {
+type sendByAllUsersResponse struct {
 	Success bool `json:"success"`
 }
 
 // DecodeParams ... 受け取ったJSONパラメータをデコードする
-func (h *SendByAllAction) DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error) {
-	var params sendByAllParams
+func (h *SendByAllUsersAction) DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error) {
+	var params sendByAllUsersParams
 	err := json.Unmarshal(*msg, &params)
 	if err != nil {
 		return params, err
@@ -41,22 +41,22 @@ func (h *SendByAllAction) DecodeParams(ctx context.Context, msg *json.RawMessage
 }
 
 // Exec ... 処理をする
-func (h *SendByAllAction) Exec(ctx context.Context, method string, params interface{}) (interface{}, error) {
-	ps := params.(sendByAllParams)
+func (h *SendByAllUsersAction) Exec(ctx context.Context, method string, params interface{}) (interface{}, error) {
+	ps := params.(sendByAllUsersParams)
 
-	err := h.sSvc.MessageByAll(ctx, ps.AppID, ps.Message)
+	err := h.sSvc.AllUsers(ctx, ps.AppID, ps.Message)
 	if err != nil {
 		return nil, err
 	}
 
-	return sendByAllResponse{
+	return sendByAllUsersResponse{
 		Success: true,
 	}, nil
 }
 
-// NewSendByAllAction ... SendByAllActionを作成する
-func NewSendByAllAction(sSvc service.Sender) *SendByAllAction {
-	return &SendByAllAction{
+// NewSendByAllUsersAction ... SendByAllUsersActionを作成する
+func NewSendByAllUsersAction(sSvc service.Sender) *SendByAllUsersAction {
+	return &SendByAllUsersAction{
 		sSvc: sSvc,
 	}
 }

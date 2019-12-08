@@ -1,6 +1,6 @@
 # post_api_rpc_leave
 
-プッシュ通知
+プッシュ通知を解除する
 
 ## Request
 
@@ -21,9 +21,9 @@ Content-Type: application/json
     "method": "leave",
     "params": {
         "app_id": "rec",
-        "device_id": "sample_device_id",
+        "device_id": "75BF4085-F382-4600-A949-AF1A27EF5F11",
         "platform": "ios",
-        "user_id": "sample_user_id"
+        "user_id": "wnuLkLqflFWWtuhu7dvML0sy6Rh1"
     }
 }
 ```
@@ -37,9 +37,8 @@ Status 200
 {
     "jsonrpc": "2.0",
     "id": "0",
-    "error": {
-        "code": 500,
-        "message": "UnsubscribeFromTopic index: 0, reason: request contains an invalid argument; code: invalid-argument"
+    "result": {
+        "success": true
     }
 }
 ```
