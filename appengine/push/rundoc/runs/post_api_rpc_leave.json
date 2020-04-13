@@ -1,0 +1,17 @@
+{
+    "description": "プッシュ通知を解除する",
+    "path": "/api/rpc",
+    "method": "post",
+    "headers": {},
+    "params": {
+        "jsonrpc": "2.0",
+        "id": "0",
+        "method": "leave",
+        "params": {
+            "app_id": "rec",
+            "user_id": "wnuLkLqflFWWtuhu7dvML0sy6Rh1",
+            "platform": "ios",
+            "device_id": "75BF4085-F382-4600-A949-AF1A27EF5F11"
+        }
+    }
+}

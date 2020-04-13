@@ -1,0 +1,21 @@
+{
+    "description": "プッシュ通知の予約を編集する",
+    "path": "/api/rpc",
+    "method": "post",
+    "headers": {},
+    "params": {
+        "jsonrpc": "2.0",
+        "id": "0",
+        "method": "update_reserve",
+        "params": {
+            "app_id": "rec",
+            "reserve_id": "--SsKlwzcJUngjOMJCnl3v8x6QxVojf-uvXcGskCd5s",
+            "reserved_at": 1575802628763,
+            "message": {
+                "title": "test_title_reserved",
+                "body": "test_body_reserved"
+            },
+            "status": "canceled"
+        }
+    }
+}

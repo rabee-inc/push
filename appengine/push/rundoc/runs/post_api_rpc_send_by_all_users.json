@@ -1,0 +1,18 @@
+{
+    "description": "プッシュ通知を全員に送信する",
+    "path": "/api/rpc",
+    "method": "post",
+    "headers": {},
+    "params": {
+        "jsonrpc": "2.0",
+        "id": "0",
+        "method": "send_by_all_users",
+        "params": {
+            "app_id": "rec",
+            "message": {
+                "title": "test_title_all",
+                "body": "test_body_all"
+            }
+        }
+    }
+}

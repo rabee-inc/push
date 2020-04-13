@@ -1,0 +1,19 @@
+{
+    "description": "プッシュ通知を予約する",
+    "path": "/api/rpc",
+    "method": "post",
+    "headers": {},
+    "params": {
+        "jsonrpc": "2.0",
+        "id": "0",
+        "method": "create_reserve",
+        "params": {
+            "app_id": "rec",
+            "reserved_at": 1575802628763,
+            "message": {
+                "title": "test_title_reserved",
+                "body": "test_body_reserved"
+            }
+        }
+    }
+}

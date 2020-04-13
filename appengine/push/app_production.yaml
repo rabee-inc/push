@@ -1,0 +1,13 @@
+runtime: go112
+env: standard
+instance_class: F2
+
+automatic_scaling:
+  min_idle_instances: 1
+  min_instances: 1
+  max_concurrent_requests: 80
+
+service: push
+
+env_variables:
+  DEPLOY: "production"
