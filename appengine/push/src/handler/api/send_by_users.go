@@ -19,6 +19,7 @@ type SendByUsersAction struct {
 type sendByUsersParams struct {
 	AppID   string         `json:"app_id"   validate:"required"`
 	UserIDs []string       `json:"user_ids" validate:"required"`
+	PushID  string         `json:"push_id"  validate:"required"`
 	Message *model.Message `json:"message"  validate:"required"`
 }
 
@@ -49,6 +50,7 @@ func (h *SendByUsersAction) Exec(ctx context.Context, method string, params inte
 	src := &model.CloudTasksParamSendUsers{
 		AppID:   ps.AppID,
 		UserIDs: ps.UserIDs,
+		PushID:  ps.PushID,
 		Message: ps.Message,
 	}
 
