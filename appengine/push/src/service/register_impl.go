@@ -14,15 +14,22 @@ type register struct {
 }
 
 func (s *register) SetToken(ctx context.Context, appID string, userID string, platform string, deviceID string, token string) error {
+	// 取得
+	cToken, err := s.tRepo.Get(ctx, appID, userID, platform, deviceID)
+	if err != nil {
+		log.Errorm(ctx, "s.tRepo.Get", err)
+		return err
+	}
+
 	// 保存
-	err := s.tRepo.Put(ctx, appID, userID, platform, deviceID, token)
+	err = s.tRepo.Put(ctx, appID, userID, platform, deviceID, token)
 	if err != nil {
 		log.Errorm(ctx, "s.tRepo.Put", err)
 		return err
 	}
 
 	// 全員のトピックに登録
-	if token != "" {
+	if token != "" && token != cToken {
 		err = s.fRepo.SubscribeTopic(ctx, appID, config.TopicAll, []string{token})
 		if err != nil {
 			log.Warningm(ctx, "s.fRepo.SubscribeTopic", err)
