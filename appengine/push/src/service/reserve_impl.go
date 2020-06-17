@@ -7,7 +7,7 @@ import (
 	"cloud.google.com/go/firestore"
 
 	"github.com/rabee-inc/go-pkg/log"
-	"github.com/rabee-inc/go-pkg/util"
+	"github.com/rabee-inc/go-pkg/timeutil"
 	"github.com/rabee-inc/push/appengine/push/src/config"
 	"github.com/rabee-inc/push/appengine/push/src/model"
 	"github.com/rabee-inc/push/appengine/push/src/repository"
@@ -53,7 +53,7 @@ func (s *reserve) Create(
 	userIDs []string,
 	msg *model.Message,
 	reservedAt int64) (*model.Reserve, error) {
-	now := util.TimeNowUnix()
+	now := timeutil.NowUnix()
 	dst, err := s.rRepo.Create(ctx, appID, userIDs, msg, reservedAt, config.ReserveStatusReserved, now)
 	if err != nil {
 		log.Errorm(ctx, "s.rRepo.Create", err)
@@ -83,7 +83,7 @@ func (s *reserve) Update(
 	src.Message = msg
 	src.ReservedAt = reservedAt
 	src.Status = status
-	now := util.TimeNowUnix()
+	now := timeutil.NowUnix()
 	dst, err := s.rRepo.Update(ctx, appID, src, now)
 	if err != nil {
 		log.Errorm(ctx, "s.rRepo.Update", err)

@@ -8,7 +8,7 @@ import (
 
 	"github.com/rabee-inc/go-pkg/cloudfirestore"
 	"github.com/rabee-inc/go-pkg/log"
-	"github.com/rabee-inc/go-pkg/util"
+	"github.com/rabee-inc/go-pkg/timeutil"
 	"github.com/rabee-inc/push/appengine/push/src/model"
 )
 
@@ -98,7 +98,7 @@ func (r *token) Put(ctx context.Context, appID string, userID string, platform s
 		Platform:  platform,
 		DeviceID:  deviceID,
 		Token:     token,
-		CreatedAt: util.TimeNowUnix(),
+		CreatedAt: timeutil.NowUnix(),
 	}
 	docID := model.GenerateTokenDocID(platform, deviceID)
 	docRef := model.TokenRef(r.fCli, appID, userID).Doc(docID)

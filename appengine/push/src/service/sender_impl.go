@@ -7,7 +7,7 @@ import (
 
 	"github.com/rabee-inc/go-pkg/cloudtasks"
 	"github.com/rabee-inc/go-pkg/log"
-	"github.com/rabee-inc/go-pkg/util"
+	"github.com/rabee-inc/go-pkg/timeutil"
 	"github.com/rabee-inc/push/appengine/push/src/config"
 	"github.com/rabee-inc/push/appengine/push/src/model"
 	"github.com/rabee-inc/push/appengine/push/src/repository"
@@ -71,7 +71,7 @@ func (s *sender) User(ctx context.Context, appID string, userID string, pushID s
 
 func (s *sender) Reserved(ctx context.Context, appID string) error {
 	// 送信対象の予約を取得
-	now := util.TimeNowUnix()
+	now := timeutil.NowUnix()
 	rsvs, _, err := s.rRepo.ListBySend(ctx, appID, now, 30, nil)
 	if err != nil {
 		log.Errorm(ctx, "s.rRepo.ListBySend", err)
@@ -115,7 +115,7 @@ func (s *sender) Reserved(ctx context.Context, appID string) error {
 			rsv.Status = config.ReserveStatusSuccess
 		}
 		// ステータスを変更
-		now := util.TimeNowUnix()
+		now := timeutil.NowUnix()
 		_ = s.rRepo.BtUpdate(ctx, bt, appID, rsv, now)
 	}
 	_, err = bt.Commit(ctx)
