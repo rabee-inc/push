@@ -56,7 +56,6 @@ func (s *sender) User(ctx context.Context, appID string, userID string, pushID s
 		return err
 	}
 	if len(tokens) == 0 {
-		log.Warningf(ctx, "no regist tokens user: %s", userID)
 		return nil
 	}
 
