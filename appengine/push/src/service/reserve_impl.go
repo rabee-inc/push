@@ -52,9 +52,10 @@ func (s *reserve) Create(
 	appID string,
 	userIDs []string,
 	msg *model.Message,
-	reservedAt int64) (*model.Reserve, error) {
+	reservedAt int64,
+	unmanaged bool) (*model.Reserve, error) {
 	now := timeutil.NowUnix()
-	dst, err := s.rRepo.Create(ctx, appID, userIDs, msg, reservedAt, config.ReserveStatusReserved, now)
+	dst, err := s.rRepo.Create(ctx, appID, userIDs, msg, reservedAt, config.ReserveStatusReserved, unmanaged, now)
 	if err != nil {
 		log.Errorm(ctx, "s.rRepo.Create", err)
 		return nil, err

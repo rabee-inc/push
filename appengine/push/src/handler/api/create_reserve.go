@@ -20,6 +20,7 @@ type createReserveParams struct {
 	UserIDs    []string       `json:"user_ids"`
 	Message    *model.Message `json:"message"     validate:"required"`
 	ReservedAt int64          `json:"reserved_at" validate:"required"`
+	Unmanaged  bool           `json:"unmanaged"`
 }
 
 type createReserveResponse struct {
@@ -46,7 +47,7 @@ func (h *CreateReserveAction) DecodeParams(ctx context.Context, msg *json.RawMes
 func (h *CreateReserveAction) Exec(ctx context.Context, method string, params interface{}) (interface{}, error) {
 	ps := params.(createReserveParams)
 
-	dst, err := h.rSvc.Create(ctx, ps.AppID, ps.UserIDs, ps.Message, ps.ReservedAt)
+	dst, err := h.rSvc.Create(ctx, ps.AppID, ps.UserIDs, ps.Message, ps.ReservedAt, ps.Unmanaged)
 	if err != nil {
 		return nil, err
 	}

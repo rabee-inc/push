@@ -38,6 +38,7 @@ func (r *reserve) ListByCursor(
 	limit int,
 	cursor string) ([]*model.Reserve, string, error) {
 	q := model.ReserveRef(r.fCli, appID).
+		Where("unmanaged", "==", false).
 		OrderBy("reserved_at", firestore.Desc)
 	var dsnp *firestore.DocumentSnapshot
 	var err error
@@ -87,12 +88,14 @@ func (r *reserve) Create(
 	msg *model.Message,
 	reservedAt int64,
 	status config.ReserveStatus,
+	unmanaged bool,
 	createdAt int64) (*model.Reserve, error) {
 	src := &model.Reserve{
 		UserIDs:    userIDs,
 		Message:    msg,
 		ReservedAt: reservedAt,
 		Status:     status,
+		Unmanaged:  unmanaged,
 		CreatedAt:  createdAt,
 		UpdatedAt:  createdAt,
 	}

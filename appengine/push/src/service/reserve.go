@@ -23,7 +23,8 @@ type Reserve interface {
 		appID string,
 		userIDs []string,
 		msg *model.Message,
-		reservedAt int64) (*model.Reserve, error)
+		reservedAt int64,
+		unmanaged bool) (*model.Reserve, error)
 	Update(
 		ctx context.Context,
 		appID string,

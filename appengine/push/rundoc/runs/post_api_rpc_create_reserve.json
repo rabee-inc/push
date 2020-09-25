@@ -13,7 +13,8 @@
             "message": {
                 "title": "test_title_reserved",
                 "body": "test_body_reserved"
-            }
+            },
+            "unmanaged": false
         }
     }
 }

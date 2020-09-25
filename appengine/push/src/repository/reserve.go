@@ -33,6 +33,7 @@ type Reserve interface {
 		msg *model.Message,
 		reservedAt int64,
 		status config.ReserveStatus,
+		unmanaged bool,
 		createdAt int64) (*model.Reserve, error)
 	Update(
 		ctx context.Context,

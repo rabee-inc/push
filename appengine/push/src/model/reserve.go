@@ -14,6 +14,7 @@ type Reserve struct {
 	Message    *Message               `json:"message"     firestore:"message"`
 	ReservedAt int64                  `json:"reserved_at" firestore:"reserved_at"`
 	Status     config.ReserveStatus   `json:"status"      firestore:"status"`
+	Unmanaged  bool                   `json:"unmanaged"   firestore:"unmanaged"`
 	CreatedAt  int64                  `json:"created_at"  firestore:"created_at"`
 	UpdatedAt  int64                  `json:"updated_at"  firestore:"updated_at"`
 }
