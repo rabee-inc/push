@@ -7,7 +7,7 @@ require (
 	firebase.google.com/go v3.13.0+incompatible
 	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/rabee-inc/go-pkg v0.0.0-20201127004444-19954628ec5c
+	github.com/rabee-inc/go-pkg v0.0.0-20201214013207-5c11b0345d50
 	golang.org/x/net v0.0.0-20201202161906-c7110b5ffcbb // indirect
 	golang.org/x/oauth2 v0.0.0-20201203001011-0b49973bad19 // indirect
 	golang.org/x/sys v0.0.0-20201202213521-69691e467435 // indirect
