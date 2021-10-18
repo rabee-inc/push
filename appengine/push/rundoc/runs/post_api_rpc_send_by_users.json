@@ -8,11 +8,18 @@
         "id": "0",
         "method": "send_by_users",
         "params": {
-            "app_id": "rec",
-            "user_ids": ["wnuLkLqflFWWtuhu7dvML0sy6Rh1"],
+            "push_id": "aaaaadaada",
+            "app_id": "alog",
+            "user_ids": ["nWnKI9skp3c38MjJ0LrM6x30StB3"],
             "message": {
                 "title": "test_title_users",
-                "body": "test_body_users"
+                "body": "test_body_users",
+                "ios": {
+                    "image_url": "https://storage.googleapis.com/content-staging-alog-rabee-jp/user/icon/nOZ7dov3QVM0w0L9SptacriqR602_0"
+                }
+            },
+            "data": {
+                "hoge": "fuga"
             }
         }
     }

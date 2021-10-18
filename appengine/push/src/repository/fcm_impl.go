@@ -99,13 +99,17 @@ func (r *fcm) generateMessage(ctx context.Context, appID string, pushID string, 
 			},
 			Payload: &messaging.APNSPayload{
 				Aps: &messaging.Aps{
-					Badge: &src.IOS.Badge,
-					Sound: src.IOS.Sound,
+					Badge:          &src.IOS.Badge,
+					Sound:          src.IOS.Sound,
+					MutableContent: true,
 				},
 				CustomData: map[string]interface{}{
 					"push_id":                 pushID,
 					"notification_foreground": true,
 				},
+			},
+			FCMOptions: &messaging.APNSFCMOptions{
+				ImageURL: src.IOS.ImageURL,
 			},
 		},
 		Android: &messaging.AndroidConfig{
