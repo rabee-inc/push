@@ -17,14 +17,14 @@ func (s *register) SetToken(ctx context.Context, appID string, userID string, pl
 	// 取得
 	cToken, err := s.tRepo.Get(ctx, appID, userID, platform, deviceID)
 	if err != nil {
-		log.Errorm(ctx, "s.tRepo.Get", err)
+		log.Error(ctx, err)
 		return err
 	}
 
 	// 保存
 	err = s.tRepo.Put(ctx, appID, userID, platform, deviceID, token)
 	if err != nil {
-		log.Errorm(ctx, "s.tRepo.Put", err)
+		log.Error(ctx, err)
 		return err
 	}
 
@@ -32,7 +32,7 @@ func (s *register) SetToken(ctx context.Context, appID string, userID string, pl
 	if token != "" && token != cToken {
 		err = s.fRepo.SubscribeTopic(ctx, appID, config.TopicAll, []string{token})
 		if err != nil {
-			log.Warningm(ctx, "s.fRepo.SubscribeTopic", err)
+			log.Warning(ctx, err)
 			// レスポンスを返す事を優先させるため握りつぶす
 		}
 	}
@@ -43,7 +43,7 @@ func (s *register) DeleteToken(ctx context.Context, appID string, userID string,
 	// 取得
 	token, err := s.tRepo.Get(ctx, appID, userID, platform, deviceID)
 	if err != nil {
-		log.Errorm(ctx, "s.tRepo.Get", err)
+		log.Error(ctx, err)
 		return err
 	}
 	if token == "" {
@@ -55,7 +55,7 @@ func (s *register) DeleteToken(ctx context.Context, appID string, userID string,
 	// 削除
 	err = s.tRepo.Delete(ctx, appID, userID, platform, deviceID)
 	if err != nil {
-		log.Errorm(ctx, "s.tRepo.Delete", err)
+		log.Error(ctx, err)
 		return err
 	}
 
@@ -63,7 +63,7 @@ func (s *register) DeleteToken(ctx context.Context, appID string, userID string,
 	if token != "" {
 		err = s.fRepo.UnsubscribeTopic(ctx, appID, config.TopicAll, []string{token})
 		if err != nil {
-			log.Warningm(ctx, "s.fRepo.UnsubscribeTopic", err)
+			log.Warning(ctx, err)
 			// レスポンスを返す事を優先させるため握りつぶす
 		}
 	}

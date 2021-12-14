@@ -25,7 +25,7 @@ func (s *sender) AllUsers(ctx context.Context, appID string, pushID string, msg 
 	// プッシュ通知を送信
 	err := s.fRepo.SendMessageByTopic(ctx, appID, config.TopicAll, pushID, msg)
 	if err != nil {
-		log.Warningm(ctx, "s.fRepo.SendMessageByTopic", err)
+		log.Warning(ctx, err)
 		return err
 	}
 	return nil
@@ -41,7 +41,7 @@ func (s *sender) Users(ctx context.Context, appID string, userIDs []string, push
 		}
 		err := s.tCli.AddTask(ctx, config.QueueSendUser, "/worker/send/user", src)
 		if err != nil {
-			log.Warningm(ctx, "s.tCli.AddTask", err)
+			log.Warning(ctx, err)
 			return err
 		}
 	}
@@ -52,7 +52,7 @@ func (s *sender) User(ctx context.Context, appID string, userID string, pushID s
 	// ユーザーに紐づくTokenを取得
 	tokens, err := s.tRepo.ListByUser(ctx, appID, userID)
 	if err != nil {
-		log.Warningm(ctx, "s.tRepo.GetListByUserID", err)
+		log.Warning(ctx, err)
 		return err
 	}
 	if len(tokens) == 0 {
@@ -62,7 +62,7 @@ func (s *sender) User(ctx context.Context, appID string, userID string, pushID s
 	// プッシュ通知を送信
 	err = s.fRepo.SendMessageByTokens(ctx, appID, tokens, pushID, msg)
 	if err != nil {
-		log.Warningm(ctx, "s.fRepo.SendMessage", err)
+		log.Warning(ctx, err)
 		return err
 	}
 	return nil
@@ -73,7 +73,7 @@ func (s *sender) Reserved(ctx context.Context, appID string) error {
 	now := timeutil.NowUnix()
 	rsvs, _, err := s.rRepo.ListBySend(ctx, appID, now, 30, nil)
 	if err != nil {
-		log.Errorm(ctx, "s.rRepo.ListBySend", err)
+		log.Error(ctx, err)
 		return err
 	}
 	if len(rsvs) == 0 {
@@ -88,7 +88,7 @@ func (s *sender) Reserved(ctx context.Context, appID string) error {
 	}
 	_, err = bt.Commit(ctx)
 	if err != nil {
-		log.Errorm(ctx, "bt.Commit", err)
+		log.Error(ctx, err)
 		return err
 	}
 
@@ -98,12 +98,12 @@ func (s *sender) Reserved(ctx context.Context, appID string) error {
 		if len(rsv.UserIDs) > 0 {
 			err = s.Users(ctx, appID, rsv.UserIDs, rsv.ID, rsv.Message)
 			if err != nil {
-				log.Errorm(ctx, "s.Users", err)
+				log.Error(ctx, err)
 			}
 		} else {
 			err = s.AllUsers(ctx, appID, rsv.ID, rsv.Message)
 			if err != nil {
-				log.Errorm(ctx, "s.AllUsers", err)
+				log.Error(ctx, err)
 			}
 		}
 		if err != nil {
@@ -119,7 +119,7 @@ func (s *sender) Reserved(ctx context.Context, appID string) error {
 	}
 	_, err = bt.Commit(ctx)
 	if err != nil {
-		log.Errorm(ctx, "bt.Commit", err)
+		log.Error(ctx, err)
 		return err
 	}
 	return nil

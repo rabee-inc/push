@@ -23,7 +23,7 @@ func (r *reserve) Get(
 	dst := &model.Reserve{}
 	exist, err := cloudfirestore.Get(ctx, docRef, dst)
 	if err != nil {
-		log.Errorm(ctx, "cloudfirestore.Get", err)
+		log.Error(ctx, err)
 		return nil, err
 	}
 	if !exist {
@@ -45,14 +45,14 @@ func (r *reserve) ListByCursor(
 	if cursor != "" {
 		dsnp, err = model.ReserveRef(r.fCli, appID).Doc(cursor).Get(ctx)
 		if err != nil {
-			log.Errorm(ctx, "Get", err)
+			log.Error(ctx, err)
 			return nil, "", err
 		}
 	}
 	dsts := []*model.Reserve{}
 	nDsnp, err := cloudfirestore.ListByQueryCursor(ctx, q, limit, dsnp, &dsts)
 	if err != nil {
-		log.Errorm(ctx, "cloudfirestore.ListByQueryCursor", err)
+		log.Error(ctx, err)
 		return nil, "", err
 	}
 	var nCursor string
@@ -75,7 +75,7 @@ func (r *reserve) ListBySend(
 	dsts := []*model.Reserve{}
 	nCursor, err := cloudfirestore.ListByQueryCursor(ctx, q, limit, cursor, &dsts)
 	if err != nil {
-		log.Errorm(ctx, "cloudfirestore.ListByQueryCursor", err)
+		log.Error(ctx, err)
 		return nil, nil, err
 	}
 	return dsts, nCursor, nil
@@ -102,7 +102,7 @@ func (r *reserve) Create(
 	colRef := model.ReserveRef(r.fCli, appID)
 	err := cloudfirestore.Create(ctx, colRef, src)
 	if err != nil {
-		log.Errorm(ctx, "cloudfirestore.Create", err)
+		log.Error(ctx, err)
 		return nil, err
 	}
 	return src, nil
@@ -117,7 +117,7 @@ func (r *reserve) Update(
 	docRef := model.ReserveRef(r.fCli, appID).Doc(src.ID)
 	err := cloudfirestore.Set(ctx, docRef, src)
 	if err != nil {
-		log.Errorm(ctx, "cloudfirestore.Set", err)
+		log.Error(ctx, err)
 		return nil, err
 	}
 	return src, nil

@@ -18,7 +18,7 @@ type fcm struct {
 func (r *fcm) SubscribeTopic(ctx context.Context, appID string, topic string, tokens []string) error {
 	res, err := r.fCli.SubscribeToTopic(ctx, tokens, topic)
 	if err != nil {
-		log.Errorm(ctx, "r.fCli.SubscribeToTopic", err)
+		log.Error(ctx, err)
 		return err
 	}
 	if res.FailureCount > 0 {
@@ -33,7 +33,7 @@ func (r *fcm) SubscribeTopic(ctx context.Context, appID string, topic string, to
 func (r *fcm) UnsubscribeTopic(ctx context.Context, appID string, topic string, tokens []string) error {
 	res, err := r.fCli.UnsubscribeFromTopic(ctx, tokens, topic)
 	if err != nil {
-		log.Errorm(ctx, "r.fCli.UnsubscribeFromTopic", err)
+		log.Error(ctx, err)
 		return err
 	}
 	if res.FailureCount > 0 {
@@ -57,7 +57,7 @@ func (r *fcm) SendMessageByTokens(ctx context.Context, appID string, tokens []st
 	}
 	_, err := r.fCli.SendMulticast(ctx, mmsg)
 	if err != nil {
-		log.Warningm(ctx, "r.fCli.SendMulticast", err)
+		log.Warning(ctx, err)
 		return err
 	}
 	return nil
@@ -68,7 +68,7 @@ func (r *fcm) SendMessageByTopic(ctx context.Context, appID string, topic string
 	msg.Topic = topic
 	_, err := r.fCli.Send(ctx, msg)
 	if err != nil {
-		log.Warningm(ctx, "r.fCli.Send", err)
+		log.Warning(ctx, err)
 		return err
 	}
 	return nil

@@ -24,7 +24,7 @@ func (s *reserve) Get(
 	reserveID string) (*model.Reserve, error) {
 	dst, err := s.rRepo.Get(ctx, appID, reserveID)
 	if err != nil {
-		log.Errorm(ctx, "s.rRepo.Get", err)
+		log.Error(ctx, err)
 		return nil, err
 	}
 	if dst == nil {
@@ -41,7 +41,7 @@ func (s *reserve) List(
 	cursor string) ([]*model.Reserve, string, error) {
 	dsts, nCursor, err := s.rRepo.ListByCursor(ctx, appID, limit, cursor)
 	if err != nil {
-		log.Errorm(ctx, "s.rRepo.ListByCursor", err)
+		log.Error(ctx, err)
 		return nil, "", err
 	}
 	return dsts, nCursor, nil
@@ -57,7 +57,7 @@ func (s *reserve) Create(
 	now := timeutil.NowUnix()
 	dst, err := s.rRepo.Create(ctx, appID, userIDs, msg, reservedAt, config.ReserveStatusReserved, unmanaged, now)
 	if err != nil {
-		log.Errorm(ctx, "s.rRepo.Create", err)
+		log.Error(ctx, err)
 		return nil, err
 	}
 	return dst, nil
@@ -73,7 +73,7 @@ func (s *reserve) Update(
 	status config.ReserveStatus) (*model.Reserve, error) {
 	src, err := s.rRepo.Get(ctx, appID, reserveID)
 	if err != nil {
-		log.Errorm(ctx, "s.rRepo.Get", err)
+		log.Error(ctx, err)
 		return nil, err
 	}
 	if src == nil {
@@ -87,7 +87,7 @@ func (s *reserve) Update(
 	now := timeutil.NowUnix()
 	dst, err := s.rRepo.Update(ctx, appID, src, now)
 	if err != nil {
-		log.Errorm(ctx, "s.rRepo.Update", err)
+		log.Error(ctx, err)
 		return nil, err
 	}
 	return dst, nil

@@ -22,7 +22,7 @@ func (r *token) Get(ctx context.Context, appID string, userID string, platform s
 	dst := &model.Token{}
 	exist, err := cloudfirestore.Get(ctx, docRef, dst)
 	if err != nil {
-		log.Errorm(ctx, "cloudfirestore.Get", err)
+		log.Error(ctx, err)
 		return "", err
 	}
 	if !exist {
@@ -36,7 +36,7 @@ func (r *token) ListByUser(ctx context.Context, appID string, userID string) ([]
 	tokens := []*model.Token{}
 	err := cloudfirestore.ListByQuery(ctx, q, &tokens)
 	if err != nil {
-		log.Errorm(ctx, "cloudfirestore.ListByQuery", err)
+		log.Error(ctx, err)
 		return nil, err
 	}
 	dsts := []string{}
@@ -67,13 +67,13 @@ func (r *token) ListByAll(ctx context.Context, appID string) ([]string, error) {
 				break
 			}
 			if err != nil {
-				log.Errorm(ctx, "it.Next", err)
+				log.Error(ctx, err)
 				return nil, err
 			}
 			token := &model.Token{}
 			err = dsnp.DataTo(token)
 			if err != nil {
-				log.Errorm(ctx, "doc.DataTo", err)
+				log.Error(ctx, err)
 				return nil, err
 			}
 			tokens = append(tokens, token)
@@ -104,7 +104,7 @@ func (r *token) Put(ctx context.Context, appID string, userID string, platform s
 	docRef := model.TokenRef(r.fCli, appID, userID).Doc(docID)
 	err := cloudfirestore.Set(ctx, docRef, src)
 	if err != nil {
-		log.Errorm(ctx, "cloudfirestore.Set", err)
+		log.Error(ctx, err)
 		return err
 	}
 	return nil
@@ -115,7 +115,7 @@ func (r *token) Delete(ctx context.Context, appID string, userID string, platfor
 	docRef := model.TokenRef(r.fCli, appID, userID).Doc(docID)
 	err := cloudfirestore.Delete(ctx, docRef)
 	if err != nil {
-		log.Errorm(ctx, "cloudfirestore.Delete", err)
+		log.Error(ctx, err)
 		return err
 	}
 	return nil
