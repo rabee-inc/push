@@ -5,6 +5,7 @@ import (
 
 	"cloud.google.com/go/firestore"
 
+	"github.com/rabee-inc/go-pkg/cloudfirestore"
 	"github.com/rabee-inc/go-pkg/cloudtasks"
 	"github.com/rabee-inc/go-pkg/log"
 	"github.com/rabee-inc/go-pkg/timeutil"
@@ -81,18 +82,17 @@ func (s *sender) Reserved(ctx context.Context, appID string) error {
 	}
 
 	// 処理中に設定
-	bt := s.fCli.Batch()
+	ctx = cloudfirestore.RunWriteBatch(ctx, s.fCli)
 	for _, rsv := range rsvs {
 		rsv.Status = config.ReserveStatusProcessing
-		s.rRepo.BtUpdate(ctx, bt, appID, rsv, now)
+		s.rRepo.Update(ctx, appID, rsv, now)
 	}
-	_, err = bt.Commit(ctx)
-	if err != nil {
+	if ctx, err = cloudfirestore.CommitWriteBatch(ctx); err != nil {
 		log.Error(ctx, err)
 		return err
 	}
 
-	bt = s.fCli.Batch()
+	ctx = cloudfirestore.RunWriteBatch(ctx, s.fCli)
 	for _, rsv := range rsvs {
 		// 送信
 		if len(rsv.UserIDs) > 0 {
@@ -115,10 +115,13 @@ func (s *sender) Reserved(ctx context.Context, appID string) error {
 		}
 		// ステータスを変更
 		now := timeutil.NowUnix()
-		_ = s.rRepo.BtUpdate(ctx, bt, appID, rsv, now)
+		rsv, err = s.rRepo.Update(ctx, appID, rsv, now)
+		if err != nil {
+			log.Error(ctx, err)
+			return err
+		}
 	}
-	_, err = bt.Commit(ctx)
-	if err != nil {
+	if ctx, err = cloudfirestore.CommitWriteBatch(ctx); err != nil {
 		log.Error(ctx, err)
 		return err
 	}

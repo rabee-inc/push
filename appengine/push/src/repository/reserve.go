@@ -40,10 +40,4 @@ type Reserve interface {
 		appID string,
 		src *model.Reserve,
 		updatedAt int64) (*model.Reserve, error)
-	BtUpdate(
-		ctx context.Context,
-		bt *firestore.WriteBatch,
-		appID string,
-		src *model.Reserve,
-		updatedAt int64) *model.Reserve
 }

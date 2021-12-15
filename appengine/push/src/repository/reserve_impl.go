@@ -123,18 +123,6 @@ func (r *reserve) Update(
 	return src, nil
 }
 
-func (r *reserve) BtUpdate(
-	ctx context.Context,
-	bt *firestore.WriteBatch,
-	appID string,
-	src *model.Reserve,
-	updatedAt int64) *model.Reserve {
-	src.UpdatedAt = updatedAt
-	docRef := model.ReserveRef(r.fCli, appID).Doc(src.ID)
-	cloudfirestore.BtSet(ctx, bt, docRef, src)
-	return src
-}
-
 // NewReserve ... リポジトリを作成する
 func NewReserve(fCli *firestore.Client) Reserve {
 	return &reserve{
