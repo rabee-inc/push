@@ -13,6 +13,7 @@ import (
 // ListReserveAction ... 予約リスト取得のアクション
 type ListReserveAction struct {
 	rSvc service.Reserve
+	v    *validator.Validate
 }
 
 type listReserveParams struct {
@@ -35,8 +36,7 @@ func (h *ListReserveAction) DecodeParams(ctx context.Context, msg *json.RawMessa
 	}
 
 	// Validation
-	v := validator.New()
-	if err := v.Struct(params); err != nil {
+	if err := h.v.Struct(params); err != nil {
 		return params, err
 	}
 
@@ -63,7 +63,9 @@ func (h *ListReserveAction) Exec(ctx context.Context, method string, params inte
 
 // NewListReserveAction ... アクションを作成する
 func NewListReserveAction(rSvc service.Reserve) *ListReserveAction {
+	v := validator.New()
 	return &ListReserveAction{
 		rSvc: rSvc,
+		v:    v,
 	}
 }

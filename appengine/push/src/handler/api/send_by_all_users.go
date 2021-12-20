@@ -13,6 +13,7 @@ import (
 // SendByAllUsersAction ...  全員送信のアクション
 type SendByAllUsersAction struct {
 	sSvc service.Sender
+	v    *validator.Validate
 }
 
 type sendByAllUsersParams struct {
@@ -34,8 +35,7 @@ func (h *SendByAllUsersAction) DecodeParams(ctx context.Context, msg *json.RawMe
 	}
 
 	// Validation
-	v := validator.New()
-	if err := v.Struct(params); err != nil {
+	if err := h.v.Struct(params); err != nil {
 		return params, err
 	}
 	return params, nil
@@ -57,7 +57,9 @@ func (h *SendByAllUsersAction) Exec(ctx context.Context, method string, params i
 
 // NewSendByAllUsersAction ... SendByAllUsersActionを作成する
 func NewSendByAllUsersAction(sSvc service.Sender) *SendByAllUsersAction {
+	v := validator.New()
 	return &SendByAllUsersAction{
 		sSvc: sSvc,
+		v:    v,
 	}
 }

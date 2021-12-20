@@ -14,6 +14,7 @@ import (
 // SendByUsersAction ...  送信のアクション
 type SendByUsersAction struct {
 	tCli *cloudtasks.Client
+	v    *validator.Validate
 }
 
 type sendByUsersParams struct {
@@ -36,8 +37,7 @@ func (h *SendByUsersAction) DecodeParams(ctx context.Context, msg *json.RawMessa
 	}
 
 	// Validation
-	v := validator.New()
-	if err := v.Struct(params); err != nil {
+	if err := h.v.Struct(params); err != nil {
 		return params, err
 	}
 	return params, nil
@@ -66,7 +66,9 @@ func (h *SendByUsersAction) Exec(ctx context.Context, method string, params inte
 
 // NewSendByUsersAction ... SendByUsersActionを作成する
 func NewSendByUsersAction(tCli *cloudtasks.Client) *SendByUsersAction {
+	v := validator.New()
 	return &SendByUsersAction{
 		tCli: tCli,
+		v:    v,
 	}
 }

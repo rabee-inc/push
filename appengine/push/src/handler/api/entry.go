@@ -12,6 +12,7 @@ import (
 // EntryAction ... エントリーのアクション
 type EntryAction struct {
 	rSvc service.Register
+	v    *validator.Validate
 }
 
 type entryParams struct {
@@ -35,8 +36,7 @@ func (h *EntryAction) DecodeParams(ctx context.Context, msg *json.RawMessage) (i
 	}
 
 	// Validation
-	v := validator.New()
-	if err := v.Struct(params); err != nil {
+	if err := h.v.Struct(params); err != nil {
 		return params, err
 	}
 	return params, nil
@@ -58,7 +58,9 @@ func (h *EntryAction) Exec(ctx context.Context, method string, params interface{
 
 // NewEntryAction ... アクションを作成する
 func NewEntryAction(rSvc service.Register) *EntryAction {
+	v := validator.New()
 	return &EntryAction{
 		rSvc: rSvc,
+		v:    v,
 	}
 }

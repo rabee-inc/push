@@ -14,6 +14,7 @@ import (
 // UpdateReserveAction ... 予約編集のアクション
 type UpdateReserveAction struct {
 	rSvc service.Reserve
+	v    *validator.Validate
 }
 
 type updateReserveParams struct {
@@ -38,8 +39,7 @@ func (h *UpdateReserveAction) DecodeParams(ctx context.Context, msg *json.RawMes
 	}
 
 	// Validation
-	v := validator.New()
-	if err := v.Struct(params); err != nil {
+	if err := h.v.Struct(params); err != nil {
 		return params, err
 	}
 	return params, nil
@@ -61,7 +61,9 @@ func (h *UpdateReserveAction) Exec(ctx context.Context, method string, params in
 
 // NewUpdateReserveAction ... アクションを作成する
 func NewUpdateReserveAction(rSvc service.Reserve) *UpdateReserveAction {
+	v := validator.New()
 	return &UpdateReserveAction{
 		rSvc: rSvc,
+		v:    v,
 	}
 }

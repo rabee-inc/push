@@ -12,6 +12,7 @@ import (
 // LeaveAction ... 解除のアクション
 type LeaveAction struct {
 	rSvc service.Register
+	v    *validator.Validate
 }
 
 type leaveParams struct {
@@ -34,8 +35,7 @@ func (h *LeaveAction) DecodeParams(ctx context.Context, msg *json.RawMessage) (i
 	}
 
 	// Validation
-	v := validator.New()
-	if err := v.Struct(params); err != nil {
+	if err := h.v.Struct(params); err != nil {
 		return params, err
 	}
 	return params, nil
@@ -57,7 +57,9 @@ func (h *LeaveAction) Exec(ctx context.Context, method string, params interface{
 
 // NewLeaveAction ... アクションを作成する
 func NewLeaveAction(rSvc service.Register) *LeaveAction {
+	v := validator.New()
 	return &LeaveAction{
 		rSvc: rSvc,
+		v:    v,
 	}
 }
