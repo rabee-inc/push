@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"cloud.google.com/go/firestore"
-
 	"github.com/rabee-inc/go-pkg/encryptutil"
 )
 

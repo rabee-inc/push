@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"firebase.google.com/go/messaging"
-
 	"github.com/rabee-inc/go-pkg/log"
+
 	"github.com/rabee-inc/push/appengine/push/src/model"
 )
 
