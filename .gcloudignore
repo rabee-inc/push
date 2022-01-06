@@ -25,7 +25,7 @@
 *.out
 rundoc/
 bin
-.air.toml
+tmp/
 cloudbuild.yaml
-.realize.yaml
+.air.toml
 Makefile

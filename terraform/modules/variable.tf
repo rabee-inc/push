@@ -1,0 +1,9 @@
+variable "project_id" {}
+variable "project_num" {}
+variable "deploy" {}
+variable "region" {}
+variable "internal_auth_token" {}
+variable "time_zone" {}
+variable "default_domain" {}
+variable "api_domain" {}
+variable "content_bucket_name" {}

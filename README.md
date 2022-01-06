@@ -14,27 +14,3 @@ iOS, Android, Webにプッシュ通知を送信するサーバーです。
 - 定期送信 ToBe...
 
 # セットアップ
-
-## 準備
-```bash
-cd appengine/push
-go get -u ...
-go mod tidy
-```
-
-## 実行
-```bash
-cd appengine/push
-make run
-```
-
-## デプロイ
-```bash
-cd appengine/push
-make deploy
-make deploy-prod
-```
-
-# API
-JSONRPC2.0を使用しています。
-詳細はrundoc/docs内を参照してください。

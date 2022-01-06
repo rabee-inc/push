@@ -20,7 +20,7 @@ type Environment struct {
 
 // Get ... 環境変数を取得する
 func (e *Environment) Get() {
-	environment.Load(config.GetFilePath("env.yaml"))
+	environment.Load(config.GetFilePath("../../env.yaml"))
 	err := envconfig.Process("", e)
 	if err != nil {
 		panic(err)
