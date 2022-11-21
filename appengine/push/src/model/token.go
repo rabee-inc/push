@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"cloud.google.com/go/firestore"
-	"github.com/rabee-inc/go-pkg/encryptutil"
+	"github.com/rabee-inc/push/appengine/push/src/config"
 )
 
 // Token ... トークン
@@ -19,7 +19,7 @@ type Token struct {
 
 // GenerateTokenDocID ... Firestore用のDocIDを作成する
 func GenerateTokenDocID(pf string, deviceID string) string {
-	return encryptutil.ToMD5(fmt.Sprintf("%s::%s", pf, deviceID))
+	return config.ToMD5(fmt.Sprintf("%s::%s", pf, deviceID))
 }
 
 // TokenRef ... コレクション参照を取得
