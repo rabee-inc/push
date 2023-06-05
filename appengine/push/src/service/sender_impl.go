@@ -82,17 +82,21 @@ func (s *sender) Reserved(ctx context.Context, appID string) error {
 	}
 
 	// 処理中に設定
-	ctx = cloudfirestore.RunWriteBatch(ctx, s.fCli)
+	ctx = cloudfirestore.RunBulkWriter(ctx, s.fCli)
 	for _, rsv := range rsvs {
 		rsv.Status = config.ReserveStatusProcessing
-		s.rRepo.Update(ctx, appID, rsv, now)
+		_, err = s.rRepo.Update(ctx, appID, rsv, now)
+		if err != nil {
+			log.Error(ctx, err)
+			return err
+		}
 	}
-	if ctx, err = cloudfirestore.CommitWriteBatch(ctx); err != nil {
+	if ctx, err = cloudfirestore.CommitBulkWriter(ctx); err != nil {
 		log.Error(ctx, err)
 		return err
 	}
 
-	ctx = cloudfirestore.RunWriteBatch(ctx, s.fCli)
+	ctx = cloudfirestore.RunBulkWriter(ctx, s.fCli)
 	for _, rsv := range rsvs {
 		// 送信
 		if len(rsv.UserIDs) > 0 {
@@ -115,13 +119,13 @@ func (s *sender) Reserved(ctx context.Context, appID string) error {
 		}
 		// ステータスを変更
 		now := timeutil.NowUnix()
-		rsv, err = s.rRepo.Update(ctx, appID, rsv, now)
+		_, err = s.rRepo.Update(ctx, appID, rsv, now)
 		if err != nil {
 			log.Error(ctx, err)
 			return err
 		}
 	}
-	if ctx, err = cloudfirestore.CommitWriteBatch(ctx); err != nil {
+	if ctx, err = cloudfirestore.CommitBulkWriter(ctx); err != nil {
 		log.Error(ctx, err)
 		return err
 	}
