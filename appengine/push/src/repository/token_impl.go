@@ -2,68 +2,79 @@ package repository
 
 import (
 	"context"
+	"errors"
 
 	"cloud.google.com/go/firestore"
 	"github.com/rabee-inc/go-pkg/cloudfirestore"
 	"github.com/rabee-inc/go-pkg/log"
-	"github.com/rabee-inc/go-pkg/timeutil"
-	"google.golang.org/api/iterator"
-
 	"github.com/rabee-inc/push/appengine/push/src/model"
+	"google.golang.org/api/iterator"
 )
 
 type token struct {
-	fCli *firestore.Client
+	cFirestore *firestore.Client
 }
 
-func (r *token) Get(ctx context.Context, appID string, userID string, platform string, deviceID string) (string, error) {
-	docID := model.GenerateTokenDocID(platform, deviceID)
-	docRef := model.TokenRef(r.fCli, appID, userID).Doc(docID)
+func NewToken(
+	cFirestore *firestore.Client,
+) Token {
+	return &token{
+		cFirestore,
+	}
+}
+
+func (r *token) Get(
+	ctx context.Context,
+	appID string,
+	userID string,
+	tokenID string,
+) (*model.Token, error) {
+	docRef := model.TokenRef(r.cFirestore, appID, userID).Doc(tokenID)
 	dst := &model.Token{}
 	exist, err := cloudfirestore.Get(ctx, docRef, dst)
 	if err != nil {
 		log.Error(ctx, err)
-		return "", err
+		return nil, err
 	}
 	if !exist {
-		return "", nil
+		return nil, nil
 	}
-	return dst.Token, nil
+	return dst, nil
 }
 
-func (r *token) ListByUser(ctx context.Context, appID string, userID string) ([]string, error) {
-	q := model.TokenRef(r.fCli, appID, userID).Query
-	tokens := []*model.Token{}
-	err := cloudfirestore.ListByQuery(ctx, q, &tokens)
+func (r *token) List(
+	ctx context.Context,
+	appID string,
+	userID string,
+) ([]*model.Token, error) {
+	q := model.TokenRef(r.cFirestore, appID, userID).Query
+	dsts := []*model.Token{}
+	err := cloudfirestore.ListByQuery(ctx, q, &dsts)
 	if err != nil {
 		log.Error(ctx, err)
 		return nil, err
 	}
-	dsts := []string{}
-	for _, token := range tokens {
-		if token.Token == "" {
-			continue
-		}
-		dsts = append(dsts, token.Token)
-	}
 	return dsts, nil
 }
 
-func (r *token) ListByAll(ctx context.Context, appID string) ([]string, error) {
-	dsts := []string{}
+func (r *token) ListAll(
+	ctx context.Context,
+	appID string,
+) ([]*model.Token, error) {
+	dsts := []*model.Token{}
 	var cursor *firestore.DocumentSnapshot
 	for {
 		tokens := []*model.Token{}
 		var dsnp *firestore.DocumentSnapshot
 		var err error
-		q := r.fCli.CollectionGroup("tokens")
+		q := r.cFirestore.CollectionGroup("tokens")
 		if cursor != nil {
 			q.StartAfter(cursor)
 		}
 		it := q.Documents(ctx)
 		for {
 			dsnp, err = it.Next()
-			if err == iterator.Done {
+			if errors.Is(err, iterator.Done) {
 				break
 			}
 			if err != nil {
@@ -82,9 +93,6 @@ func (r *token) ListByAll(ctx context.Context, appID string) ([]string, error) {
 		if len(tokens) == 300 {
 			nCursor = dsnp
 		}
-		for _, token := range tokens {
-			dsts = append(dsts, token.Token)
-		}
 		if nCursor == nil {
 			break
 		}
@@ -93,15 +101,13 @@ func (r *token) ListByAll(ctx context.Context, appID string) ([]string, error) {
 	return dsts, nil
 }
 
-func (r *token) Put(ctx context.Context, appID string, userID string, platform string, deviceID string, token string) error {
-	src := &model.Token{
-		Platform:  platform,
-		DeviceID:  deviceID,
-		Token:     token,
-		CreatedAt: timeutil.NowUnix(),
-	}
-	docID := model.GenerateTokenDocID(platform, deviceID)
-	docRef := model.TokenRef(r.fCli, appID, userID).Doc(docID)
+func (r *token) Set(
+	ctx context.Context,
+	appID string,
+	userID string,
+	src *model.Token,
+) error {
+	docRef := model.TokenRef(r.cFirestore, appID, userID).Doc(src.ID)
 	err := cloudfirestore.Set(ctx, docRef, src)
 	if err != nil {
 		log.Error(ctx, err)
@@ -110,20 +116,17 @@ func (r *token) Put(ctx context.Context, appID string, userID string, platform s
 	return nil
 }
 
-func (r *token) Delete(ctx context.Context, appID string, userID string, platform string, deviceID string) error {
-	docID := model.GenerateTokenDocID(platform, deviceID)
-	docRef := model.TokenRef(r.fCli, appID, userID).Doc(docID)
+func (r *token) Delete(
+	ctx context.Context,
+	appID string,
+	userID string,
+	src *model.Token,
+) error {
+	docRef := model.TokenRef(r.cFirestore, appID, userID).Doc(src.ID)
 	err := cloudfirestore.Delete(ctx, docRef)
 	if err != nil {
 		log.Error(ctx, err)
 		return err
 	}
 	return nil
-}
-
-// NewToken ... リポジトリを作成する
-func NewToken(fCli *firestore.Client) Token {
-	return &token{
-		fCli: fCli,
-	}
 }

@@ -3,11 +3,9 @@ package app
 import (
 	"github.com/kelseyhightower/envconfig"
 	"github.com/rabee-inc/go-pkg/environment"
-
 	"github.com/rabee-inc/push/appengine/push/src/config"
 )
 
-// Environment ... 環境変数
 type Environment struct {
 	Port              int    `envconfig:"PORT"                default:"8080"`
 	Deploy            string `envconfig:"DEPLOY"              required:"true"`
@@ -18,7 +16,6 @@ type Environment struct {
 	FCMServerKey      string `envconfig:"FCM_SERVER_KEY"      required:"true"`
 }
 
-// Get ... 環境変数を取得する
 func (e *Environment) Get() {
 	environment.Load(config.GetFilePath("../../env.yaml"))
 	err := envconfig.Process("", e)

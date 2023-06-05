@@ -7,40 +7,68 @@ import (
 	"github.com/rabee-inc/go-pkg/cloudfirestore"
 	"github.com/rabee-inc/go-pkg/cloudtasks"
 	"github.com/rabee-inc/go-pkg/log"
-	"github.com/rabee-inc/go-pkg/timeutil"
-
 	"github.com/rabee-inc/push/appengine/push/src/config"
-	"github.com/rabee-inc/push/appengine/push/src/model"
+	"github.com/rabee-inc/push/appengine/push/src/model/input"
 	"github.com/rabee-inc/push/appengine/push/src/repository"
 )
 
 type sender struct {
-	tRepo repository.Token
-	fRepo repository.Fcm
-	rRepo repository.Reserve
-	tCli  *cloudtasks.Client
-	fCli  *firestore.Client
+	rToken     repository.Token
+	rFCM       repository.FCM
+	rReserve   repository.Reserve
+	cTasks     *cloudtasks.Client
+	cFirestore *firestore.Client
 }
 
-func (s *sender) AllUsers(ctx context.Context, appID string, pushID string, msg *model.Message) error {
-	// プッシュ通知を送信
-	err := s.fRepo.SendMessageByTopic(ctx, appID, config.TopicAll, pushID, msg)
+func NewSender(
+	rToken repository.Token,
+	rFCM repository.FCM,
+	rReserve repository.Reserve,
+	cTasks *cloudtasks.Client,
+	cFirestore *firestore.Client,
+) Sender {
+	return &sender{
+		rToken,
+		rFCM,
+		rReserve,
+		cTasks,
+		cFirestore,
+	}
+}
+
+func (s *sender) AllUsers(
+	ctx context.Context,
+	param *SenderAllUsersInput,
+) (*SenderAllUsersOutput, error) {
+	// 全員が所属しているトピックにプッシュ通知を送信
+	err := s.rFCM.SendMessageByTopic(
+		ctx,
+		param.AppID,
+		config.TopicAll,
+		param.PushID,
+		param.Message,
+	)
 	if err != nil {
 		log.Warning(ctx, err)
-		return err
+		return nil, err
 	}
-	return nil
+	return &SenderAllUsersOutput{
+		Success: true,
+	}, nil
 }
 
-func (s *sender) Users(ctx context.Context, appID string, userIDs []string, pushID string, msg *model.Message) error {
-	for _, userID := range userIDs {
-		src := &model.CloudTasksParamSendUser{
-			AppID:   appID,
+func (s *sender) Users(
+	ctx context.Context,
+	param *input.WorkerSendUsers,
+) error {
+	for _, userID := range param.UserIDs {
+		src := &input.WorkerSendUser{
+			AppID:   param.AppID,
 			UserID:  userID,
-			PushID:  pushID,
-			Message: msg,
+			PushID:  param.PushID,
+			Message: param.Message,
 		}
-		err := s.tCli.AddTask(ctx, config.QueueSendUser, "/worker/send/user", src)
+		err := s.cTasks.AddTask(ctx, config.QueueSendUser, "/worker/send/user", src)
 		if err != nil {
 			log.Warning(ctx, err)
 			return err
@@ -49,9 +77,15 @@ func (s *sender) Users(ctx context.Context, appID string, userIDs []string, push
 	return nil
 }
 
-func (s *sender) User(ctx context.Context, appID string, userID string, pushID string, msg *model.Message) error {
-	// ユーザーに紐づくTokenを取得
-	tokens, err := s.tRepo.ListByUser(ctx, appID, userID)
+func (s *sender) User(
+	ctx context.Context,
+	param *input.WorkerSendUser,
+) error {
+	tokens, err := s.rToken.List(
+		ctx,
+		param.AppID,
+		param.UserID,
+	)
 	if err != nil {
 		log.Warning(ctx, err)
 		return err
@@ -60,8 +94,13 @@ func (s *sender) User(ctx context.Context, appID string, userID string, pushID s
 		return nil
 	}
 
-	// プッシュ通知を送信
-	err = s.fRepo.SendMessageByTokens(ctx, appID, tokens, pushID, msg)
+	err = s.rFCM.SendMessageByTokens(
+		ctx,
+		param.AppID,
+		tokens,
+		param.PushID,
+		param.Message,
+	)
 	if err != nil {
 		log.Warning(ctx, err)
 		return err
@@ -69,23 +108,33 @@ func (s *sender) User(ctx context.Context, appID string, userID string, pushID s
 	return nil
 }
 
-func (s *sender) Reserved(ctx context.Context, appID string) error {
+func (s *sender) Reserved(
+	ctx context.Context,
+	param *SenderReservedInput,
+) error {
 	// 送信対象の予約を取得
-	now := timeutil.NowUnix()
-	rsvs, _, err := s.rRepo.ListBySend(ctx, appID, now, 30, nil)
+	reserves, _, err := s.rReserve.List(
+		ctx,
+		param.AppID,
+		&repository.ReserveListQuery{
+			OverdueReserved: true,
+			FilterStatuses: []config.ReserveStatus{
+				config.ReserveStatusReserved,
+			},
+		})
 	if err != nil {
 		log.Error(ctx, err)
 		return err
 	}
-	if len(rsvs) == 0 {
+	if len(reserves) == 0 {
 		return nil
 	}
 
 	// 処理中に設定
-	ctx = cloudfirestore.RunBulkWriter(ctx, s.fCli)
-	for _, rsv := range rsvs {
-		rsv.Status = config.ReserveStatusProcessing
-		_, err = s.rRepo.Update(ctx, appID, rsv, now)
+	ctx = cloudfirestore.RunBulkWriter(ctx, s.cFirestore)
+	for _, reserve := range reserves {
+		reserve.Status = config.ReserveStatusProcessing
+		err = s.rReserve.Update(ctx, param.AppID, reserve)
 		if err != nil {
 			log.Error(ctx, err)
 			return err
@@ -96,30 +145,36 @@ func (s *sender) Reserved(ctx context.Context, appID string) error {
 		return err
 	}
 
-	ctx = cloudfirestore.RunBulkWriter(ctx, s.fCli)
-	for _, rsv := range rsvs {
+	ctx = cloudfirestore.RunBulkWriter(ctx, s.cFirestore)
+	for _, reserve := range reserves {
 		// 送信
-		if len(rsv.UserIDs) > 0 {
-			err = s.Users(ctx, appID, rsv.UserIDs, rsv.ID, rsv.Message)
+		if len(reserve.UserIDs) > 0 {
+			err = s.Users(ctx, &input.WorkerSendUsers{
+				AppID:   param.AppID,
+				UserIDs: reserve.UserIDs,
+				PushID:  reserve.ID,
+				Message: reserve.Message,
+			})
 			if err != nil {
 				log.Error(ctx, err)
 			}
 		} else {
-			err = s.AllUsers(ctx, appID, rsv.ID, rsv.Message)
-			if err != nil {
-				log.Error(ctx, err)
-			}
+			_, err = s.AllUsers(ctx, &SenderAllUsersInput{
+				AppID:   param.AppID,
+				PushID:  reserve.ID,
+				Message: reserve.Message,
+			})
 		}
 		if err != nil {
 			// 失敗
-			rsv.Status = config.ReserveStatusFailure
+			reserve.Status = config.ReserveStatusFailure
 		} else {
 			// 成功
-			rsv.Status = config.ReserveStatusSuccess
+			reserve.Status = config.ReserveStatusSuccess
 		}
+
 		// ステータスを変更
-		now := timeutil.NowUnix()
-		_, err = s.rRepo.Update(ctx, appID, rsv, now)
+		err = s.rReserve.Update(ctx, param.AppID, reserve)
 		if err != nil {
 			log.Error(ctx, err)
 			return err
@@ -130,20 +185,4 @@ func (s *sender) Reserved(ctx context.Context, appID string) error {
 		return err
 	}
 	return nil
-}
-
-// NewSender ... サービスを作成する
-func NewSender(
-	tRepo repository.Token,
-	fRepo repository.Fcm,
-	rRepo repository.Reserve,
-	tCli *cloudtasks.Client,
-	fCli *firestore.Client) Sender {
-	return &sender{
-		tRepo: tRepo,
-		fRepo: fRepo,
-		rRepo: rRepo,
-		tCli:  tCli,
-		fCli:  fCli,
-	}
 }

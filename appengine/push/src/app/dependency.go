@@ -7,7 +7,6 @@ import (
 	"github.com/rabee-inc/go-pkg/internalauth"
 	"github.com/rabee-inc/go-pkg/jsonrpc2"
 	"github.com/rabee-inc/go-pkg/log"
-
 	"github.com/rabee-inc/push/appengine/push/src/config"
 	"github.com/rabee-inc/push/appengine/push/src/handler/api"
 	"github.com/rabee-inc/push/appengine/push/src/handler/worker"
@@ -15,60 +14,58 @@ import (
 	"github.com/rabee-inc/push/appengine/push/src/service"
 )
 
-// Dependency ... 依存性
 type Dependency struct {
-	Log                  *log.Middleware
-	InternalAuth         *internalauth.Middleware
-	JSONRPC2Handler      *jsonrpc2.Handler
-	EntryAction          *api.EntryAction
-	LeaveAction          *api.LeaveAction
-	SendByUsersAction    *api.SendByUsersAction
-	SendByAllUsersAction *api.SendByAllUsersAction
-	GetReserve           *api.GetReserveAction
-	ListReserve          *api.ListReserveAction
-	CreateReserve        *api.CreateReserveAction
-	UpdateReserve        *api.UpdateReserveAction
-	SendHandler          *worker.SendHandler
+	Log             *log.Middleware
+	InternalAuth    *internalauth.Middleware
+	JSONRPC2Handler *jsonrpc2.Handler
+	RegisterEntry   *api.RegisterEntry
+	RegisterLeave   *api.RegisterLeave
+	SenderAllUsers  *api.SenderAllUsers
+	SenderUsers     *api.SenderUsers
+	ReserveGet      *api.ReserveGet
+	ReserveList     *api.ReserveList
+	ReserveCreate   *api.ReserveCreate
+	ReserveUpdate   *api.ReserveUpdate
+	Sender          *worker.Sender
 }
 
-// Inject ... 依存性を注入する
 func (d *Dependency) Inject(e *Environment) {
 	// Client
-	var lCli log.Writer
+	var cLog log.Writer
 	if deploy.IsLocal() {
-		lCli = log.NewWriterStdout()
+		cLog = log.NewWriterStdout()
 	} else {
-		lCli = log.NewWriterStackdriver(e.ProjectID)
+		cLog = log.NewWriterStackdriver(e.ProjectID)
 	}
-	fCli := cloudfirestore.NewClient(e.ProjectID)
-	tCli := cloudtasks.NewClient(e.Port, e.Deploy, e.ProjectID, "push", e.LocationID, e.InternalAuthToken)
+	cFirestore := cloudfirestore.NewClient(e.ProjectID)
+	cTasks := cloudtasks.NewClient(e.Port, e.Deploy, e.ProjectID, "push", e.LocationID, e.InternalAuthToken)
 	fcmCli := config.GetClient(e.ProjectID)
 
 	// Repository
-	tRepo := repository.NewToken(fCli)
-	fRepo := repository.NewFcm(fcmCli, e.FCMServerKey)
-	rRepo := repository.NewReserve(fCli)
+	rToken := repository.NewToken(cFirestore)
+	rFCM := repository.NewFCM(fcmCli, e.FCMServerKey)
+	rReserve := repository.NewReserve(cFirestore)
 
 	// Service
-	rgSvc := service.NewRegister(tRepo, fRepo)
-	sSvc := service.NewSender(tRepo, fRepo, rRepo, tCli, fCli)
-	rSvc := service.NewReserve(rRepo, fCli)
+	rgSvc := service.NewRegister(rToken, rFCM)
+	sSvc := service.NewSender(rToken, rFCM, rReserve, cTasks, cFirestore)
+	rSvc := service.NewReserve(rReserve, cFirestore)
 
 	// Middleware
-	d.Log = log.NewMiddleware(lCli, e.MinLogSeverity)
+	d.Log = log.NewMiddleware(cLog, e.MinLogSeverity)
 	d.InternalAuth = internalauth.NewMiddleware(e.InternalAuthToken)
 
 	// Handler
 	d.JSONRPC2Handler = jsonrpc2.NewHandler()
-	d.SendHandler = worker.NewSendHandler(sSvc, rSvc)
+	d.Sender = worker.NewSender(sSvc)
 
 	// Action
-	d.EntryAction = api.NewEntryAction(rgSvc)
-	d.LeaveAction = api.NewLeaveAction(rgSvc)
-	d.SendByUsersAction = api.NewSendByUsersAction(tCli)
-	d.SendByAllUsersAction = api.NewSendByAllUsersAction(sSvc)
-	d.GetReserve = api.NewGetReserveAction(rSvc)
-	d.ListReserve = api.NewListReserveAction(rSvc)
-	d.CreateReserve = api.NewCreateReserveAction(rSvc)
-	d.UpdateReserve = api.NewUpdateReserveAction(rSvc)
+	d.RegisterEntry = api.NewRegisterEntry(rgSvc)
+	d.RegisterLeave = api.NewRegisterLeave(rgSvc)
+	d.SenderAllUsers = api.NewSenderAllUsers(sSvc)
+	d.SenderUsers = api.NewSenderUsers(cTasks)
+	d.ReserveGet = api.NewReserveGet(rSvc)
+	d.ReserveList = api.NewReserveList(rSvc)
+	d.ReserveCreate = api.NewReserveCreate(rSvc)
+	d.ReserveUpdate = api.NewReserveUpdate(rSvc)
 }

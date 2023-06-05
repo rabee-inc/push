@@ -2,34 +2,40 @@ package repository
 
 import (
 	"context"
+
+	"github.com/rabee-inc/push/appengine/push/src/model"
 )
 
-// Token ... トークン
 type Token interface {
 	Get(
 		ctx context.Context,
 		appID string,
 		userID string,
-		platform string,
-		deviceID string) (string, error)
-	ListByUser(
-		ctx context.Context,
-		appID string,
-		userID string) ([]string, error)
-	ListByAll(
-		ctx context.Context,
-		appID string) ([]string, error)
-	Put(
+		tokenID string,
+	) (*model.Token, error)
+
+	List(
 		ctx context.Context,
 		appID string,
 		userID string,
-		platform string,
-		deviceID string,
-		token string) error
+	) ([]*model.Token, error)
+
+	ListAll(
+		ctx context.Context,
+		appID string,
+	) ([]*model.Token, error)
+
+	Set(
+		ctx context.Context,
+		appID string,
+		userID string,
+		src *model.Token,
+	) error
+
 	Delete(
 		ctx context.Context,
 		appID string,
 		userID string,
-		platform string,
-		deviceID string) error
+		src *model.Token,
+	) error
 }

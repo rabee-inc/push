@@ -11,7 +11,6 @@ import (
 	"google.golang.org/grpc/keepalive"
 )
 
-// GetClient ... Clientを取得する
 func GetClient(projectID string) *messaging.Client {
 	ctx := context.Background()
 	gOpt := option.WithGRPCDialOption(grpc.WithKeepaliveParams(keepalive.ClientParameters{

@@ -4,77 +4,125 @@ import (
 	"context"
 
 	"github.com/rabee-inc/go-pkg/log"
-
 	"github.com/rabee-inc/push/appengine/push/src/config"
+	"github.com/rabee-inc/push/appengine/push/src/model"
 	"github.com/rabee-inc/push/appengine/push/src/repository"
 )
 
 type register struct {
-	tRepo repository.Token
-	fRepo repository.Fcm
+	rToken repository.Token
+	rFCM   repository.FCM
 }
 
-func (s *register) SetToken(ctx context.Context, appID string, userID string, platform string, deviceID string, token string) error {
+func NewRegister(
+	rToken repository.Token,
+	rFCM repository.FCM,
+) Register {
+	return &register{
+		rToken,
+		rFCM,
+	}
+}
+
+func (s *register) Entry(
+	ctx context.Context,
+	param *RegisterEntryInput,
+) (*RegisterEntryOutput, error) {
 	// 取得
-	cToken, err := s.tRepo.Get(ctx, appID, userID, platform, deviceID)
+	tokenID := model.GenerateTokenDocID(param.Platform, param.DeviceID)
+	token, err := s.rToken.Get(
+		ctx,
+		param.AppID,
+		param.UserID,
+		tokenID,
+	)
 	if err != nil {
 		log.Error(ctx, err)
-		return err
+		return nil, err
+	}
+	if token == nil {
+		token = model.NewToken(
+			tokenID,
+			param.Platform,
+			param.DeviceID,
+			param.Token,
+		)
 	}
 
 	// 保存
-	err = s.tRepo.Put(ctx, appID, userID, platform, deviceID, token)
+	err = s.rToken.Set(
+		ctx,
+		param.AppID,
+		param.UserID,
+		token,
+	)
 	if err != nil {
 		log.Error(ctx, err)
-		return err
+		return nil, err
 	}
 
-	// 全員のトピックに登録
-	if token != "" && token != cToken {
-		err = s.fRepo.SubscribeTopic(ctx, appID, config.TopicAll, []string{token})
-		if err != nil {
-			log.Warning(ctx, err)
-			// レスポンスを返す事を優先させるため握りつぶす
-		}
+	// 全員が所属しているトピックに登録
+	err = s.rFCM.SubscribeTopic(
+		ctx,
+		param.AppID,
+		config.TopicAll,
+		[]*model.Token{token},
+	)
+	if err != nil {
+		log.Warning(ctx, err)
+		// レスポンスを返す事を優先させるため握りつぶす
 	}
-	return nil
+	return &RegisterEntryOutput{
+		Success: true,
+	}, nil
 }
 
-func (s *register) DeleteToken(ctx context.Context, appID string, userID string, platform string, deviceID string) error {
+func (s *register) Leave(
+	ctx context.Context,
+	param *RegisterLeaveInput,
+) (*RegisterLeaveOutput, error) {
 	// 取得
-	token, err := s.tRepo.Get(ctx, appID, userID, platform, deviceID)
+	tokenID := model.GenerateTokenDocID(param.Platform, param.DeviceID)
+	token, err := s.rToken.Get(
+		ctx,
+		param.AppID,
+		param.UserID,
+		tokenID,
+	)
 	if err != nil {
 		log.Error(ctx, err)
-		return err
+		return nil, err
 	}
-	if token == "" {
-		log.Warningf(ctx, "not exist token: app_id: %s, platform: %s, device_id: %s", appID, platform, deviceID)
-		// 既に削除済みの場合は成功を返す
-		return nil
+	if token == nil {
+		return &RegisterLeaveOutput{
+			Success: true,
+		}, nil
 	}
 
 	// 削除
-	err = s.tRepo.Delete(ctx, appID, userID, platform, deviceID)
+	err = s.rToken.Delete(
+		ctx,
+		param.AppID,
+		param.UserID,
+		token,
+	)
 	if err != nil {
 		log.Error(ctx, err)
-		return err
+		return nil, err
 	}
 
-	// 全員のトピックから削除
-	if token != "" {
-		err = s.fRepo.UnsubscribeTopic(ctx, appID, config.TopicAll, []string{token})
-		if err != nil {
-			log.Warning(ctx, err)
-			// レスポンスを返す事を優先させるため握りつぶす
-		}
+	// 全員が所属しているトピックから削除
+	err = s.rFCM.UnsubscribeTopic(
+		ctx,
+		param.AppID,
+		config.TopicAll,
+		[]*model.Token{token},
+	)
+	if err != nil {
+		log.Warning(ctx, err)
+		// レスポンスを返す事を優先させるため握りつぶす
 	}
-	return nil
-}
-
-// NewRegister ... サービスを作成する
-func NewRegister(tRepo repository.Token, fRepo repository.Fcm) Register {
-	return &register{
-		tRepo: tRepo,
-		fRepo: fRepo,
-	}
+	return &RegisterLeaveOutput{
+		Success: true,
+	}, nil
 }

@@ -4,10 +4,14 @@ import (
 	"fmt"
 
 	"cloud.google.com/go/firestore"
+	"github.com/rabee-inc/go-pkg/timeutil"
 	"github.com/rabee-inc/push/appengine/push/src/config"
 )
 
-// Token ... トークン
+func TokenRef(cFirestore *firestore.Client, appID string, userID string) *firestore.CollectionRef {
+	return UserRef(cFirestore, appID).Doc(userID).Collection("tokens")
+}
+
 type Token struct {
 	ID        string                 `firestore:"-" cloudfirestore:"id"`
 	Ref       *firestore.DocumentRef `firestore:"-" cloudfirestore:"ref"`
@@ -17,12 +21,22 @@ type Token struct {
 	CreatedAt int64                  `firestore:"created_at"`
 }
 
-// GenerateTokenDocID ... Firestore用のDocIDを作成する
-func GenerateTokenDocID(pf string, deviceID string) string {
-	return config.ToMD5(fmt.Sprintf("%s::%s", pf, deviceID))
+func GenerateTokenDocID(platform string, deviceID string) string {
+	return config.ToMD5(fmt.Sprintf("%s::%s", platform, deviceID))
 }
 
-// TokenRef ... コレクション参照を取得
-func TokenRef(fCli *firestore.Client, appID string, userID string) *firestore.CollectionRef {
-	return UserRef(fCli, appID).Doc(userID).Collection("tokens")
+func NewToken(
+	id string,
+	platform string,
+	deviceID string,
+	token string,
+) *Token {
+	now := timeutil.NowUnix()
+	return &Token{
+		ID:        id,
+		Platform:  platform,
+		DeviceID:  deviceID,
+		Token:     token,
+		CreatedAt: now,
+	}
 }

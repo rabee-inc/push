@@ -6,28 +6,34 @@ import (
 	"github.com/rabee-inc/push/appengine/push/src/model"
 )
 
-// Fcm ... FCMに関するリポジトリ
-type Fcm interface {
+type FCM interface {
 	SubscribeTopic(
 		ctx context.Context,
 		appID string,
 		topic string,
-		tokens []string) error
+		tokens []*model.Token,
+	) error
+
 	UnsubscribeTopic(
 		ctx context.Context,
 		appID string,
 		topic string,
-		tokens []string) error
+		tokens []*model.Token,
+	) error
+
 	SendMessageByTokens(
 		ctx context.Context,
 		appID string,
-		tokens []string,
+		tokens []*model.Token,
 		pushID string,
-		src *model.Message) error
+		message *model.Message,
+	) error
+
 	SendMessageByTopic(
 		ctx context.Context,
 		appID string,
 		topic string,
 		pushID string,
-		src *model.Message) error
+		message *model.Message,
+	) error
 }
