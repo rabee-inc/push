@@ -11,8 +11,8 @@
 |Production|`POST` https://appspot.com/api/rpc|
 
 ```
-Authorization: xxxxxxxxxx
 Content-Type: application/json
+Authorization: xxxxxxxxxx
 ```
 ```json
 {
@@ -20,11 +20,11 @@ Content-Type: application/json
     "jsonrpc": "2.0",
     "method": "entry",
     "params": {
-        "app_id": "rec",
-        "device_id": "75BF4085-F382-4600-A949-AF1A27EF5F11",
+        "app_id": "test",
+        "device_id": "test_device_id",
         "platform": "ios",
-        "token": "eo4L3IORW-4:APA91bHydj7jiMSbB4vKt1ht6fIyjHyHqybwb1P5h55li_b21BjBHIzCjv2FnRGnmmZ8_pOWVhDwHT1ef1Bqus2Kp3y8nQmyd8sv7fUjBIOMaC49_B0jDYOXcNg3_RgOSaRgXCUEbHPX",
-        "user_id": "wnuLkLqflFWWtuhu7dvML0sy6Rh1"
+        "token": "test_token",
+        "user_id": "test_user_id"
     }
 }
 ```

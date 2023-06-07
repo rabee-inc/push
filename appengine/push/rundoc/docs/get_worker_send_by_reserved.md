@@ -11,12 +11,12 @@
 |Production|`GET` https://appspot.com/worker/send/reserved|
 
 ```
-Content-Type: application/json
 Authorization: xxxxxxxxxx
+Content-Type: application/json
 ```
 ```json
 {
-    "app_id": "rec"
+    "app_id": "test"
 }
 ```
 
