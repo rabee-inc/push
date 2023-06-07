@@ -8,8 +8,10 @@
         "id": "0",
         "method": "list_reserve",
         "params": {
-            "app_id": "rec",
-            "reserve_id": ""
+            "app_id": "test",
+            "reserve_id": "",
+            "limit": 10,
+            "cursor": ""
         }
     }
 }

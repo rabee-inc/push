@@ -20,10 +20,10 @@ Content-Type: application/json
     "jsonrpc": "2.0",
     "method": "leave",
     "params": {
-        "app_id": "rec",
-        "device_id": "75BF4085-F382-4600-A949-AF1A27EF5F11",
+        "app_id": "test",
+        "device_id": "test_device_id",
         "platform": "ios",
-        "user_id": "wnuLkLqflFWWtuhu7dvML0sy6Rh1"
+        "user_id": "test_user_id"
     }
 }
 ```

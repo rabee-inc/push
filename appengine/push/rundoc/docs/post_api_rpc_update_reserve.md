@@ -20,13 +20,13 @@ Content-Type: application/json
     "jsonrpc": "2.0",
     "method": "update_reserve",
     "params": {
-        "app_id": "rec",
+        "app_id": "test",
         "message": {
             "body": "test_body_reserved",
             "title": "test_title_reserved"
         },
-        "reserve_id": "--SsKlwzcJUngjOMJCnl3v8x6QxVojf-uvXcGskCd5s",
-        "reserved_at": 1575802628763,
+        "reserve_id": "BZoYtjvGcL3w5T9SkYCw",
+        "reserved_at": 1700000000000,
         "status": "canceled"
     }
 }
@@ -43,24 +43,8 @@ Status 200
     "id": "0",
     "result": {
         "reserve": {
-            "id": "--SsKlwzcJUngjOMJCnl3v8x6QxVojf-uvXcGskCd5s",
-            "ref": {
-                "Parent": {
-                    "Parent": {
-                        "Parent": {
-                            "Parent": null,
-                            "Path": "projects/staging-push-rabee-jp/databases/(default)/documents/push_apps",
-                            "ID": "push_apps"
-                        },
-                        "Path": "projects/staging-push-rabee-jp/databases/(default)/documents/push_apps/rec",
-                        "ID": "rec"
-                    },
-                    "Path": "projects/staging-push-rabee-jp/databases/(default)/documents/push_apps/rec/reserves",
-                    "ID": "reserves"
-                },
-                "Path": "projects/staging-push-rabee-jp/databases/(default)/documents/push_apps/rec/reserves/--SsKlwzcJUngjOMJCnl3v8x6QxVojf-uvXcGskCd5s",
-                "ID": "--SsKlwzcJUngjOMJCnl3v8x6QxVojf-uvXcGskCd5s"
-            },
+            "id": "BZoYtjvGcL3w5T9SkYCw",
+            "user_ids": [],
             "message": {
                 "title": "test_title_reserved",
                 "body": "test_body_reserved",
@@ -69,10 +53,11 @@ Status 200
                 "android": null,
                 "web": null
             },
-            "reserved_at": 1575802628763,
+            "reserved_at": 1700000000000,
+            "unmanaged": false,
             "status": "canceled",
-            "created_at": 1575802788198,
-            "updated_at": 1575803480240
+            "created_at": 1686113768330,
+            "updated_at": 1686114673712
         }
     }
 }

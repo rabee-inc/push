@@ -4,6 +4,6 @@
     "method": "get",
     "headers": {},
     "params": {
-        "app_id": "rec"
+        "app_id": "test"
     }
 }

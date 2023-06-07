@@ -1,3 +1,0 @@
-[build]
-exclude_dir = ["rundoc"]
-exclude_file = ["app_staging.yaml", "app_production.yaml"]

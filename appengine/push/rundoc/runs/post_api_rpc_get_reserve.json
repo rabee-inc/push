@@ -8,8 +8,8 @@
         "id": "0",
         "method": "get_reserve",
         "params": {
-            "app_id": "rec",
-            "reserve_id": "--SsKlwzcJUngjOMJCnl3v8x6QxVojf-uvXcGskCd5s"
+            "app_id": "test",
+            "reserve_id": "BZoYtjvGcL3w5T9SkYCw"
         }
     }
 }

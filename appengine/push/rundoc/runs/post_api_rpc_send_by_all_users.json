@@ -8,7 +8,7 @@
         "id": "0",
         "method": "send_by_all_users",
         "params": {
-            "app_id": "rec",
+            "app_id": "test",
             "message": {
                 "title": "test_title_all",
                 "body": "test_body_all"

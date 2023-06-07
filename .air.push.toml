@@ -1,0 +1,3 @@
+[build]
+cmd = "go build -o ./tmp/main ./appengine/push"
+exclude_dir = ["command", "rundoc", "functions", "terraform"]

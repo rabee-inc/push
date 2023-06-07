@@ -9,8 +9,8 @@
         "method": "send_by_users",
         "params": {
             "push_id": "aaaaadaada",
-            "app_id": "alog",
-            "user_ids": ["nWnKI9skp3c38MjJ0LrM6x30StB3"],
+            "app_id": "test",
+            "user_ids": ["test_user_id"],
             "message": {
                 "title": "test_title_users",
                 "body": "test_body_users",

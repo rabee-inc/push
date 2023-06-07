@@ -8,8 +8,8 @@
         "id": "0",
         "method": "create_reserve",
         "params": {
-            "app_id": "rec",
-            "reserved_at": 1575802628763,
+            "app_id": "test",
+            "reserved_at": 1686113627892,
             "message": {
                 "title": "test_title_reserved",
                 "body": "test_body_reserved"
