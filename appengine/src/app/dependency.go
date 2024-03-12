@@ -1,7 +1,9 @@
 package app
 
 import (
-	"github.com/rabee-inc/go-pkg/cloudfirestore"
+	"context"
+
+	"cloud.google.com/go/firestore"
 	"github.com/rabee-inc/go-pkg/cloudtasks"
 	"github.com/rabee-inc/go-pkg/deploy"
 	"github.com/rabee-inc/go-pkg/internalauth"
@@ -37,7 +39,10 @@ func (d *Dependency) Inject(e *Environment) {
 	} else {
 		cLog = log.NewWriterStackdriver(e.ProjectID)
 	}
-	cFirestore := cloudfirestore.NewClient(e.ProjectID)
+	cFirestore, err := firestore.NewClient(context.Background(), e.ProjectID)
+	if err != nil {
+		panic(err)
+	}
 	cTasks := cloudtasks.NewClient(e.Port, e.Deploy, e.ProjectID, "push", e.LocationID, e.InternalAuthToken)
 	cFCM := config.GetClient(e.ProjectID)
 
