@@ -1,0 +1,15 @@
+{
+    "description": "プッシュ通知を複数ユーザーに送信する",
+    "path": "/worker/send/user",
+    "method": "post",
+    "headers": {},
+    "params": {
+        "push_id": "xxxx",
+        "app_id": "alog",
+        "user_id": "nWnKI9skp3c38MjJ0LrM6x30StB3",
+        "message": {
+            "title": "test_title_users",
+            "body": "test_body_users"
+        }
+    }
+}

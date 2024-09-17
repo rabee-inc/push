@@ -4,23 +4,23 @@ import (
 	"context"
 	"fmt"
 
-	"firebase.google.com/go/messaging"
+	"firebase.google.com/go/v4/messaging"
 	"github.com/rabee-inc/go-pkg/log"
 	"github.com/rabee-inc/go-pkg/sliceutil"
 	"github.com/rabee-inc/push/appengine/src/model"
 )
 
 type fcm struct {
-	cFirestore *messaging.Client
+	cMessaging *messaging.Client
 	serverKey  string
 }
 
 func NewFCM(
-	cFirestore *messaging.Client,
+	cMessaging *messaging.Client,
 	serverKey string,
 ) FCM {
 	return &fcm{
-		cFirestore,
+		cMessaging,
 		serverKey,
 	}
 }
@@ -35,7 +35,7 @@ func (r *fcm) SubscribeTopic(
 	if len(ts) == 0 {
 		return nil
 	}
-	res, err := r.cFirestore.SubscribeToTopic(ctx, ts, topic)
+	res, err := r.cMessaging.SubscribeToTopic(ctx, ts, topic)
 	if err != nil {
 		log.Error(ctx, err)
 		return err
@@ -58,7 +58,7 @@ func (r *fcm) UnsubscribeTopic(
 	if len(ts) == 0 {
 		return nil
 	}
-	res, err := r.cFirestore.UnsubscribeFromTopic(ctx, ts, topic)
+	res, err := r.cMessaging.UnsubscribeFromTopic(ctx, ts, topic)
 	if err != nil {
 		log.Error(ctx, err)
 		return err
@@ -82,19 +82,25 @@ func (r *fcm) SendMessageByTokens(
 	if len(ts) == 0 {
 		return nil
 	}
-	m := r.generateMessage(ctx, appID, pushID, message)
-	mm := &messaging.MulticastMessage{
+	msg := r.generateMessage(pushID, message)
+	multiMsg := &messaging.MulticastMessage{
 		Tokens:       ts,
-		Notification: m.Notification,
-		Data:         m.Data,
-		APNS:         m.APNS,
-		Android:      m.Android,
-		Webpush:      m.Webpush,
+		Notification: msg.Notification,
+		Data:         msg.Data,
+		APNS:         msg.APNS,
+		Android:      msg.Android,
+		Webpush:      msg.Webpush,
 	}
-	_, err := r.cFirestore.SendMulticast(ctx, mm)
+	multiRes, err := r.cMessaging.SendEachForMulticast(ctx, multiMsg)
 	if err != nil {
 		log.Warning(ctx, err)
 		return err
+	}
+	if multiRes.FailureCount > 0 {
+		for _, res := range multiRes.Responses {
+			log.Warning(ctx, res.Error)
+			// 個別の送信エラーは無視
+		}
 	}
 	return nil
 }
@@ -106,9 +112,9 @@ func (r *fcm) SendMessageByTopic(
 	pushID string,
 	message *model.Message,
 ) error {
-	msg := r.generateMessage(ctx, appID, pushID, message)
+	msg := r.generateMessage(pushID, message)
 	msg.Topic = topic
-	_, err := r.cFirestore.Send(ctx, msg)
+	_, err := r.cMessaging.Send(ctx, msg)
 	if err != nil {
 		log.Warning(ctx, err)
 		return err
@@ -123,8 +129,6 @@ func (r *fcm) filterMapToken(tokens []*model.Token) []string {
 }
 
 func (r *fcm) generateMessage(
-	ctx context.Context,
-	appID string,
 	pushID string,
 	message *model.Message,
 ) *messaging.Message {
