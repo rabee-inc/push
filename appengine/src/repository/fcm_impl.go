@@ -98,6 +98,9 @@ func (r *fcm) SendMessageByTokens(
 	}
 	if multiRes.FailureCount > 0 {
 		for _, res := range multiRes.Responses {
+			if res == nil || res.Error == nil {
+				continue
+			}
 			log.Warning(ctx, res.Error)
 			// 個別の送信エラーは無視
 		}
