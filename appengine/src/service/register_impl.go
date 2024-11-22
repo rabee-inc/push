@@ -47,6 +47,8 @@ func (s *register) Entry(
 			param.DeviceID,
 			param.Token,
 		)
+	} else {
+		token.Token = param.Token
 	}
 
 	// 保存
